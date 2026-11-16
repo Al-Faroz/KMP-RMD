@@ -47,6 +47,8 @@ Gunakan view cetak CI4 dengan stylesheet CSS biasa khusus dokumen. Uji dimensi f
 
 Pada ARD KHS2 dan RDM K13, bagian Deskripsi dimulai di halaman baru. Tabel panjang mengulang kepala kolom pada halaman lanjutan. Ringkasan nilai dan rentang predikat dikelompokkan setelah tabel nilai. Data pendukung dan pengesahan ditempatkan bersama jika keduanya muat di satu halaman.
 
+Semua format menyediakan sedikitnya dua baris Ekstrakurikuler dan tiga baris Prestasi. Baris dengan kolom keterangan kosong memberi ruang tulis tangan 8 mm. Jika belum terisi, Catatan Wali Kelas menyediakan ruang minimal 22 mm dan Tanggapan Orang Tua / Wali 27 mm.
+
 Cetak Rapor membaca nilai, predikat, deskripsi, ringkasan, dan pengesahan yang tersimpan pada semester yang dipilih. Format memakai susunan bagian dari arsip dan penyesuaian lebar kolom serta pemisah halaman untuk F4. Kolom Rata-rata dan Beban × Nilai pada RDM K13 muncul jika nilainya tersimpan. Bagian Sikap disediakan pada format K13 dan arsip lama, dengan sel kosong jika isian tidak tersedia. Pengesahan menampilkan jabatan, nama, NIP, dan ruang tanda tangan. Data impor saat ini belum menyimpan kode verifikasi QR dari RDM Merdeka.
 
 - [Workbook Excel KHS1 kelas IX 2018/2019](https://chatgpt.com/library?file_id=libfile_869df16be2d8819182f0a0fb03fb462e&account_id=personal)

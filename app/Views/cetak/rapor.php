@@ -32,6 +32,7 @@ $potongan = static function (?string $teks): array {
     .rapor-tabel th, .rapor-tabel td { border: .4pt solid #555; padding: 1.05mm .8mm; vertical-align: top; }
     .rapor-tabel th { background: #eeeeee; vertical-align: middle; }
     .rapor-tabel .teks { text-align: left; }
+    .rapor-tabel .isian-manual td { height: 8mm; vertical-align: middle; }
     .rapor-tabel .kolom-sempit { font-size: 6.7pt; }
     .rapor-tabel.rapor-khs1 th, .rapor-tabel.rapor-khs1 td { padding: .75mm .6mm; }
     .tetap-bersama { page-break-inside: avoid; }
@@ -42,7 +43,10 @@ $potongan = static function (?string $teks): array {
     .ringkasan { width: 100%; margin-top: 2mm; }
     .ringkasan .nilai-ringkas { width: 12%; text-align: right; padding-right: 5mm; }
     .ringkasan td { padding: .6mm 1mm; }
-    .bingkai { border: .4pt solid #555; padding: 2mm; min-height: 10mm; margin: 0; }
+    .bingkai { border: .4pt solid #555; padding: 2mm; margin: 0; }
+    .kotak-isian { width: 100%; }
+    .kotak-isian td { border: .4pt solid #555; padding: 0; height: 22mm; }
+    .kotak-isian .tanggapan { height: 27mm; }
     .ttd { margin-top: 7mm; }
     .ttd .kepala { text-align: center; padding-top: 3mm; }
 </style>
@@ -77,7 +81,7 @@ $potongan = static function (?string $teks): array {
             <?php foreach (['Sikap Spiritual', 'Sikap Sosial'] as $sikap): ?>
                 <?php foreach ($pendukung[mb_strtolower($sikap)] ?? [[]] as $item): ?>
                     <?php foreach ($potongan($item['keterangan'] ?? $item['isian_tercetak_asli'] ?? null) as $segmen => $isi): ?>
-                        <tr>
+                        <tr<?= trim($isi) === '' ? ' class="isian-manual"' : '' ?>>
                             <td class="teks"><?= esc($sikap) ?></td><td><?= esc($segmen === 0 ? ($item['predikat'] ?? '') : '') ?></td>
                             <td class="teks"><?= nl2br(esc($isi), false) ?></td>
                         </tr>

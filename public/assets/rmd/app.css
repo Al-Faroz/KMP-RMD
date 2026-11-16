@@ -1,0 +1,72 @@
+:root {
+  --bs-font-sans-serif: system-ui, "Segoe UI", sans-serif;
+  --bs-primary: #176b4d;
+  --bs-primary-bg-subtle: #e5f3ec;
+  --bs-menu-active-color: var(--bs-primary);
+  --bs-menu-active-bg: var(--bs-primary-bg-subtle);
+}
+
+.rmd-sidebar {
+  --bs-offcanvas-width: var(--bs-menu-width);
+}
+
+.rmd-menu.menu {
+  width: 100%;
+  min-height: 100%;
+  overflow-y: auto;
+  background: var(--bs-menu-bg);
+}
+
+.rmd-menu .rmd-brand {
+  gap: 0.75rem;
+  padding: 1.25rem 0.875rem 1.25rem 1rem;
+  line-height: 1.25;
+}
+
+.rmd-brand-icon {
+  display: grid;
+  flex: 0 0 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border-radius: 0.5rem;
+  background: var(--bs-primary);
+  color: #fff;
+  font-size: 1.25rem;
+}
+
+.rmd-sidebar .menu-item {
+  width: 100%;
+}
+
+.rmd-sidebar .menu-link:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: -2px;
+}
+
+.rmd-skip-link:focus {
+  position: fixed;
+  z-index: 1100;
+  padding: 0.75rem 1rem;
+  background: var(--bs-white);
+}
+
+@media (max-width: 1199.98px) {
+  .rmd-menu .rmd-brand {
+    gap: 0.5rem;
+    padding-inline-end: 0.5rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .rmd-sidebar {
+    position: sticky;
+    top: 0;
+    flex: 0 0 var(--bs-menu-width);
+    height: 100vh;
+    box-shadow: var(--bs-menu-box-shadow);
+  }
+
+  .rmd-sidebar-collapsed .rmd-sidebar {
+    display: none;
+  }
+}

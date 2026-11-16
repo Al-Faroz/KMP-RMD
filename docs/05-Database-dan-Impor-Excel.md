@@ -4,19 +4,19 @@ Delapan workbook final angkatan 2016–2023 menjadi data awal. Pemutakhiran oleh
 
 ## Database lokal XAMPP
 
-CI4 mengambil konfigurasi database default dari `.env` di `E:\xampp\htdocs\kmp-rdm`. Nama database mengikuti nilai yang diberikan pengguna, yaitu **`kmp-rdm`**.
+CI4 mengambil konfigurasi database default dari `.env` di `E:\xampp\htdocs\kmp-rdm`. Nama database lokal adalah **`dt_rdm`**.
 
 | Kunci konfigurasi | Nilai lokal |
 |---|---|
 | `database.default.hostname` | `localhost` |
-| `database.default.database` | `kmp-rdm` |
+| `database.default.database` | `dt_rdm` |
 | `database.default.DBDriver` | `MySQLi` |
 | `database.default.DBPrefix` | Kosong |
 | `database.default.port` | `3306` |
 | `database.default.charset` | `utf8mb4` |
 | `database.default.DBCollat` | `utf8mb4_general_ci` |
 
-Nilai `database.default.username` dan `database.default.password` tetap diatur di `.env` lokal. Sebelum migrasi atau impor awal, cek bahwa koneksi dari CI4 berhasil dan `SELECT DATABASE()` mengembalikan `kmp-rdm`. Uji halaman Welcome hanya memeriksa bahwa aplikasi dapat dijalankan.
+Nilai `database.default.username` dan `database.default.password` tetap diatur di `.env` lokal. Sebelum migrasi atau impor awal, cek bahwa koneksi dari CI4 berhasil dan `SELECT DATABASE()` mengembalikan `dt_rdm`. Uji halaman Welcome hanya memeriksa bahwa aplikasi dapat dijalankan.
 
 ## Rancangan data dan pengisian awal
 

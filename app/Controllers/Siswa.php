@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\CetakDokumenSiswa;
+use App\Libraries\CetakRapor;
 use App\Libraries\CetakTranskrip;
 use App\Models\RaporSemesterModel;
 use App\Models\SiswaModel;
@@ -87,6 +88,30 @@ final class Siswa extends BaseController
         $pdf = (new CetakDokumenSiswa())->nilai($siswa, $rapor, $nilai, $pengaturan);
 
         return $this->pdf('Lembar-Nilai-' . $siswa['id'] . '-Semester-' . $semester, $pdf);
+    }
+
+    public function cetakRapor(string $id, string $semester): ResponseInterface
+    {
+        $this->validasiSemester($semester);
+        $siswa = $this->temukanSiswa($id);
+        $model = model(RaporSemesterModel::class);
+        $rapor = $model->detail($id, (int) $semester);
+        if (($rapor['status_arsip'] ?? null) !== 'Ditemukan') {
+            throw PageNotFoundException::forPageNotFound('Arsip rapor semester ini belum ditemukan.');
+        }
+
+        $cetak = new CetakRapor();
+        if (! $cetak->mendukung($rapor['kode_format'])) {
+            return $this->response->setStatusCode(422)->setContentType('text/plain')
+                ->setBody('Format cetak rapor semester ini belum tersedia. Periksa format di Edit Rapor.');
+        }
+
+        $raporId = (string) $rapor['id'];
+        $pengaturanId = $rapor['pengaturan_cetak_id'];
+        $pdf = $cetak->buat($siswa, $rapor, $model->nilai($raporId), $model->dataPendukung($raporId),
+            $model->pengaturanCetak($pengaturanId), $model->rentangPredikat($pengaturanId));
+
+        return $this->pdf('Rapor-' . $siswa['id'] . '-Semester-' . $semester, $pdf);
     }
 
     public function semester(string $id, string $semester): string

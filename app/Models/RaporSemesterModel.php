@@ -18,7 +18,7 @@ final class RaporSemesterModel extends Model
 
     public function detail(string $siswaId, int $semester): ?array
     {
-        return $this->select('rapor_semester.*, format_cetak.nama_format')
+        return $this->select('rapor_semester.*, format_cetak.nama_format, format_cetak.id_sumber AS kode_format')
             ->join('format_cetak', 'format_cetak.id = rapor_semester.format_cetak_id', 'left')
             ->where('rapor_semester.siswa_id', $siswaId)
             ->where('rapor_semester.semester', $semester)->first();
@@ -31,6 +31,16 @@ final class RaporSemesterModel extends Model
         }
 
         return $this->db->table('pengaturan_cetak')->where('id', $id)->get()->getRowArray();
+    }
+
+    public function rentangPredikat(int|string|null $pengaturanId): array
+    {
+        if ($pengaturanId === null) {
+            return [];
+        }
+
+        return $this->db->table('rentang_predikat')->where('pengaturan_cetak_id', $pengaturanId)
+            ->orderBy('urutan')->orderBy('id')->get()->getResultArray();
     }
 
     public function pengaturanIdentitas(string $siswaId): ?array

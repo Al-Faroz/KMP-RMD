@@ -48,6 +48,8 @@ $angka = static function ($value): string {
         <?= $status === 'Ditemukan' ? 'Unduh Excel' : 'Unduh Template Excel' ?>
     </a>
     <?php if ($status === 'Ditemukan'): ?>
+        <a href="<?= esc(url_to('cetak-rapor', $siswa['id'], $nomorSemester), 'attr') ?>" target="_blank" rel="noopener"
+           class="btn btn-primary">Cetak Rapor</a>
         <a href="<?= esc(url_to('cetak-lembar-nilai', $siswa['id'], $nomorSemester), 'attr') ?>" target="_blank" rel="noopener"
            class="btn btn-outline-primary">Cetak Lembar Nilai</a>
     <?php endif ?>

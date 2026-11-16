@@ -4,7 +4,7 @@ RMD membuat PDF dari data terbaru di database saat operator menjalankan tindakan
 
 | Aksi | Keluaran |
 |---|---|
-| **Satu siswa, satu semester** | Satu PDF untuk rapor semester pilihan jika arsip tersedia. |
+| **Satu siswa, satu semester** | Tombol **Cetak Rapor** di Detail Semester membuka PDF F4 di tab baru saat arsip berstatus Ditemukan. |
 | **Satu siswa, semua semester** | Satu PDF berisi semua rapor yang tersedia, urut nomor semester. |
 | **Satu rombel, satu semester** | Satu PDF gabungan berisi rapor yang tersedia di rombel pada semester pilihan. Daftar dan status arsip dapat dilihat sebelum membuat PDF. |
 
@@ -17,7 +17,7 @@ Setiap rapor memilih tata letak dari kode format pada entri rapornya. Dalam satu
 | `EXCEL_KHS1` | Sheet **KHS1**. Sikap, tabel gabungan Pengetahuan dan Keterampilan dengan SKS, rekap semester, data pendukung, dan tanda tangan. Acuan awal angkatan 2016 berasal dari workbook Excel kelas IX 2018/2019. |
 | `ARD_KHS2` | Sheet **KHS2**. Sikap, tabel nilai dan predikat, bagian deskripsi Pengetahuan dan Keterampilan, data pendukung, dan tanda tangan. |
 | `RDM_PDF_2023_VIIA` | RDM Kurikulum Merdeka. Bagian **Capaian Hasil Belajar** memuat JP, nilai akhir, JP × nilai, dan capaian kompetensi. Acuan visual yang sudah diperiksa adalah VII A semester 1 tahun pelajaran 2023/2024. |
-| `RDM_K13` | Data tersedia di workbook final. Tata letak rapor Kurikulum 2013 masih perlu dicocokkan dengan contoh asli dari periode yang relevan. |
+| `RDM_K13` | Acuan cetak 8A semester 3 tahun pelajaran 2020/2021. Sikap, tabel JP dan nilai Pengetahuan serta Keterampilan, deskripsi terpisah, data pendukung, dan pengesahan. |
 
 Pada pratinjau F4, cocokkan ukuran halaman, susunan kolom, pemisah halaman, keterbacaan deskripsi panjang, dan posisi tanda tangan terhadap acuan format. Nama, NIS dan NISN pada kepala rapor diambil dari Data Siswa sesuai bidang yang dipakai format tersebut.
 
@@ -45,7 +45,7 @@ Satu tata letak per dokumen berlaku untuk keempat tipe rapor. Kolom Lembar Nilai
 
 Gunakan view cetak CI4 dengan stylesheet CSS biasa khusus dokumen. Uji dimensi fisik F4 pada keluaran PDF dan lakukan satu uji cetak dari XAMPP menggunakan kertas yang dipakai madrasah. Letakkan tiap rapor pada halaman baru dalam PDF gabungan. Cocokkan isi dan urutan PDF dengan pilihan pada layar.
 
-Untuk RDM Kurikulum 2013, tunggu satu contoh asli sebelum menetapkan tata letaknya. Pastikan pemeriksaan RDM Kurikulum Merdeka diawali dari contoh VII A yang sudah tersedia.
+Cetak Rapor membaca nilai, predikat, deskripsi, ringkasan, dan pengesahan yang tersimpan pada semester yang dipilih. Format memakai susunan bagian dari arsip dan penyesuaian lebar kolom serta pemisah halaman untuk F4. Kolom Rata-rata dan Beban × Nilai pada RDM K13 muncul jika nilainya tersimpan. Bagian Sikap disediakan pada format K13 dan arsip lama, dengan sel kosong jika isian tidak tersedia. Pengesahan menampilkan jabatan, nama, NIP, dan ruang tanda tangan. Data impor saat ini belum menyimpan kode verifikasi QR dari RDM Merdeka.
 
 - [Workbook Excel KHS1 kelas IX 2018/2019](https://chatgpt.com/library?file_id=libfile_869df16be2d8819182f0a0fb03fb462e&account_id=personal)
 - [Workbook ARD KHS2 semester 1 2019/2020](https://chatgpt.com/library?file_id=libfile_797f95ecdf448191a7be0028a323a078&account_id=personal)

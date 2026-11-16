@@ -13,7 +13,7 @@ RMD digunakan untuk mencari, memperbarui, dan mencetak ulang rapor historis. Del
 | Folder lokal | `E:\xampp\htdocs\kmp-rdm` |
 | URL aplikasi | [http://localhost/kmp-rdm/](http://localhost/kmp-rdm/) |
 | Status awal | Halaman **Welcome CodeIgniter** sudah tampil berdasarkan uji lokal pengguna. |
-| Database lokal | `kmp-rdm`, host `localhost`, port `3306`, driver `MySQLi` |
+| Database lokal | `dt_rdm`, host `localhost`, port `3306`, driver `MySQLi` |
 
 Detail penempatan entry point dan konfigurasi lokal ada di [02 · Arsitektur CodeIgniter 4](02-Arsitektur-CodeIgniter-4.md). Pemeriksaan koneksi database ada di [05 · Database dan Impor Excel](05-Database-dan-Impor-Excel.md).
 

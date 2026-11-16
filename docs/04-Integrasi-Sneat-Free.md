@@ -19,6 +19,17 @@ RMD menggunakan **Sneat – Free Responsive Bootstrap 5 HTML5 Admin Template** d
 4. Arahkan referensi aset ke URL aset CI4, termasuk konfigurasi jalur aset jika diperlukan oleh rilis tersebut. Muat satu runtime Bootstrap yang sesuai agar interaksi seperti dropdown dan collapse terdaftar satu kali.
 5. Simpan lisensi yang menyertai paket. README resmi menyebut lisensi MIT dan meminta atribusi ThemeSelection pada footer. [Sneat Free · Lisensi dan atribusi](https://github.com/themeselection/sneat-bootstrap-html-admin-template-free#license-)
 
+### Versi Tahap 1
+
+| Aset lokal | Sumber |
+|---|---|
+| `sneat/core.css` | Sneat Free HTML5 [v3.0.0](https://github.com/themeselection/sneat-bootstrap-html-admin-template-free/tree/v3.0.0), commit `c6424a8`. CSS Sneat sudah memuat Bootstrap 5.3.3. |
+| `sneat/bootstrap.bundle.min.js` | [Bootstrap 5.3.3](https://github.com/twbs/bootstrap/tree/v5.3.3) dengan Popper 2.11.8. |
+| `sneat/boxicons.css` | Lima ikon Boxicons dari CSS yang disertakan dalam Sneat Free v3.0.0. |
+| `rmd/app.css` dan `rmd/operator.js` | Penyesuaian tampilan RMD dan kontrol menu operator. |
+
+Menu memakai Bootstrap Offcanvas di bawah lebar 1.200 px dan sidebar yang dapat ditutup mulai lebar 1.200 px. CI4 membuat URL aset dari `app.baseURL`. Jalurnya `public/assets/` saat entry point berada di root XAMPP dan `assets/` saat document root mengarah ke `public/`.
+
 ## Kriteria tahap fondasi
 
 - Halaman awal menampilkan **Data Siswa**. Menu **Cetak Rombel** membuka halaman yang sesuai.

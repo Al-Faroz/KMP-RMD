@@ -11,6 +11,11 @@ Options -Indexes
 	Options +FollowSymlinks
 	RewriteEngine On
 
+	# The XAMPP front controller is in the project root.
+	RewriteRule (^|/)\. - [F]
+	RewriteRule ^(?:app|docs|tests|vendor|writable)(?:/|$) - [F,NC]
+	RewriteRule ^(?:env|builds|composer\.(?:json|lock)|phpunit\.dist\.xml|preload\.php|spark)(?:/|$) - [F,NC]
+
 	# If you installed CodeIgniter in a subfolder, you will need to
 	# change the following line to match the subfolder you need.
 	# http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase

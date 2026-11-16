@@ -43,8 +43,21 @@ final class SiswaModel extends Model
 
     public function cari(string $kata, string $angkatan): array
     {
-        $this->select('siswa.id, siswa.nama, siswa.nis, siswa.nisn, angkatan.tahun_masuk')
-            ->join('angkatan', 'angkatan.id = siswa.angkatan_id');
+        return $this->pencarian($kata, $angkatan)
+            ->select('siswa.id, siswa.nama, siswa.nis, siswa.nisn, angkatan.tahun_masuk')
+            ->paginate(20);
+    }
+
+    public function saran(string $kata, string $angkatan): array
+    {
+        return $this->pencarian($kata, $angkatan)
+            ->select('siswa.id, siswa.nama, angkatan.tahun_masuk')
+            ->findAll(8);
+    }
+
+    private function pencarian(string $kata, string $angkatan): self
+    {
+        $this->join('angkatan', 'angkatan.id = siswa.angkatan_id');
 
         if ($angkatan !== '') {
             $this->where('angkatan.tahun_masuk', (int) $angkatan);
@@ -59,7 +72,7 @@ final class SiswaModel extends Model
                 ->groupEnd();
         }
 
-        return $this->orderBy('siswa.nama')->orderBy('siswa.id')->paginate(20);
+        return $this->orderBy('siswa.nama')->orderBy('siswa.id');
     }
 
     public function daftarAngkatan(): array

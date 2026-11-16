@@ -13,11 +13,7 @@ final class Siswa extends BaseController
 
     public function index(): string
     {
-        $kata = $this->request->getGet('q');
-        $kata = is_string($kata) ? mb_substr(trim($kata), 0, 100) : '';
-        $angkatan = $this->request->getGet('angkatan');
-        $angkatan = is_string($angkatan) && preg_match('/^[0-9]{4}$/D', $angkatan) ? $angkatan : '';
-
+        [$kata, $angkatan] = $this->filterPencarian();
         $model = model(SiswaModel::class);
         $siswa = $model->cari($kata, $angkatan);
 
@@ -27,7 +23,21 @@ final class Siswa extends BaseController
             'kata' => $kata,
             'angkatan' => $angkatan,
             'pager' => $model->pager->only(['q', 'angkatan']),
+            'pageScript' => 'rmd/siswa-search.js',
         ]);
+    }
+
+    public function saran(): ResponseInterface
+    {
+        [$kata, $angkatan] = $this->filterPencarian();
+        $hasil = mb_strlen($kata) < 2 ? [] : model(SiswaModel::class)->saran($kata, $angkatan);
+        $saran = array_map(static fn (array $siswa): array => [
+            'nama' => $siswa['nama'],
+            'angkatan' => $siswa['tahun_masuk'],
+            'url' => url_to('detail-siswa', $siswa['id']),
+        ], $hasil);
+
+        return $this->response->setHeader('Cache-Control', 'no-store')->setJSON($saran);
     }
 
     public function show(string $id): string
@@ -103,6 +113,17 @@ final class Siswa extends BaseController
         }
 
         return redirect()->route('detail-siswa', [$id], 303)->with('pesan_siswa', 'Identitas siswa tersimpan.')->withCookies();
+    }
+
+    private function filterPencarian(): array
+    {
+        $kata = $this->request->getGet('q');
+        $angkatan = $this->request->getGet('angkatan');
+
+        return [
+            is_string($kata) ? mb_substr(trim($kata), 0, 100) : '',
+            is_string($angkatan) && preg_match('/^[0-9]{4}$/D', $angkatan) ? $angkatan : '',
+        ];
     }
 
     private function temukanSiswa(string $id): array

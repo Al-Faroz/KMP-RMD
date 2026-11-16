@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use CodeIgniter\Database\BaseBuilder;
 use CodeIgniter\Model;
 
 final class RaporSemesterModel extends Model
@@ -10,7 +11,8 @@ final class RaporSemesterModel extends Model
 
     public function riwayat(string $siswaId): array
     {
-        $rapor = $this->select('semester, kelas, rombel, tahun_pelajaran, status_arsip')
+        $rapor = $this->select('semester, kelas, rombel, tahun_pelajaran, status_arsip, format_cetak.id_sumber AS kode_format')
+            ->join('format_cetak', 'format_cetak.id = rapor_semester.format_cetak_id', 'left')
             ->where('siswa_id', $siswaId)->findAll();
 
         return array_column($rapor, null, 'semester');
@@ -22,6 +24,30 @@ final class RaporSemesterModel extends Model
             ->join('format_cetak', 'format_cetak.id = rapor_semester.format_cetak_id', 'left')
             ->where('rapor_semester.siswa_id', $siswaId)
             ->where('rapor_semester.semester', $semester)->first();
+    }
+
+    public function daftarRombel(int $angkatan, int $semester): array
+    {
+        $baris = $this->db->table('rapor_semester r')->distinct()->select('r.rombel')
+            ->join('angkatan a', 'a.id = r.angkatan_id')
+            ->where('a.tahun_masuk', $angkatan)->where('r.semester', $semester)
+            ->where('r.rombel !=', '')->orderBy('r.rombel')->get()->getResultArray();
+
+        return array_column($baris, 'rombel');
+    }
+
+    public function anggotaRombel(int $angkatan, int $semester, string $rombel): array
+    {
+        return $this->arsipCetak()
+            ->join('angkatan a', 'a.id = r.angkatan_id')
+            ->where('a.tahun_masuk', $angkatan)->where('r.semester', $semester)->where('r.rombel', $rombel)
+            ->orderBy('s.nama')->orderBy('s.id')->get()->getResultArray();
+    }
+
+    public function arsipSiswa(string $siswaId): array
+    {
+        return $this->arsipCetak()->where('r.siswa_id', $siswaId)->whereIn('r.semester', range(1, 6))
+            ->orderBy('r.semester')->get()->getResultArray();
     }
 
     public function pengaturanCetak(int|string|null $id): ?array
@@ -79,5 +105,13 @@ final class RaporSemesterModel extends Model
     {
         return $this->db->table('data_pendukung')->where('rapor_semester_id', $raporId)
             ->orderBy('jenis_item')->orderBy('urutan')->orderBy('id')->get()->getResultArray();
+    }
+
+    private function arsipCetak(): BaseBuilder
+    {
+        return $this->db->table('rapor_semester r')
+            ->select('r.*, s.nama, s.nis, s.nisn, f.nama_format, f.id_sumber AS kode_format')
+            ->join('siswa s', 's.id = r.siswa_id')
+            ->join('format_cetak f', 'f.id = r.format_cetak_id', 'left');
     }
 }

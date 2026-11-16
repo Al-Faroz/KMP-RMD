@@ -2,6 +2,7 @@
 
 namespace App\Libraries;
 
+use App\Models\RaporSemesterModel;
 use CodeIgniter\I18n\Time;
 
 final class CetakRapor
@@ -69,7 +70,27 @@ final class CetakRapor
         return isset(self::FORMAT[$kode]);
     }
 
-    public function buat(array $siswa, array $rapor, array $mapel, array $pendukung, ?array $pengaturan, array $rentang): string
+    public function buat(string $judul, array $daftar, RaporSemesterModel $model): string
+    {
+        $bagian = function () use ($daftar, $model): iterable {
+            $pengaturan = $rentang = [];
+            foreach ($daftar as $rapor) {
+                $id = (string) $rapor['id'];
+                $idPengaturan = $rapor['pengaturan_cetak_id'];
+                if ($idPengaturan !== null && ! array_key_exists($idPengaturan, $pengaturan)) {
+                    $pengaturan[$idPengaturan] = $model->pengaturanCetak($idPengaturan);
+                    $rentang[$idPengaturan] = $model->rentangPredikat($idPengaturan);
+                }
+
+                yield $this->data($rapor, $model->nilai($id), $model->dataPendukung($id),
+                    $pengaturan[$idPengaturan] ?? null, $rentang[$idPengaturan] ?? []);
+            }
+        };
+
+        return (new PdfRmd())->gabungkan('rapor', $judul, $bagian());
+    }
+
+    private function data(array $rapor, array $mapel, array $pendukung, ?array $pengaturan, array $rentang): array
     {
         $kode = $rapor['kode_format'];
         $format = self::FORMAT[$kode];
@@ -113,8 +134,8 @@ final class CetakRapor
             ]));
         }
 
-        return (new PdfRmd())->buat('rapor', 'Rapor Semester ' . $rapor['semester'], [
-            'siswa' => $siswa,
+        return [
+            'siswa' => ['nama' => $rapor['nama'], 'nis' => $rapor['nis'], 'nisn' => $rapor['nisn']],
             'rapor' => $rapor,
             'mapel' => $mapel,
             'judul' => $format['judul'],
@@ -127,6 +148,6 @@ final class CetakRapor
             'tempatTanggal' => $tempatTanggal,
             'merdeka' => $kode === 'RDM_PDF_2023_VIIA',
             'deskripsiTerpisah' => in_array($kode, ['ARD_KHS2', 'RDM_K13'], true),
-        ]);
+        ];
     }
 }

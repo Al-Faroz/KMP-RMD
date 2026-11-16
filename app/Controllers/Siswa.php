@@ -45,9 +45,15 @@ final class Siswa extends BaseController
 
     public function show(string $id): string
     {
+        $siswa = $this->temukanSiswa($id);
+        $riwayat = model(RaporSemesterModel::class)->riwayat($id);
+        $cetak = new CetakRapor();
+
         return $this->halaman('siswa/detail', 'Detail Siswa', [
-            'siswa' => $this->temukanSiswa($id),
-            'riwayat' => model(RaporSemesterModel::class)->riwayat($id),
+            'siswa' => $siswa,
+            'riwayat' => $riwayat,
+            'adaRaporTersedia' => array_filter($riwayat, static fn (array $rapor): bool =>
+                $rapor['status_arsip'] === 'Ditemukan' && $cetak->mendukung($rapor['kode_format'])) !== [],
         ]);
     }
 
@@ -106,12 +112,23 @@ final class Siswa extends BaseController
                 ->setBody('Format cetak rapor semester ini belum tersedia. Periksa format di Edit Rapor.');
         }
 
-        $raporId = (string) $rapor['id'];
-        $pengaturanId = $rapor['pengaturan_cetak_id'];
-        $pdf = $cetak->buat($siswa, $rapor, $model->nilai($raporId), $model->dataPendukung($raporId),
-            $model->pengaturanCetak($pengaturanId), $model->rentangPredikat($pengaturanId));
+        $pdf = $cetak->buat('Rapor Semester ' . $semester, [$rapor + $siswa], $model);
 
         return $this->pdf('Rapor-' . $siswa['id'] . '-Semester-' . $semester, $pdf);
+    }
+
+    public function cetakSemuaSemester(string $id): ResponseInterface
+    {
+        $siswa = $this->temukanSiswa($id);
+        $model = model(RaporSemesterModel::class);
+        $cetak = new CetakRapor();
+        $arsip = array_filter($model->arsipSiswa($id), static fn (array $rapor): bool =>
+            $rapor['status_arsip'] === 'Ditemukan' && $cetak->mendukung($rapor['kode_format']));
+        if ($arsip === []) {
+            throw PageNotFoundException::forPageNotFound('Belum ada rapor semester yang dapat dicetak.');
+        }
+
+        return $this->pdf('Rapor-Semua-Semester-' . $siswa['id'], $cetak->buat('Rapor Semua Semester', $arsip, $model));
     }
 
     public function semester(string $id, string $semester): string

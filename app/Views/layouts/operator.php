@@ -13,6 +13,9 @@ $assetPath = realpath(FCPATH) === realpath(ROOTPATH) ? 'public/assets/' : 'asset
     <link rel="stylesheet" href="<?= esc(base_url($assetPath . 'rmd/app.css'), 'attr') ?>">
     <script defer src="<?= esc(base_url($assetPath . 'sneat/bootstrap.bundle.min.js'), 'attr') ?>"></script>
     <script defer src="<?= esc(base_url($assetPath . 'rmd/operator.js'), 'attr') ?>"></script>
+    <?php if (isset($pageScript)): ?>
+        <script defer src="<?= esc(base_url($assetPath . $pageScript), 'attr') ?>"></script>
+    <?php endif ?>
 </head>
 <body>
     <a class="visually-hidden-focusable rmd-skip-link" href="#konten-utama">Lewati ke konten utama</a>

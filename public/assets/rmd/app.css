@@ -70,3 +70,32 @@
     display: none;
   }
 }
+
+.rmd-deskripsi {
+  min-width: 16rem;
+  overflow-wrap: anywhere;
+}
+
+.rmd-arsip-ditemukan {
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary);
+}
+
+.rmd-saran-siswa {
+  position: absolute;
+  inset-inline: calc(var(--bs-gutter-x) / 2);
+  z-index: 5;
+  max-height: min(18rem, 45vh);
+  overflow-y: auto;
+}
+
+.rmd-saran-siswa [role="option"] {
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.rmd-saran-siswa [role="option"]:hover,
+.rmd-saran-siswa [aria-selected="true"] {
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary);
+}

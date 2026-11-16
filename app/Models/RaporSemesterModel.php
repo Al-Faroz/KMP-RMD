@@ -24,6 +24,25 @@ final class RaporSemesterModel extends Model
             ->where('rapor_semester.semester', $semester)->first();
     }
 
+    public function pengaturanCetak(int|string|null $id): ?array
+    {
+        if ($id === null) {
+            return null;
+        }
+
+        return $this->db->table('pengaturan_cetak')->where('id', $id)->get()->getRowArray();
+    }
+
+    public function pengaturanIdentitas(string $siswaId): ?array
+    {
+        return $this->db->table('rapor_semester r')->select('p.*')
+            ->join('pengaturan_cetak p', 'p.id = r.pengaturan_cetak_id')
+            ->where('r.siswa_id', $siswaId)
+            ->where('r.status_arsip', 'Ditemukan')
+            ->orderBy('r.semester')
+            ->get(1)->getRowArray();
+    }
+
     public function nilai(string $raporId): array
     {
         return $this->db->table('nilai_mapel')->where('rapor_semester_id', $raporId)

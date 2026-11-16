@@ -31,6 +31,16 @@ Dari **Detail Siswa**, operator membuka **Cetak Transkrip** untuk melihat PDF sa
 - Nama mapel menggunakan padanan transkrip dari arsip jika tersedia. Sel yang tidak tersedia dibiarkan kosong dan daftar semester yang arsipnya belum ditemukan dicantumkan di bawah tabel.
 - Ruang pengesahan memakai nama, NIP, tempat dan tanggal dari pengaturan cetak rapor terakhir yang tersedia bagi siswa. Ruang tanda tangan disediakan pada akhir dokumen.
 
+## Dokumen per siswa
+
+| Dokumen | Aksi | Kertas dan isi |
+|---|---|---|
+| Sampul | **Detail Siswa → Cetak Sampul** | A4 potret. Logo Kementerian Agama, judul laporan hasil belajar, nama, NIS dan NISN siswa. |
+| Identitas | **Detail Siswa → Cetak Identitas** | A4 potret. Biodata terkini siswa, penerimaan, orang tua dan wali, dengan ruang pasfoto 3 × 4 cm. Pengesahan memakai pengaturan cetak semester paling awal yang ditemukan. |
+| Lembar Nilai | **Detail Semester → Cetak Lembar Nilai** | 203 × 330 mm potret mengikuti contoh Kartu Hasil Studi. Tampilkan nilai dan predikat tersimpan, beban belajar, dan ringkasan yang tersedia untuk semester pilihan. Tombol tersedia ketika arsip berstatus Ditemukan. |
+
+Satu tata letak per dokumen berlaku untuk keempat tipe rapor. Kolom Lembar Nilai menyesuaikan data arsip tiap semester. Transkrip, Sampul, Identitas, dan Lembar Nilai dibuka di tab baru.
+
 ## Implementasi layout dan pemeriksaan
 
 Gunakan view cetak CI4 dengan stylesheet CSS biasa khusus dokumen. Uji dimensi fisik F4 pada keluaran PDF dan lakukan satu uji cetak dari XAMPP menggunakan kertas yang dipakai madrasah. Letakkan tiap rapor pada halaman baru dalam PDF gabungan. Cocokkan isi dan urutan PDF dengan pilihan pada layar.

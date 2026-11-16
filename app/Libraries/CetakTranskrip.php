@@ -3,29 +3,13 @@
 namespace App\Libraries;
 
 use CodeIgniter\I18n\Time;
-use Mpdf\Mpdf;
-use Mpdf\Output\Destination;
 
 final class CetakTranskrip
 {
     public function buat(array $siswa, array $arsip): string
     {
-        $data = $this->susun($arsip);
-        $pdf = new Mpdf([
-            'mode' => 'utf-8',
-            'format' => [210, 330],
-            'default_font' => 'dejavusans',
-            'margin_left' => 12,
-            'margin_right' => 12,
-            'margin_top' => 12,
-            'margin_bottom' => 12,
-            'tempDir' => WRITEPATH . 'cache/mpdf',
-        ]);
-        $pdf->imageVars['kopKemenag'] = file_get_contents(APPPATH . 'Assets/logo-kemenag-transkrip.jpg');
-        $pdf->SetTitle('Transkrip Nilai Enam Semester');
-        $pdf->WriteHTML(view('cetak/transkrip', $data + ['siswa' => $siswa], ['saveData' => false]));
-
-        return $pdf->Output('', Destination::STRING_RETURN);
+        return (new PdfRmd())->buat('transkrip', 'Transkrip Nilai Enam Semester', [210, 330],
+            $this->susun($arsip) + ['siswa' => $siswa]);
     }
 
     private function susun(array $arsip): array

@@ -57,11 +57,14 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 | POST | `/siswa/{siswa}/semester/{semester}/impor/konfirmasi` | Simpan perubahan yang dikonfirmasi. |
 | GET | `/siswa/{siswa}/semester/{semester}/cetak` | Buat PDF satu rapor dari data terkini. |
 | GET | `/siswa/{siswa}/transkrip` | Buat PDF transkrip nilai Semester 1–6. |
+| GET | `/siswa/{siswa}/sampul` | Buat PDF sampul laporan hasil belajar. |
+| GET | `/siswa/{siswa}/identitas` | Buat PDF biodata peserta didik. |
+| GET | `/siswa/{siswa}/semester/{semester}/nilai` | Buat PDF lembar nilai dari arsip semester yang ditemukan. |
 | GET | `/siswa/{siswa}/cetak-semua-semester` | Buat PDF gabungan rapor yang tersedia. |
 | GET | `/cetak-rombel` | Pilih angkatan, semester, dan rombel, lalu tinjau daftar rapor. |
 | GET | `/cetak-rombel/pdf` | Buat PDF gabungan dari pilihan rombel. |
 
-Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Rute dokumen pendukung ditentukan saat cakupannya disepakati.
+Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Lembar Nilai dibuka dari Detail Semester. Dokumen PDF tersebut dibuka di tab baru.
 
 ## Validasi dan akses
 
@@ -70,4 +73,4 @@ Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Rute do
 - Otorisasi eksekusi di sisi server setelah kebijakan akun disetujui. Pemeriksaan berlaku juga untuk unduhan Excel dan PDF yang berisi data siswa.
 - Pembuatan PDF membaca data terkini dan mengirim hasil ke pengguna. Database menyimpan data rapor dan konfigurasi cetak.
 
-Excel menggunakan PhpSpreadsheet. PDF transkrip menggunakan mPDF dengan direktori sementara `writable/cache/mpdf`. Model akun masih perlu ditetapkan. Kriteria penerimaan setiap tahap tersedia di [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md).
+Excel menggunakan PhpSpreadsheet. PDF dokumen siswa menggunakan mPDF dengan direktori sementara `writable/cache/mpdf`. Model akun masih perlu ditetapkan. Kriteria penerimaan setiap tahap tersedia di [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md).

@@ -14,6 +14,7 @@ $routes->get('siswa/(:num)/edit', 'Siswa::edit/$1', ['as' => 'edit-siswa']);
 $routes->post('siswa/(:num)/edit', 'Siswa::update/$1', ['filter' => 'csrf']);
 $routes->get('siswa/(:num)/semester/(:num)', 'Siswa::semester/$1/$2', ['as' => 'detail-semester']);
 $routes->get('siswa/(:num)/semester/(:num)/nilai', 'Siswa::lembarNilai/$1/$2', ['as' => 'cetak-lembar-nilai']);
+$routes->get('siswa/(:num)/semester/(:num)/cetak', 'Siswa::cetakRapor/$1/$2', ['as' => 'cetak-rapor']);
 $routes->get('siswa/(:num)/semester/(:num)/edit', 'Rapor::edit/$1/$2', ['as' => 'edit-rapor']);
 $routes->post('siswa/(:num)/semester/(:num)/edit', 'Rapor::simpan/$1/$2', ['filter' => 'csrf']);
 $routes->get('siswa/(:num)/semester/(:num)/excel', 'Rapor::excel/$1/$2', ['as' => 'excel-rapor']);

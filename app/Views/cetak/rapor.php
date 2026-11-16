@@ -33,10 +33,14 @@ $potongan = static function (?string $teks): array {
     .rapor-tabel th { background: #eeeeee; vertical-align: middle; }
     .rapor-tabel .teks { text-align: left; }
     .rapor-tabel .kolom-sempit { font-size: 6.7pt; }
+    .rapor-tabel.rapor-khs1 th, .rapor-tabel.rapor-khs1 td { padding: .75mm .6mm; }
+    .tetap-bersama { page-break-inside: avoid; }
     .rapor-tabel .kelompok, .rapor-tabel .subkelompok { text-align: left; font-weight: bold; }
+    .rapor-tabel tr.judul-kelompok { page-break-after: avoid; }
     .kelompok { background: #f2f2f2; }
     .subkelompok { background: #fafafa; }
-    .ringkasan { width: 54%; margin-top: 2mm; }
+    .ringkasan { width: 100%; margin-top: 2mm; }
+    .ringkasan .nilai-ringkas { width: 12%; text-align: right; padding-right: 5mm; }
     .ringkasan td { padding: .6mm 1mm; }
     .bingkai { border: .4pt solid #555; padding: 2mm; min-height: 10mm; margin: 0; }
     .ttd { margin-top: 7mm; }
@@ -95,34 +99,47 @@ $potongan = static function (?string $teks): array {
     'kolom' => $kolom, 'mapel' => $mapel, 'tampil' => $tampil, 'potongan' => $potongan,
     'lebarMapel' => match (true) {
         $merdeka => 27,
-        isset($kolom['SKS']) => 16,
+        isset($kolom['SKS']) => 14,
         default => 26,
     },
     'lebarField' => isset($kolom['SKS']) ? [
         'sks' => 5,
-        'nilai_pengetahuan' => 5, 'sk_sx_n1' => 6, 'predikat_pengetahuan' => 8, 'deskripsi_pengetahuan' => 18,
-        'nilai_keterampilan' => 5, 'sk_sx_n2' => 6, 'predikat_keterampilan' => 8, 'deskripsi_keterampilan' => 18,
+        'nilai_pengetahuan' => 5, 'sk_sx_n1' => 6, 'predikat_pengetahuan' => 7, 'deskripsi_pengetahuan' => 19,
+        'nilai_keterampilan' => 5, 'sk_sx_n2' => 6, 'predikat_keterampilan' => 7, 'deskripsi_keterampilan' => 19,
     ] : [],
+    'padat' => isset($kolom['SKS']),
 ], ['saveData' => false]) ?>
-<?php if ($ringkasan !== []): ?>
-    <table class="ringkasan">
-        <?php foreach ($ringkasan as $label => $nilai): ?>
-            <tr><td><?= esc($label) ?></td><td style="text-align: right"><?= esc($tampil($nilai)) ?></td></tr>
-        <?php endforeach ?>
-    </table>
+<?php if ($ringkasan !== [] || $rentang !== []): ?>
+    <div class="tetap-bersama">
+        <?php if ($ringkasan !== []): ?>
+            <table class="ringkasan">
+                <tbody>
+                    <?php foreach (array_chunk(array_keys($ringkasan), 2) as $pasangan): ?>
+                        <tr>
+                            <?php foreach ($pasangan as $label): ?>
+                                <td><?= esc($label) ?></td><td class="nilai-ringkas"><?= esc($tampil($ringkasan[$label])) ?></td>
+                            <?php endforeach ?>
+                            <?php if (count($pasangan) === 1): ?><td colspan="2"></td><?php endif ?>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        <?php endif ?>
+        <?php if ($rentang !== []): ?>
+            <h2>Rentang Predikat</h2>
+            <table class="rapor-tabel">
+                <thead><tr><th>Predikat</th><?php foreach ($rentang as $item): ?><th><?= esc($item['predikat'] ?? '') ?></th><?php endforeach ?></tr></thead>
+                <tbody><tr><td>Rentang</td><?php foreach ($rentang as $item): ?><td><?= esc($item['rentang_tercetak'] ?? '') ?></td><?php endforeach ?></tr></tbody>
+            </table>
+        <?php endif ?>
+    </div>
 <?php endif ?>
-<?php if ($rentang !== []): ?>
-    <h2>Rentang Predikat</h2>
-    <table class="rapor-tabel">
-        <thead><tr><th>Predikat</th><?php foreach ($rentang as $item): ?><th><?= esc($item['predikat'] ?? '') ?></th><?php endforeach ?></tr></thead>
-        <tbody><tr><td>Rentang</td><?php foreach ($rentang as $item): ?><td><?= esc($item['rentang_tercetak'] ?? '') ?></td><?php endforeach ?></tr></tbody>
-    </table>
-<?php endif ?>
-<?php if ($deskripsiTerpisah): ?>
+<?php if ($deskripsiTerpisah && $mapel !== []): ?>
+    <pagebreak />
     <h2>C. Deskripsi Pengetahuan dan Keterampilan</h2>
     <?= view('cetak/rapor/tabel_mapel', [
         'kolom' => ['Pengetahuan' => 'deskripsi_pengetahuan', 'Keterampilan' => 'deskripsi_keterampilan'],
-        'mapel' => $mapel, 'tampil' => $tampil, 'potongan' => $potongan, 'lebarMapel' => 27, 'lebarField' => [],
+        'mapel' => $mapel, 'tampil' => $tampil, 'potongan' => $potongan, 'lebarMapel' => 27, 'lebarField' => [], 'padat' => false,
     ], ['saveData' => false]) ?>
 <?php endif ?>
 <?= view('cetak/rapor/pendukung', [

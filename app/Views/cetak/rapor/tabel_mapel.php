@@ -8,7 +8,7 @@ foreach ($kolom as $field) {
 $rentangBaris = $kelompokKolom ? 2 : 1;
 $jumlahKolom = count($daftarField) + 2;
 ?>
-<table class="rapor-tabel" autosize="1.08">
+<table class="rapor-tabel<?= $padat ? ' rapor-khs1' : '' ?>" autosize="1.08">
     <thead>
         <tr>
             <th rowspan="<?= $rentangBaris ?>" style="width: 5%">No.</th>
@@ -39,11 +39,11 @@ $jumlahKolom = count($daftarField) + 2;
             <?php if ($item['kelompok_mapel'] !== $kelompok): ?>
                 <?php $subkelompok = null; ?>
                 <?php if ($item['kelompok_mapel'] !== null): ?>
-                    <tr><td colspan="<?= $jumlahKolom ?>" class="kelompok"><?= esc($item['kelompok_mapel']) ?></td></tr>
+                    <tr class="judul-kelompok"><td colspan="<?= $jumlahKolom ?>" class="kelompok"><?= esc($item['kelompok_mapel']) ?></td></tr>
                 <?php endif ?>
             <?php endif ?>
             <?php if ($item['subkelompok_mapel'] !== null && $item['subkelompok_mapel'] !== $subkelompok): ?>
-                <tr><td colspan="<?= $jumlahKolom ?>" class="subkelompok"><?= esc($item['subkelompok_mapel']) ?></td></tr>
+                <tr class="judul-kelompok"><td colspan="<?= $jumlahKolom ?>" class="subkelompok"><?= esc($item['subkelompok_mapel']) ?></td></tr>
             <?php endif ?>
             <?php
             $kelompok = $item['kelompok_mapel'];

@@ -85,6 +85,8 @@ Skema memuat data dari sheet **Data Siswa**, **Rapor Semester**, **Nilai Mapel**
 3. Saat operator mengonfirmasi, simpan perubahan untuk satu rapor semester dalam satu transaksi. Sel kosong dilewati. Angka `0` disimpan sebagai nilai. **Edit Rapor** memperbarui entri semester yang sama.
 4. Pratinjau cetak berikutnya membaca data terbaru. Untuk rapor baru, penyimpanan mengisi status ketersediaan dan kode format berdasarkan data yang dikonfirmasi.
 
-Usulan guard teknis untuk mencegah koreksi saling menimpa adalah memeriksa perubahan yang terjadi pada rapor sejak pratinjau dibuka. Jika datanya berubah, tampilkan pratinjau baru sebelum konfirmasi.
+Unduhan RMD berisi sheet **Identitas**, **Rapor Semester**, **Nilai Mapel**, **Data Pendukung**, dan **Acuan Cetak**. Untuk memilih format template arsip yang baru ditemukan, buka **Edit Rapor** dan gunakan pilihan **Format template Excel**. Edit isian data pada workbook, pertahankan identitas target dan judul kolom, lalu kosongkan **ID baris** saat menambah mapel atau data pendukung baru. Isi nilai secara langsung. Impor menerima file `.xlsx` berukuran hingga 1 MB.
+
+Pratinjau berlaku selama 30 menit untuk siswa dan semester terkait dalam sesi operator. Konfirmasi memeriksa versi rapor saat ini. Jika rapor sudah berubah, unggah kembali file untuk membuat pratinjau baru.
 
 [Workbook final angkatan 2016–2023](https://chatgpt.com/library?file_id=libfile_3824903a06dc8191935a112cbf272a7a&account_id=personal)

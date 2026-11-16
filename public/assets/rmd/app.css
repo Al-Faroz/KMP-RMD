@@ -70,3 +70,13 @@
     display: none;
   }
 }
+
+.rmd-deskripsi {
+  min-width: 16rem;
+  overflow-wrap: anywhere;
+}
+
+.rmd-arsip-ditemukan {
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary);
+}

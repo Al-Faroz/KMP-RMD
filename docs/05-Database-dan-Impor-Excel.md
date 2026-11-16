@@ -55,6 +55,29 @@ Angka di bawah berasal dari hitungan baris identitas dan rapor pada workbook fin
 | 2023 | 478 | 490 | 2.378 |
 | **Total** | **4.492** | **22.102** | **4.850** |
 
+## Instalasi skema dan impor awal di XAMPP
+
+Jalankan dari `E:\xampp\htdocs\kmp-rdm` setelah menyalakan MySQL XAMPP. Pastikan database aktif melalui koneksi CI4 adalah `dt_rdm`.
+
+```powershell
+composer install
+composer check-platform-reqs
+& 'E:\xampp\php\php.exe' spark migrate
+& 'E:\xampp\php\php.exe' spark migrate:status
+```
+
+`migrate:status` menampilkan `CreateRmdSchema` beserta waktu migrasinya. Migrasi membuat delapan tabel InnoDB. Jika target sudah punya tabel bernama sama tanpa riwayat migrasi yang sesuai, cek skema yang ada sebelum mencoba lagi.
+
+Ekstrak delapan workbook dari ZIP di luar folder publik aplikasi. Contoh ini memakai `E:\RMD-Workbook`. Simulasikan satu angkatan terlebih dahulu dan cocokkan ringkasannya dengan tabel pembanding.
+
+```powershell
+& 'E:\xampp\php\php.exe' spark rmd:impor-awal 'E:\RMD-Workbook\RMD-Angkatan-2023.xlsx' --dry-run
+```
+
+Untuk menyimpan setelah hasil sesuai, jalankan perintah yang sama tanpa `--dry-run`. Ulangi untuk angkatan lain. Impor menggunakan satu transaksi per angkatan. Impor yang sudah berhasil ditandai dan otomatis dilewati pada pengulangan. Jika satu workbook gagal, perbaiki penyebab yang dilaporkan lalu jalankan lagi untuk angkatan itu.
+
+Skema memuat data dari sheet **Data Siswa**, **Rapor Semester**, **Nilai Mapel**, **Data Pendukung**, **Pengaturan Cetak**, **Format Cetak**, dan **Rentang Predikat**. Tahun masuk dibaca dari **Pengaturan**. ID sumber dalam tiap angkatan disimpan bersama ID internal, dan format cetak mengikuti acuan workbook angkatan masing-masing.
+
 ## Impor Excel satu siswa dan satu semester
 
 1. Operator membuka **Detail Semester** dan mengunduh Excel untuk siswa dan semester tersebut. Jika rapornya tersedia, file memuat data RMD saat ini. Untuk rapor yang baru ditemukan, gunakan template yang sesuai dengan format arsipnya.

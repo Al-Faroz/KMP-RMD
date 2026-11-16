@@ -5,9 +5,10 @@
     <style>
         body { color: #202020; font-family: dejavusans, sans-serif; font-size: 9pt; }
         h1 { margin: 4mm 0; font-size: 14pt; text-align: center; }
-        .kop { width: 100%; text-align: center; border-bottom: 1.4pt double #333; }
-        .kop td { padding-bottom: 1mm; }
-        .kop-logo { width: 25mm; }
+        .kop { width: 100%; border-bottom: 1.4pt double #333; }
+        .kop td { padding: 0 0 2mm; vertical-align: middle; }
+        .kop-sisi { width: 25mm; text-align: left; }
+        .kop-teks { width: 136mm; text-align: center; }
         .kop-madrasah { font-family: dejavuserif, serif; font-size: 13pt; font-weight: bold; }
         .kop-alamat { font-family: dejavuserif, serif; font-style: italic; }
         table { border-collapse: collapse; }

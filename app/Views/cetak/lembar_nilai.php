@@ -1,4 +1,6 @@
 <?php
+$jumlahKolom = 2 + count($kolom) + count($kolomPredikat);
+$rowspan = $kolomPredikat === [] ? 1 : 2;
 $angka = static function ($nilai): string {
     if ($nilai === null) {
         return '';
@@ -16,6 +18,7 @@ $angka = static function ($nilai): string {
     .nilai th, .nilai td { border: .45pt solid #777; padding: 1mm; }
     .nilai th { background-color: #eee; }
     .nilai .mapel { text-align: left; }
+    .nilai .subkolom { font-size: 7.5pt; }
     .kelompok { text-align: left; font-weight: bold; background-color: #f4f4f4; }
     .ringkasan { width: 64%; margin-top: 2mm; }
     .ringkasan td { padding: .6mm 1mm; }
@@ -46,31 +49,43 @@ $angka = static function ($nilai): string {
 <table class="nilai">
     <thead>
         <tr>
-            <th style="width: 7%">No.</th><th class="mapel">Mata Pelajaran</th>
-            <?php foreach ($kolom as $label): ?><th><?= esc($label) ?></th><?php endforeach ?>
+            <th style="width: 7%" rowspan="<?= $rowspan ?>">No.</th>
+            <th class="mapel" rowspan="<?= $rowspan ?>">Mata Pelajaran</th>
+            <?php foreach ($kolom as $nama => $label): ?>
+                <?php if (isset($kolomPredikat[$nama])): ?>
+                    <th colspan="2"><?= esc($label) ?></th>
+                <?php else: ?>
+                    <th rowspan="<?= $rowspan ?>"><?= esc($label) ?></th>
+                <?php endif ?>
+            <?php endforeach ?>
         </tr>
+        <?php if ($kolomPredikat !== []): ?>
+            <tr>
+                <?php foreach ($kolomPredikat as $predikat): ?>
+                    <th class="subkolom">Angka</th><th class="subkolom">Predikat</th>
+                <?php endforeach ?>
+            </tr>
+        <?php endif ?>
     </thead>
     <tbody>
         <?php $kelompok = null; ?>
         <?php foreach ($nilai as $i => $item): ?>
             <?php if ($item['kelompok_mapel'] !== null && $item['kelompok_mapel'] !== $kelompok): ?>
-                <tr><td class="kelompok" colspan="<?= count($kolom) + 2 ?>"><?= esc($item['kelompok_mapel']) ?></td></tr>
+                <tr><td class="kelompok" colspan="<?= $jumlahKolom ?>"><?= esc($item['kelompok_mapel']) ?></td></tr>
             <?php endif ?>
             <?php $kelompok = $item['kelompok_mapel']; ?>
             <tr>
                 <td><?= $i + 1 ?></td><td class="mapel"><?= esc($item['nama_mapel_asli']) ?></td>
-                <?php foreach ($kolom as $nama => $label): ?>
-                    <?php $predikat = match ($nama) {
-                        'nilai_pengetahuan' => $item['predikat_pengetahuan'],
-                        'nilai_keterampilan' => $item['predikat_keterampilan'],
-                        default => null,
-                    }; ?>
-                    <td><?= esc($angka($item[$nama])) ?><?= $predikat === null ? '' : ' ' . esc($predikat) ?></td>
+                <?php foreach (array_keys($kolom) as $nama): ?>
+                    <td><?= esc($angka($item[$nama])) ?></td>
+                    <?php if (isset($kolomPredikat[$nama])): ?>
+                        <td><?= esc($item[$kolomPredikat[$nama]] ?? '') ?></td>
+                    <?php endif ?>
                 <?php endforeach ?>
             </tr>
         <?php endforeach ?>
         <?php if ($nilai === []): ?>
-            <tr><td colspan="<?= count($kolom) + 2 ?>">Belum ada nilai yang tersedia.</td></tr>
+            <tr><td colspan="<?= $jumlahKolom ?>">Belum ada nilai yang tersedia.</td></tr>
         <?php endif ?>
     </tbody>
 </table>

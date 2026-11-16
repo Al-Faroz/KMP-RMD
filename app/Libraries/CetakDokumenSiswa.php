@@ -17,6 +17,11 @@ final class CetakDokumenSiswa
         'j_px_ni' => 'JP × Nilai',
     ];
 
+    private const KOLOM_PREDIKAT = [
+        'nilai_pengetahuan' => 'predikat_pengetahuan',
+        'nilai_keterampilan' => 'predikat_keterampilan',
+    ];
+
     public function sampul(array $siswa): string
     {
         return (new PdfRmd())->buat('sampul', 'Sampul Laporan Hasil Belajar', ['siswa' => $siswa]);
@@ -37,7 +42,14 @@ final class CetakDokumenSiswa
     public function nilai(array $siswa, array $rapor, array $nilai, ?array $pengaturan): string
     {
         $kolom = array_filter(self::KOLOM_NILAI, static function (string $field) use ($nilai): bool {
-            return array_filter(array_column($nilai, $field), static fn ($data) => $data !== null) !== [];
+            $predikat = self::KOLOM_PREDIKAT[$field] ?? null;
+            foreach ($nilai as $mapel) {
+                if ($mapel[$field] !== null || ($predikat !== null && $mapel[$predikat] !== null)) {
+                    return true;
+                }
+            }
+
+            return false;
         }, ARRAY_FILTER_USE_KEY);
         $batasNilai = array_filter([
             'KBM' => $rapor['kbm'] ?? $pengaturan['kbm'] ?? null,
@@ -60,6 +72,7 @@ final class CetakDokumenSiswa
             'rapor' => $rapor,
             'nilai' => $nilai,
             'kolom' => $kolom,
+            'kolomPredikat' => array_intersect_key(self::KOLOM_PREDIKAT, $kolom),
             'batasNilai' => $batasNilai,
             'ringkasan' => $ringkasan,
             'pengesahan' => $this->pengesahan($pengaturan),

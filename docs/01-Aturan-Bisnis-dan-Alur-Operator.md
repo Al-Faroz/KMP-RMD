@@ -12,7 +12,7 @@
 | AB-06 | RMD mencetak dari data terbaru di database. Tata letak mengikuti format asli yang tercatat pada rapor semester itu. PDF dibuat saat cetak dan dikirim ke pengguna. Database menyimpan data rapor. |
 | AB-07 | Tersedia tiga pilihan cetak rapor. **Satu siswa satu semester** menghasilkan rapor semester pilihan. **Satu siswa semua semester** menghasilkan satu PDF berisi rapor yang tersedia, urut semester. **Satu rombel satu semester** menghasilkan satu PDF gabungan. |
 | AB-08 | Cetak rombel memakai angkatan, semester, dan rombel pada periode pilihan. Sebelum membuat PDF, tampilkan rapor yang tersedia dan siswa pada rombel tersebut yang arsipnya belum ditemukan. PDF gabungan memuat rapor yang tersedia. |
-| AB-09 | Semua halaman **Cetak Rapor** memakai kertas **F4**. Sampul, halaman identitas, dan dokumen pendukung memiliki tindakan cetak tersendiri. |
+| AB-09 | Semua dokumen cetak memakai kertas **F4 (210 × 330 mm)**, termasuk rapor, sampul, identitas, transkrip, lembar nilai, dan leger. |
 | AB-10 | Antarmuka operator memakai **Bootstrap 5 dan Sneat Free**. Penyesuaian RMD dan tata letak dokumen cetak memakai **CSS biasa**. |
 
 ## Halaman dan alur operator

@@ -14,7 +14,7 @@ CI4 sudah terpasang di `E:\xampp\htdocs\kmp-rdm`. Pengguna sudah menguji URL lok
 | **4. Pemutakhiran rapor** | Edit Rapor, unduh Excel, impor dengan pratinjau, dan penambahan arsip yang ditemukan. | Uji isi baru, penggantian nilai, angka nol, sel kosong, dan file untuk siswa atau semester lain. Pastikan perubahan masuk ke semester yang dipilih. |
 | **5. Cetak satu semester** | Implementasi layout F4 mulai dari KHS1, lalu KHS2 dan RDM Kurikulum Merdeka. Tambahkan RDM K13 setelah acuannya bisa diverifikasi. | Cocokkan setiap format dengan sumber yang relevan. Periksa hasil koreksi identitas dan nilai, pemisah halaman, teks panjang, dan tanda tangan. |
 | **6. Cetak gabungan** | Cetak semua semester satu siswa dan satu rombel satu semester. | Uji satu siswa angkatan 2017 dengan format campuran serta hasil cetak rombel yang memuat format berbeda jika datanya tersedia. Uji satu rombel yang sebagian arsipnya belum tersedia. Urutan semester, format per rapor, dan jumlah rapor di PDF sesuai pilihan. |
-| **7. Cetak dokumen terpisah dan regresi** | Tindakan cetak sampul, halaman identitas, dan dokumen pendukung yang telah dipetakan. Uji ulang alur pencarian, edit, impor, dan cetak. | Tindakan menghasilkan dokumen yang dipilih. Ketiga pilihan **Cetak Rapor** menghasilkan halaman rapor semester di F4. |
+| **7. Cetak dokumen terpisah dan regresi** | Tindakan cetak sampul, halaman identitas, dan dokumen pendukung yang telah dipetakan. Uji ulang alur pencarian, edit, impor, dan cetak. | Setiap keluaran mencetak dokumen yang dipilih pada kertas F4 (210 × 330 mm). |
 
 ### Cara kerja per tahap
 

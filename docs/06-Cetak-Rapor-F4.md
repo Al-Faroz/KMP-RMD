@@ -1,6 +1,6 @@
 # Cetak Rapor F4
 
-RMD membuat PDF dari data terbaru di database saat operator menjalankan tindakan cetak. Semua halaman **Cetak Rapor** memakai F4. Sampul, halaman identitas, dan dokumen pendukung memiliki tindakan cetak tersendiri.
+RMD membuat PDF dari data terbaru di database saat operator menjalankan tindakan cetak. Semua dokumen memakai kertas **F4 (210 × 330 mm)**, termasuk rapor, sampul, identitas, transkrip, lembar nilai, dan leger. Sampul, identitas, dan dokumen pendukung memiliki tindakan cetak tersendiri.
 
 | Aksi | Keluaran |
 |---|---|
@@ -35,9 +35,9 @@ Dari **Detail Siswa**, operator membuka **Cetak Transkrip** untuk melihat PDF sa
 
 | Dokumen | Aksi | Kertas dan isi |
 |---|---|---|
-| Sampul | **Detail Siswa → Cetak Sampul** | A4 potret. Logo Kementerian Agama, judul laporan hasil belajar, nama, NIS dan NISN siswa. |
-| Identitas | **Detail Siswa → Cetak Identitas** | A4 potret. Biodata terkini siswa, penerimaan, orang tua dan wali, dengan ruang pasfoto 3 × 4 cm. Pengesahan memakai pengaturan cetak semester paling awal yang ditemukan. |
-| Lembar Nilai | **Detail Semester → Cetak Lembar Nilai** | 203 × 330 mm potret mengikuti contoh Kartu Hasil Studi. Tampilkan nilai dan predikat tersimpan, beban belajar, dan ringkasan yang tersedia untuk semester pilihan. Tombol tersedia ketika arsip berstatus Ditemukan. |
+| Sampul | **Detail Siswa → Cetak Sampul** | F4 potret. Logo Kementerian Agama, judul laporan hasil belajar, nama, NIS dan NISN siswa. |
+| Identitas | **Detail Siswa → Cetak Identitas** | F4 potret. Biodata terkini siswa, penerimaan, orang tua dan wali, dengan ruang pasfoto 3 × 4 cm. Pengesahan memakai pengaturan cetak semester paling awal yang ditemukan. |
+| Lembar Nilai | **Detail Semester → Cetak Lembar Nilai** | F4 potret. Tampilkan nilai dan predikat tersimpan, beban belajar, dan ringkasan yang tersedia untuk semester pilihan. Tombol tersedia ketika arsip berstatus Ditemukan. |
 
 Satu tata letak per dokumen berlaku untuk keempat tipe rapor. Kolom Lembar Nilai menyesuaikan data arsip tiap semester. Transkrip, Sampul, Identitas, dan Lembar Nilai dibuka di tab baru.
 

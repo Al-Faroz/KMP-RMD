@@ -7,11 +7,13 @@ use Mpdf\Output\Destination;
 
 final class PdfRmd
 {
-    public function buat(string $dokumen, string $judul, array $format, array $data): string
+    private const F4_MM = [210, 330];
+
+    public function buat(string $dokumen, string $judul, array $data): string
     {
         $pdf = new Mpdf([
             'mode' => 'utf-8',
-            'format' => $format,
+            'format' => self::F4_MM,
             'default_font' => 'dejavusans',
             'margin_left' => 12,
             'margin_right' => 12,

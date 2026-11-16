@@ -19,12 +19,12 @@ final class CetakDokumenSiswa
 
     public function sampul(array $siswa): string
     {
-        return (new PdfRmd())->buat('sampul', 'Sampul Laporan Hasil Belajar', [210, 297], ['siswa' => $siswa]);
+        return (new PdfRmd())->buat('sampul', 'Sampul Laporan Hasil Belajar', ['siswa' => $siswa]);
     }
 
     public function identitas(array $siswa, ?array $pengaturan): string
     {
-        return (new PdfRmd())->buat('identitas', 'Identitas Peserta Didik', [210, 297], [
+        return (new PdfRmd())->buat('identitas', 'Identitas Peserta Didik', [
             'siswa' => $siswa,
             'lahir' => implode(', ', array_filter([
                 $siswa['tempat_lahir'], $this->tanggal($siswa['tanggal_lahir']),
@@ -55,7 +55,7 @@ final class CetakDokumenSiswa
             'IP Semester' => $rapor['ip_semester'],
         ], static fn ($data) => $data !== null);
 
-        return (new PdfRmd())->buat('lembar_nilai', 'Kartu Hasil Studi', [203, 330], [
+        return (new PdfRmd())->buat('lembar_nilai', 'Kartu Hasil Studi', [
             'siswa' => $siswa,
             'rapor' => $rapor,
             'nilai' => $nilai,

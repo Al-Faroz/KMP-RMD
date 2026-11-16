@@ -8,7 +8,7 @@ final class CetakTranskrip
 {
     public function buat(array $siswa, array $arsip): string
     {
-        return (new PdfRmd())->buat('transkrip', 'Transkrip Nilai Enam Semester', [210, 330],
+        return (new PdfRmd())->buat('transkrip', 'Transkrip Nilai Enam Semester',
             $this->susun($arsip) + ['siswa' => $siswa]);
     }
 

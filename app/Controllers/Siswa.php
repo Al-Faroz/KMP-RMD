@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\CetakTranskrip;
 use App\Models\RaporSemesterModel;
 use App\Models\SiswaModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -46,6 +47,19 @@ final class Siswa extends BaseController
             'siswa' => $this->temukanSiswa($id),
             'riwayat' => model(RaporSemesterModel::class)->riwayat($id),
         ]);
+    }
+
+    public function transkrip(string $id): ResponseInterface
+    {
+        $siswa = $this->temukanSiswa($id);
+        $arsip = model(RaporSemesterModel::class)->arsipTranskrip($id);
+        $pdf = (new CetakTranskrip())->buat($siswa, $arsip);
+
+        return $this->response
+            ->setContentType('application/pdf')
+            ->setHeader('Cache-Control', 'private, no-store')
+            ->setHeader('Content-Disposition', 'inline; filename="RMD-Transkrip-' . $siswa['id'] . '.pdf"')
+            ->setBody($pdf);
     }
 
     public function semester(string $id, string $semester): string

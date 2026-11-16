@@ -21,6 +21,16 @@ Setiap rapor memilih tata letak dari kode format pada entri rapornya. Dalam satu
 
 Pada pratinjau F4, cocokkan ukuran halaman, susunan kolom, pemisah halaman, keterbacaan deskripsi panjang, dan posisi tanda tangan terhadap acuan format. Nama, NIS dan NISN pada kepala rapor diambil dari Data Siswa sesuai bidang yang dipakai format tersebut.
 
+## Transkrip Nilai Enam Semester
+
+Dari **Detail Siswa**, operator membuka **Cetak Transkrip** untuk melihat PDF satu siswa dengan nilai terbaru dari Semester 1–6. Transkrip memakai F4 potret (210 × 330 mm), kop MTsN 4 Jombang mengikuti RDM Kurikulum Merdeka, identitas terbaru (Nama Siswa dan No. Induk / NISN), serta dua tabel sesuai halaman pertama draf yang disetujui.
+
+- Excel KHS1, ARD KHS2, dan RDM K13 mengisi **A. Nilai Pengetahuan** dan **B. Nilai Keterampilan**. Tiap semester menampilkan angka dan predikat yang tercatat.
+- Semester RDM Kurikulum Merdeka menampilkan **Nilai Akhir** pada tabel A. Judul tabel dan keterangan semester menyatakan jenis nilai yang ditampilkan. Kolom huruf dan tabel keterampilan tetap kosong untuk semester tersebut jika tidak ada komponen padanannya.
+- Rata-rata per mata pelajaran dihitung dari angka yang tersedia pada tiap tabel dan ditampilkan hingga dua desimal. Sel kosong tidak ikut dihitung. Nilai nol tetap dihitung.
+- Nama mapel menggunakan padanan transkrip dari arsip jika tersedia. Sel yang tidak tersedia dibiarkan kosong dan daftar semester yang arsipnya belum ditemukan dicantumkan di bawah tabel.
+- Ruang pengesahan memakai nama, NIP, tempat dan tanggal dari pengaturan cetak rapor terakhir yang tersedia bagi siswa. Ruang tanda tangan disediakan pada akhir dokumen.
+
 ## Implementasi layout dan pemeriksaan
 
 Gunakan view cetak CI4 dengan stylesheet CSS biasa khusus dokumen. Uji dimensi fisik F4 pada keluaran PDF dan lakukan satu uji cetak dari XAMPP menggunakan kertas yang dipakai madrasah. Letakkan tiap rapor pada halaman baru dalam PDF gabungan. Cocokkan isi dan urutan PDF dengan pilihan pada layar.

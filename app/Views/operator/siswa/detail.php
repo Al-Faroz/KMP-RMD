@@ -9,7 +9,10 @@
         <h2 class="h4 mt-2 mb-1"><?= esc($siswa['nama']) ?></h2>
         <p class="mb-0">Angkatan <?= esc($siswa['tahun_masuk']) ?></p>
     </div>
-    <a href="<?= esc(url_to('edit-siswa', $siswa['id']), 'attr') ?>" class="btn btn-primary">Edit Identitas</a>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="<?= esc(url_to('cetak-transkrip', $siswa['id']), 'attr') ?>" class="btn btn-outline-primary">Cetak Transkrip</a>
+        <a href="<?= esc(url_to('edit-siswa', $siswa['id']), 'attr') ?>" class="btn btn-primary">Edit Identitas</a>
+    </div>
 </div>
 
 <?php if ($pesan = session()->getFlashdata('pesan_siswa')): ?>

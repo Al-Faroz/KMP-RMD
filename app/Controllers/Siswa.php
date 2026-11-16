@@ -60,6 +60,7 @@ final class Siswa extends BaseController
 
         return $this->halaman('siswa/semester', 'Semester ' . $semester, [
             'siswa' => $siswa,
+            'nomorSemester' => (int) $semester,
             'rapor' => $rapor,
             'nilai' => $rapor === null ? [] : $model->nilai((string) $rapor['id']),
             'pendukung' => $rapor === null ? [] : $model->dataPendukung((string) $rapor['id']),

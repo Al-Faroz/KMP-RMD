@@ -14,6 +14,12 @@ $angka = static function ($value): string {
 };
 ?>
 <a href="<?= esc(url_to('detail-siswa', $siswa['id']), 'attr') ?>">Kembali ke Detail Siswa</a>
+<?php if ($pesan = session()->getFlashdata('pesan_rapor')): ?>
+    <div class="alert alert-success mt-3" role="status"><?= esc($pesan) ?></div>
+<?php endif ?>
+<?php if ($galat = session()->getFlashdata('galat_rapor')): ?>
+    <div class="alert alert-danger mt-3" role="alert"><?= esc($galat) ?></div>
+<?php endif ?>
 <div class="card card-body mt-3 mb-4">
     <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
         <h2 class="h5 mb-0"><?= esc($siswa['nama']) ?></h2>
@@ -35,6 +41,27 @@ $angka = static function ($value): string {
         <?php endforeach ?>
     </dl>
 </div>
+
+<div class="d-flex flex-wrap gap-2 mb-3">
+    <a href="<?= esc(url_to('edit-rapor', $siswa['id'], $nomorSemester), 'attr') ?>" class="btn btn-primary">Edit Rapor</a>
+    <a href="<?= esc(url_to('excel-rapor', $siswa['id'], $nomorSemester), 'attr') ?>" class="btn btn-outline-primary">
+        <?= $status === 'Ditemukan' ? 'Unduh Excel' : 'Unduh Template Excel' ?>
+    </a>
+</div>
+<details class="card card-body mb-4"<?= isset($galat) && $galat ? ' open' : '' ?>>
+    <summary class="fw-semibold">Impor Excel</summary>
+    <form method="post" action="<?= esc(url_to('pratinjau-rapor', $siswa['id'], $nomorSemester), 'attr') ?>"
+          enctype="multipart/form-data" class="row align-items-end g-3 mt-1">
+        <?= csrf_field() ?>
+        <div class="col-md">
+            <label for="file-rapor" class="form-label">File Excel rapor semester ini</label>
+            <input type="file" class="form-control" id="file-rapor" name="workbook" accept=".xlsx" required>
+        </div>
+        <div class="col-md-auto">
+            <button type="submit" class="btn btn-primary">Pratinjau Impor</button>
+        </div>
+    </form>
+</details>
 
 <?php if ($nilai !== []): ?>
     <?php

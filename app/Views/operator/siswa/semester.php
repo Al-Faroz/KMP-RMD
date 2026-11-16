@@ -47,6 +47,10 @@ $angka = static function ($value): string {
     <a href="<?= esc(url_to('excel-rapor', $siswa['id'], $nomorSemester), 'attr') ?>" class="btn btn-outline-primary">
         <?= $status === 'Ditemukan' ? 'Unduh Excel' : 'Unduh Template Excel' ?>
     </a>
+    <?php if ($status === 'Ditemukan'): ?>
+        <a href="<?= esc(url_to('cetak-lembar-nilai', $siswa['id'], $nomorSemester), 'attr') ?>" target="_blank" rel="noopener"
+           class="btn btn-outline-primary">Cetak Lembar Nilai</a>
+    <?php endif ?>
 </div>
 <details class="card card-body mb-4"<?= isset($galat) && $galat ? ' open' : '' ?>>
     <summary class="fw-semibold">Impor Excel</summary>

@@ -44,7 +44,7 @@ Detail penempatan entry point dan konfigurasi lokal ada di [02 · Arsitektur Cod
 |---|---|
 | Dependensi antarmuka | Tag atau commit Sneat Free dan versi Bootstrap 5 yang menyertainya. |
 | Akun dan hak akses | Mekanisme autentikasi serta siapa yang boleh melihat, mengubah, mengimpor, dan mencetak. |
-| Format cetak | Acuan visual RDM Kurikulum 2013, perangkat lunak pembuat PDF, dan ukuran fisik F4 yang dipakai madrasah untuk pengujian. |
+| Format cetak | Acuan visual RDM Kurikulum 2013. |
 | Dokumen cetak terpisah | Cakupan dokumen pendukung di luar sampul dan halaman identitas. |
 
 [Draf Master Dokumen RMD v0.1](https://chatgpt.com/library?file_id=libfile_36c2e286f8c8819183acf94241a0b306&account_id=personal)

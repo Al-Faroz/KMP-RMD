@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Libraries\CetakDokumenSiswa;
+use App\Libraries\CetakTranskrip;
 use App\Models\RaporSemesterModel;
 use App\Models\SiswaModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -48,12 +50,48 @@ final class Siswa extends BaseController
         ]);
     }
 
-    public function semester(string $id, string $semester): string
+    public function transkrip(string $id): ResponseInterface
     {
-        if (! in_array($semester, ['1', '2', '3', '4', '5', '6'], true)) {
-            throw PageNotFoundException::forPageNotFound('Semester tidak ditemukan.');
+        $siswa = $this->temukanSiswa($id);
+        $arsip = model(RaporSemesterModel::class)->arsipTranskrip($id);
+        return $this->pdf('Transkrip-' . $siswa['id'], (new CetakTranskrip())->buat($siswa, $arsip));
+    }
+
+    public function sampul(string $id): ResponseInterface
+    {
+        $siswa = $this->temukanSiswa($id);
+
+        return $this->pdf('Sampul-' . $siswa['id'], (new CetakDokumenSiswa())->sampul($siswa));
+    }
+
+    public function cetakIdentitas(string $id): ResponseInterface
+    {
+        $siswa = $this->temukanSiswa($id);
+        $pengaturan = model(RaporSemesterModel::class)->pengaturanIdentitas($id);
+
+        return $this->pdf('Identitas-' . $siswa['id'], (new CetakDokumenSiswa())->identitas($siswa, $pengaturan));
+    }
+
+    public function lembarNilai(string $id, string $semester): ResponseInterface
+    {
+        $this->validasiSemester($semester);
+        $siswa = $this->temukanSiswa($id);
+        $model = model(RaporSemesterModel::class);
+        $rapor = $model->detail($id, (int) $semester);
+        if (($rapor['status_arsip'] ?? null) !== 'Ditemukan') {
+            throw PageNotFoundException::forPageNotFound('Arsip rapor semester ini belum ditemukan.');
         }
 
+        $nilai = $model->nilai((string) $rapor['id']);
+        $pengaturan = $model->pengaturanCetak($rapor['pengaturan_cetak_id']);
+        $pdf = (new CetakDokumenSiswa())->nilai($siswa, $rapor, $nilai, $pengaturan);
+
+        return $this->pdf('Lembar-Nilai-' . $siswa['id'] . '-Semester-' . $semester, $pdf);
+    }
+
+    public function semester(string $id, string $semester): string
+    {
+        $this->validasiSemester($semester);
         $siswa = $this->temukanSiswa($id);
         $model = model(RaporSemesterModel::class);
         $rapor = $model->detail($id, (int) $semester);
@@ -114,6 +152,22 @@ final class Siswa extends BaseController
         }
 
         return redirect()->route('detail-siswa', [$id], 303)->with('pesan_siswa', 'Identitas siswa tersimpan.')->withCookies();
+    }
+
+    private function validasiSemester(string $semester): void
+    {
+        if (! in_array($semester, ['1', '2', '3', '4', '5', '6'], true)) {
+            throw PageNotFoundException::forPageNotFound('Semester tidak ditemukan.');
+        }
+    }
+
+    private function pdf(string $nama, string $isi): ResponseInterface
+    {
+        return $this->response
+            ->setContentType('application/pdf')
+            ->setHeader('Cache-Control', 'private, no-store')
+            ->setHeader('Content-Disposition', 'inline; filename="RMD-' . $nama . '.pdf"')
+            ->setBody($isi);
     }
 
     private function filterPencarian(): array

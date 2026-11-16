@@ -1,6 +1,6 @@
 # Cetak Rapor F4
 
-RMD membuat PDF dari data terbaru di database saat operator menjalankan tindakan cetak. Semua halaman **Cetak Rapor** memakai F4. Sampul, halaman identitas, dan dokumen pendukung memiliki tindakan cetak tersendiri.
+RMD membuat PDF dari data terbaru di database saat operator menjalankan tindakan cetak. Semua dokumen memakai kertas **F4 (210 × 330 mm)**, termasuk rapor, sampul, identitas, transkrip, lembar nilai, dan leger. Sampul, identitas, dan dokumen pendukung memiliki tindakan cetak tersendiri.
 
 | Aksi | Keluaran |
 |---|---|
@@ -20,6 +20,26 @@ Setiap rapor memilih tata letak dari kode format pada entri rapornya. Dalam satu
 | `RDM_K13` | Data tersedia di workbook final. Tata letak rapor Kurikulum 2013 masih perlu dicocokkan dengan contoh asli dari periode yang relevan. |
 
 Pada pratinjau F4, cocokkan ukuran halaman, susunan kolom, pemisah halaman, keterbacaan deskripsi panjang, dan posisi tanda tangan terhadap acuan format. Nama, NIS dan NISN pada kepala rapor diambil dari Data Siswa sesuai bidang yang dipakai format tersebut.
+
+## Transkrip Nilai Enam Semester
+
+Dari **Detail Siswa**, operator membuka **Cetak Transkrip** untuk melihat PDF satu siswa dengan nilai terbaru dari Semester 1–6. Transkrip memakai F4 potret (210 × 330 mm), kop MTsN 4 Jombang mengikuti RDM Kurikulum Merdeka, identitas terbaru (Nama Siswa dan No. Induk / NISN), serta dua tabel sesuai halaman pertama draf yang disetujui.
+
+- Excel KHS1, ARD KHS2, dan RDM K13 mengisi **A. Nilai Pengetahuan** dan **B. Nilai Keterampilan**. Tiap semester menampilkan angka dan predikat yang tercatat.
+- Semester RDM Kurikulum Merdeka menampilkan **Nilai Akhir** pada tabel A. Judul tabel dan keterangan semester menyatakan jenis nilai yang ditampilkan. Kolom huruf dan tabel keterampilan tetap kosong untuk semester tersebut jika tidak ada komponen padanannya.
+- Rata-rata per mata pelajaran dihitung dari angka yang tersedia pada tiap tabel dan ditampilkan hingga dua desimal. Sel kosong tidak ikut dihitung. Nilai nol tetap dihitung.
+- Nama mapel menggunakan padanan transkrip dari arsip jika tersedia. Sel yang tidak tersedia dibiarkan kosong dan daftar semester yang arsipnya belum ditemukan dicantumkan di bawah tabel.
+- Ruang pengesahan memakai nama, NIP, tempat dan tanggal dari pengaturan cetak rapor terakhir yang tersedia bagi siswa. Ruang tanda tangan disediakan pada akhir dokumen.
+
+## Dokumen per siswa
+
+| Dokumen | Aksi | Kertas dan isi |
+|---|---|---|
+| Sampul | **Detail Siswa → Cetak Sampul** | F4 potret. Logo Kementerian Agama, judul laporan hasil belajar, nama, NIS dan NISN siswa. |
+| Identitas | **Detail Siswa → Cetak Identitas** | F4 potret. Biodata terkini siswa, penerimaan, orang tua dan wali, dengan ruang pasfoto 3 × 4 cm. Pengesahan memakai pengaturan cetak semester paling awal yang ditemukan. |
+| Lembar Nilai | **Detail Semester → Cetak Lembar Nilai** | F4 potret. Tampilkan nilai dan predikat tersimpan, beban belajar, dan ringkasan yang tersedia untuk semester pilihan. Tombol tersedia ketika arsip berstatus Ditemukan. |
+
+Satu tata letak per dokumen berlaku untuk keempat tipe rapor. Kolom Lembar Nilai menyesuaikan data arsip tiap semester. Transkrip, Sampul, Identitas, dan Lembar Nilai dibuka di tab baru.
 
 ## Implementasi layout dan pemeriksaan
 

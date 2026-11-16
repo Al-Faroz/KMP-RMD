@@ -1,0 +1,72 @@
+# Arsitektur CodeIgniter 4
+
+CI4 menangani permintaan halaman, validasi input, transaksi data, serta pembuatan keluaran Excel dan PDF. Aturan fungsional mengacu pada [01 · Aturan Bisnis dan Alur Operator](01-Aturan-Bisnis-dan-Alur-Operator.md).
+
+## Baseline CI4 di XAMPP
+
+- Proyek lokal berada di `E:\xampp\htdocs\kmp-rdm`. Pengguna sudah membuka [http://localhost/kmp-rdm/](http://localhost/kmp-rdm/) dan melihat halaman **Welcome CodeIgniter**.
+- File publik awal telah disalin ke root proyek. Di branch `main`, `index.php` berada sejajar dengan `app/` dan memuat `app/Config/Paths.php` dari root. Apache memakai entry point ini untuk URL lokal yang sudah berjalan. [index.php](https://github.com/Al-Faroz/KMP-RMD/blob/main/index.php)
+- Repository menetapkan PHP `^8.2` dan CI4 `^4.7` di `composer.json`. Versi CI4 yang terkunci adalah `4.7.6`. [composer.json](https://github.com/Al-Faroz/KMP-RMD/blob/main/composer.json) · [composer.lock](https://github.com/Al-Faroz/KMP-RMD/blob/main/composer.lock)
+- Jalankan pengembangan dari checkout tersebut. Untuk instalasi dependensi pada checkout baru, gunakan `composer install` agar versinya mengikuti `composer.lock`. [Instalasi Composer](https://codeigniter.com/user_guide/installation/installing_composer.html)
+
+## Struktur proyek
+
+| Lokasi | Tanggung jawab |
+|---|---|
+| `index.php` | Entry point aplikasi di root proyek, sejajar dengan `app/`. |
+| `.htaccess` | Aturan Apache pada root proyek. |
+| `app/Config/Routes.php` | Daftar rute eksplisit untuk halaman operator, perubahan data, impor, dan cetak. |
+| `app/Controllers/` | Menerima permintaan, menjalankan validasi dan pemeriksaan akses, memanggil proses aplikasi, lalu mengembalikan view, redirect, atau unduhan. |
+| `app/Models/` | Akses siswa, rapor semester, nilai mapel, dan pengaturan cetak. |
+| `app/Libraries/` | Proses impor data awal, pratinjau dan konfirmasi Excel, penyusunan data cetak, dan integrasi pembuat PDF. |
+| `app/Database/Migrations/` | Perubahan skema yang dapat dijalankan melalui CLI. |
+| `app/Views/` | Layout operator, halaman kerja, dan layout dokumen cetak. |
+| `public/assets/` | Aset web yang dipakai browser. |
+| `writable/` | Cache, log, dan area kerja internal saat dibutuhkan. |
+| `tests/` | Uji relasi data, impor, edit, dan penyusunan keluaran cetak. |
+| `docs/` | Master Dokumen dan referensi pengembangan. |
+
+## Konfigurasi aplikasi lokal
+
+File `.env` berada di root proyek lokal. Setelan aplikasi yang dilaporkan pengguna:
+
+```dotenv
+CI_ENVIRONMENT = development
+app.baseURL = 'http://localhost/kmp-rdm/'
+app.forceGlobalSecureRequests = false
+app.CSPEnabled = false
+session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+logger.threshold = 4
+```
+
+Konfigurasi database tercatat pada [05 · Database dan Impor Excel](05-Database-dan-Impor-Excel.md). `.env` merupakan konfigurasi lokal yang dikecualikan dari Git. Pada uji baseline Apache, pastikan akses HTTP langsung ke `.env`, `app/`, `vendor/`, dan `writable/` tertutup karena URL lokal memakai entry point di root. [Aturan Git](https://github.com/Al-Faroz/KMP-RMD/blob/main/.gitignore) · [Aturan Apache](https://github.com/Al-Faroz/KMP-RMD/blob/main/.htaccess)
+
+## Rute usulan
+
+Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu entri semester mengikat operasi baca, edit, impor, dan cetak. Detail format dan keluaran mengikuti [06 · Cetak Rapor F4](06-Cetak-Rapor-F4.md).
+
+| Metode | Rute | Tindakan |
+|---|---|---|
+| GET | `/siswa` | Cari siswa dan filter angkatan. |
+| GET | `/siswa/{siswa}` | Buka detail dan riwayat semester. |
+| GET / POST | `/siswa/{siswa}/edit` | Buka form dan simpan identitas. |
+| GET | `/siswa/{siswa}/semester/{semester}` | Buka detail semester. |
+| GET / POST | `/siswa/{siswa}/semester/{semester}/edit` | Buka form dan simpan rapor semester. |
+| GET | `/siswa/{siswa}/semester/{semester}/excel` | Unduh Excel satu siswa dan satu semester. |
+| POST | `/siswa/{siswa}/semester/{semester}/impor/pratinjau` | Validasi file dan tampilkan perubahan. |
+| POST | `/siswa/{siswa}/semester/{semester}/impor/konfirmasi` | Simpan perubahan yang dikonfirmasi. |
+| GET | `/siswa/{siswa}/semester/{semester}/cetak` | Buat PDF satu rapor dari data terkini. |
+| GET | `/siswa/{siswa}/cetak-semua-semester` | Buat PDF gabungan rapor yang tersedia. |
+| GET | `/cetak-rombel` | Pilih angkatan, semester, dan rombel, lalu tinjau daftar rapor. |
+| GET | `/cetak-rombel/pdf` | Buat PDF gabungan dari pilihan rombel. |
+
+Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Rute dokumen pendukung ditentukan saat cakupannya disepakati.
+
+## Validasi dan akses
+
+- Validasi bahwa siswa dan semester pada rute sesuai dengan data yang dibuka. Untuk impor, cocokkan juga identitas target dan semester file dengan rute.
+- Terapkan validasi server untuk perubahan data dan CSRF untuk form yang menulis data. Preview impor memuat perubahan yang terkait dengan sesi operator dan target yang sama saat dikonfirmasi.
+- Otorisasi eksekusi di sisi server setelah kebijakan akun disetujui. Pemeriksaan berlaku juga untuk unduhan Excel dan PDF yang berisi data siswa.
+- Pembuatan PDF membaca data terkini dan mengirim hasil ke pengguna. Database menyimpan data rapor dan konfigurasi cetak.
+
+Model akun, library Excel, dan pembuat PDF masih perlu ditetapkan. Kriteria penerimaan setiap tahap tersedia di [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md).

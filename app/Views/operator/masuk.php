@@ -19,6 +19,10 @@ $assetPath = realpath(FCPATH) === realpath(ROOTPATH) ? 'public/assets/' : 'asset
         </div>
         <h1 class="h3 mb-4">Masuk</h1>
 
+        <?php if ($sukses = session()->getFlashdata('sukses')): ?>
+            <p class="alert alert-success mb-3" role="status"><?= esc($sukses) ?></p>
+        <?php endif ?>
+
         <?php if ($galat !== '' || ($galat = session()->getFlashdata('error'))): ?>
             <p class="alert alert-danger mb-3" role="alert"><?= esc($galat) ?></p>
         <?php endif ?>

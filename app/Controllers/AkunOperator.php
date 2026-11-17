@@ -43,7 +43,7 @@ final class AkunOperator extends BaseController
         $throttler->remove($batas);
         $session = session();
         $session->regenerate(true);
-        $session->set(['operator_id' => $operator['id'], 'operator_nama' => $operator['nama_lengkap']]);
+        $session->set($operator);
 
         return $this->berhasil();
     }
@@ -51,7 +51,6 @@ final class AkunOperator extends BaseController
     public function keluar(): ResponseInterface
     {
         $session = session();
-        $session->remove(['operator_id', 'operator_nama']);
         $session->destroy();
 
         return redirect()->route('masuk', [], 303)->withCookies()->setHeader('Cache-Control', 'private, no-store');

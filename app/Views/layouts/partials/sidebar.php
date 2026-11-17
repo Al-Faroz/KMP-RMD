@@ -2,6 +2,7 @@
 $menuItems = [
     'data-siswa' => ['label' => 'Data Siswa', 'icon' => 'bx-group'],
     'cetak-rombel' => ['label' => 'Cetak Rombel', 'icon' => 'bx-printer'],
+    'daftar-operator' => ['label' => 'Operator', 'icon' => 'bx-group'],
 ];
 ?>
 <aside id="menu-operator" class="offcanvas-xl offcanvas-start rmd-sidebar" tabindex="-1" aria-labelledby="judul-menu-operator">

@@ -15,21 +15,50 @@ final class OperatorModel extends Model
 
     public function buatAkun(string $nama, string $username, #[\SensitiveParameter] string $password): void
     {
-        $nama = trim($nama);
-        $username = $this->username($username) ?? throw new DomainException('Username memakai 1–64 huruf, angka, titik, garis bawah atau tanda hubung.');
-        if ($nama === '' || mb_strlen($nama) > 255) {
-            throw new DomainException('Masukkan nama lengkap maksimal 255 karakter.');
-        }
-        if (mb_strlen($password) < 8 || strlen($password) > 72 || str_contains($password, "\0")) {
-            throw new DomainException('Kata sandi harus memiliki minimal 8 karakter dan maksimal 72 byte.');
-        }
-        if ($this->where('username', $username)->first() !== null) {
-            throw new DomainException('Username sudah dipakai.');
-        }
-
-        if ($this->insert(['nama_lengkap' => $nama, 'username' => $username, 'password_hash' => password_hash($password, PASSWORD_DEFAULT)]) === false) {
+        if ($this->insert($this->dataAkun($nama, $username, $password)) === false) {
             throw new DomainException('Akun operator gagal disimpan.');
         }
+    }
+
+    public function ubahAkun(int $id, string $nama, string $username, #[\SensitiveParameter] string $password): void
+    {
+        $data = $this->dataAkun($nama, $username, $password === '' ? null : $password, $id);
+        if ($this->update($id, $data) === false) {
+            throw new DomainException('Akun operator gagal disimpan.');
+        }
+    }
+
+    public function hapusAkun(int $id, int $idOperator): void
+    {
+        if ($id === $idOperator) {
+            throw new DomainException('Akun yang sedang digunakan tidak bisa dihapus.');
+        }
+
+        if (! $this->db->transBegin()) {
+            throw new DomainException('Penghapusan akun gagal dimulai.');
+        }
+
+        try {
+            // Lock both accounts so concurrent requests cannot delete each other's accounts.
+            $tabel = $this->db->protectIdentifiers($this->table, true);
+            $akun = $this->db->query("SELECT id FROM {$tabel} WHERE id IN (?, ?) ORDER BY id FOR UPDATE", [$id, $idOperator]);
+            if ($akun === false || $akun->getNumRows() !== 2 || ! $this->delete($id)
+                || ! $this->db->transStatus() || ! $this->db->transCommit()) {
+                throw new DomainException('Akun tidak dapat dihapus. Muat ulang daftar operator.');
+            }
+        } catch (\Throwable $e) {
+            $this->db->transRollback();
+            throw $e;
+        }
+    }
+
+    public function profilSesi(array $operator): array
+    {
+        return [
+            'operator_id' => $operator['id'],
+            'operator_nama' => $operator['nama_lengkap'],
+            'operator_kunci' => hash('sha256', $operator['password_hash']),
+        ];
     }
 
     public function autentikasi(string $username, #[\SensitiveParameter] string $password): ?array
@@ -44,7 +73,30 @@ final class OperatorModel extends Model
             return null;
         }
 
-        return ['id' => $operator['id'], 'nama_lengkap' => $operator['nama_lengkap']];
+        return $this->profilSesi($operator);
+    }
+
+    private function dataAkun(string $nama, string $username, #[\SensitiveParameter] ?string $password, ?int $id = null): array
+    {
+        $nama = trim($nama);
+        $username = $this->username($username) ?? throw new DomainException('Username memakai 1–64 huruf, angka, titik, garis bawah atau tanda hubung.');
+        if ($nama === '' || mb_strlen($nama) > 255) {
+            throw new DomainException('Masukkan nama lengkap maksimal 255 karakter.');
+        }
+        if ($password !== null && (mb_strlen($password) < 8 || strlen($password) > 72 || str_contains($password, "\0"))) {
+            throw new DomainException('Kata sandi harus memiliki minimal 8 karakter dan maksimal 72 byte.');
+        }
+        $akun = $this->where('username', $username)->first();
+        if ($akun !== null && (int) $akun['id'] !== $id) {
+            throw new DomainException('Username sudah dipakai.');
+        }
+
+        $data = ['nama_lengkap' => $nama, 'username' => $username];
+        if ($password !== null) {
+            $data['password_hash'] = password_hash($password, PASSWORD_DEFAULT);
+        }
+
+        return $data;
     }
 
     private function username(string $username): ?string

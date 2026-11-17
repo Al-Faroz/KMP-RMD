@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Libraries\CetakLeger;
 use App\Libraries\CetakRapor;
 use App\Models\RaporSemesterModel;
 use App\Models\SiswaModel;
@@ -46,9 +47,36 @@ class Operator extends BaseController
         $namaRombel = preg_replace('/[^A-Za-z0-9_-]+/', '-', $rombel);
         $nama = "RMD-Rapor-Rombel-{$angkatan}-{$namaRombel}-Semester-{$semester}.pdf";
 
+        return $this->pdf($nama, $cetak->buat("Rapor {$rombel} Semester {$semester} Angkatan {$angkatan}", $arsip, $model));
+    }
+
+    public function pdfLeger(): ResponseInterface
+    {
+        $model = model(RaporSemesterModel::class);
+        ['angkatan' => $angkatan, 'semester' => $semester, 'rombel' => $rombel] = $this->pilihanRombel($model);
+        if ($rombel === '') {
+            throw PageNotFoundException::forPageNotFound('Pilihan angkatan, semester, dan rombel tidak ditemukan.');
+        }
+
+        $anggota = $model->anggotaRombel($angkatan, $semester, $rombel);
+        if ($anggota === []) {
+            throw PageNotFoundException::forPageNotFound('Belum ada siswa yang tercatat untuk rombel ini.');
+        }
+
+        $arsip = array_filter($anggota, static fn (array $rapor): bool => $rapor['status_arsip'] === 'Ditemukan');
+        $nilai = $model->nilaiLeger(array_column($arsip, 'id'));
+        $idPengaturan = array_unique(array_filter(array_column($arsip, 'pengaturan_cetak_id')));
+        $pengaturan = count($idPengaturan) === 1 ? $model->pengaturanCetak(reset($idPengaturan)) : null;
+        $namaRombel = preg_replace('/[^A-Za-z0-9_-]+/', '-', $rombel);
+        $nama = "RMD-Leger-{$angkatan}-{$namaRombel}-Semester-{$semester}.pdf";
+
+        return $this->pdf($nama, (new CetakLeger())->buat($angkatan, $semester, $rombel, $anggota, $nilai, $pengaturan));
+    }
+
+    private function pdf(string $nama, string $isi): ResponseInterface
+    {
         return $this->response->setContentType('application/pdf')->setHeader('Cache-Control', 'private, no-store')
-            ->setHeader('Content-Disposition', 'inline; filename="' . $nama . '"')
-            ->setBody($cetak->buat("Rapor {$rombel} Semester {$semester} Angkatan {$angkatan}", $arsip, $model));
+            ->setHeader('Content-Disposition', 'inline; filename="' . $nama . '"')->setBody($isi);
     }
 
     private function pilihanRombel(RaporSemesterModel $model): array

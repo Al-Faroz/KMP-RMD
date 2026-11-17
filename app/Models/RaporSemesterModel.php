@@ -85,6 +85,19 @@ final class RaporSemesterModel extends Model
             ->orderBy('urutan_mapel')->orderBy('id')->get()->getResultArray();
     }
 
+    public function nilaiLeger(array $raporIds): array
+    {
+        if ($raporIds === []) {
+            return [];
+        }
+
+        return $this->db->table('nilai_mapel')
+            ->select('rapor_semester_id, nama_mapel_asli, nama_mapel_leger, urutan_mapel, nilai_akhir, rata_rata_ard, '
+                . 'nilai_pengetahuan, nilai_keterampilan')
+            ->whereIn('rapor_semester_id', $raporIds)
+            ->orderBy('rapor_semester_id')->orderBy('urutan_mapel')->orderBy('id')->get()->getResultArray();
+    }
+
     public function arsipTranskrip(string $siswaId): array
     {
         return $this->db->table('rapor_semester r')

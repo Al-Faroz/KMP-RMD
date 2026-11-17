@@ -9,16 +9,17 @@ final class PdfRmd
 {
     private const F4_MM = [210, 330];
 
-    public function buat(string $dokumen, string $judul, array $data): string
+    public function buat(string $dokumen, string $judul, array $data, bool $lanskap = false): string
     {
-        return $this->gabungkan($dokumen, $judul, [$data]);
+        return $this->gabungkan($dokumen, $judul, [$data], $lanskap);
     }
 
-    public function gabungkan(string $dokumen, string $judul, iterable $isi): string
+    public function gabungkan(string $dokumen, string $judul, iterable $isi, bool $lanskap = false): string
     {
         $pdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => self::F4_MM,
+            'orientation' => $lanskap ? 'L' : 'P',
             'default_font' => 'dejavusans',
             'margin_left' => 12,
             'margin_right' => 12,

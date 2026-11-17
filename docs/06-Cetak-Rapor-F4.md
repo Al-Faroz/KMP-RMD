@@ -12,7 +12,7 @@ RMD membuat PDF dari data terbaru di database saat operator menjalankan tindakan
 
 Pilih angkatan, semester, dan rombel pada halaman **Cetak Rombel**. Setelah daftar siswa tampil, **Cetak Leger** membuka PDF F4 lanskap (330 × 210 mm) dengan satu baris per siswa pada setiap bagian tabel dan satu kolom per mapel. Nama dan urutan siswa mengikuti daftar rombel. Arsip yang belum ditemukan tetap muncul dengan statusnya.
 
-Nilai diambil dari arsip. Kurikulum Merdeka memakai **Nilai Akhir**, ARD memakai **Rata-rata ARD** jika tersedia, dan nilai Pengetahuan serta Keterampilan yang tersimpan terpisah dicetak sebagai pasangan angka **Pengetahuan/Keterampilan**. Rombel dengan banyak mapel dibagi menjadi bagian kolom dengan pengulangan identitas siswa. Kepala tabel diulangi pada halaman lanjutan.
+Nilai diambil dari arsip. Setiap mapel dengan nilai **Pengetahuan (P)** dan **Keterampilan (K)** menampilkan keduanya pada subkolom terpisah. **Nilai Akhir** tampil pada subkolom **Akhir** jika tersedia. Bila sebuah arsip ARD hanya mempunyai rata-rata, nilai itu tampil di subkolom **Rata ARD**. **IP Semester** berada di kolom tersendiri dengan dua desimal, mengikuti angka yang tersimpan. Nilai yang tidak tersedia ditandai dengan garis, dan nilai nol tetap tercetak. Tabel lebar dibagi menjadi beberapa bagian tanpa memisahkan subkolom satu mapel. Nama siswa dan IP diulangi pada setiap bagian. Kepala tabel diulangi pada halaman lanjutan.
 
 ## Format historis
 

@@ -6,7 +6,13 @@ use CodeIgniter\I18n\Time;
 
 final class CetakLeger
 {
-    private const MAPEL_PER_BAGIAN = 18;
+    private const MAKS_KOLOM_NILAI = 22;
+    private const SUBKOLOM = [
+        'nilai_pengetahuan' => 'P',
+        'nilai_keterampilan' => 'K',
+        'nilai_akhir' => 'Akhir',
+        'rata_rata_ard' => 'Rata ARD',
+    ];
 
     private const SINGKATAN = [
         'alquranhadis' => 'QH',
@@ -34,7 +40,6 @@ final class CetakLeger
 
     public function buat(int $angkatan, int $semester, string $rombel, array $anggota, array $nilai, ?array $pengaturan): string
     {
-        $siswa = array_column($anggota, null, 'id');
         $mapel = $nilaiSiswa = [];
         foreach ($nilai as $item) {
             $id = $item['rapor_semester_id'];
@@ -47,18 +52,31 @@ final class CetakLeger
 
             $urutan = $item['urutan_mapel'] ?? PHP_INT_MAX;
             $alias = trim((string) $item['nama_mapel_leger']);
-            $mapel[$kunci] ??= ['nama' => $nama, 'alias' => '', 'urutan' => $urutan];
+            $mapel[$kunci] ??= ['nama' => $nama, 'alias' => '', 'urutan' => $urutan, 'bidang' => []];
             $mapel[$kunci]['urutan'] = min($mapel[$kunci]['urutan'], $urutan);
             if ($mapel[$kunci]['alias'] === '' && $alias !== '') {
                 $mapel[$kunci]['alias'] = $alias;
             }
 
-            $nilaiSiswa[$id][$kunci] = $this->nilaiCetak($siswa[$id]['kode_format'], $item);
+            $angka = array_intersect_key($item, self::SUBKOLOM);
+            if ($angka['nilai_pengetahuan'] !== null || $angka['nilai_keterampilan'] !== null) {
+                $mapel[$kunci]['bidang']['nilai_pengetahuan'] = true;
+                $mapel[$kunci]['bidang']['nilai_keterampilan'] = true;
+                $angka['rata_rata_ard'] = null;
+            }
+            foreach (['nilai_akhir', 'rata_rata_ard'] as $field) {
+                if ($angka[$field] !== null) {
+                    $mapel[$kunci]['bidang'][$field] = true;
+                }
+            }
+
+            $nilaiSiswa[$id][$kunci] = $angka;
         }
 
         uasort($mapel, static fn (array $a, array $b): int => [$a['urutan'], $a['nama']] <=> [$b['urutan'], $b['nama']]);
         foreach ($mapel as $kunci => &$item) {
             $item['label'] = self::SINGKATAN[$kunci] ?? ($item['alias'] !== '' ? $item['alias'] : $item['nama']);
+            $item['kolom'] = array_intersect_key(self::SUBKOLOM, $item['bidang']);
         }
         unset($item);
 
@@ -69,10 +87,7 @@ final class CetakLeger
             $nilai = array_unique(array_filter(array_column($baris, $field)));
             return count($nilai) === 1 ? (string) reset($nilai) : null;
         };
-        $ringkasan = array_filter([
-            'Total nilai akhir' => 'total_nilai_akhir',
-            'IP Semester' => 'ip_semester',
-        ], static fn (string $field): bool => array_filter(array_column($arsip, $field), static fn ($nilai): bool => $nilai !== null) !== []);
+        $adaTotalAkhir = array_filter(array_column($arsip, 'total_nilai_akhir'), static fn ($nilai): bool => $nilai !== null) !== [];
         $batas = [];
         foreach (['KBM', 'KKM', 'KKTP'] as $label) {
             $field = strtolower($label);
@@ -96,7 +111,7 @@ final class CetakLeger
             'kepala' => $pengaturan['nama_kepala_madrasah'] ?? null,
             'nipKepala' => $pengaturan['nip_kepala_madrasah'] ?? null,
         ];
-        $bagian = array_chunk($mapel, self::MAPEL_PER_BAGIAN, true) ?: [[]];
+        $bagian = $this->bagiKolom($mapel);
         $isi = [];
         foreach ($bagian as $i => $kolom) {
             $isi[] = [
@@ -104,7 +119,7 @@ final class CetakLeger
                 'tahunPelajaran' => implode(', ', $periode),
                 'periodeCampuran' => count($periode) > 1,
                 'anggota' => $anggota, 'nilaiSiswa' => $nilaiSiswa,
-                'mapel' => $kolom, 'ringkasan' => $ringkasan, 'batas' => $batas,
+                'mapel' => $kolom, 'adaTotalAkhir' => $adaTotalAkhir, 'batas' => $batas,
                 'bagian' => $i + 1, 'jumlahBagian' => count($bagian),
                 'pengesahan' => $pengesahan,
             ];
@@ -113,22 +128,24 @@ final class CetakLeger
         return (new PdfRmd())->gabungkan('leger', "Leger {$rombel} Semester {$semester}", $isi, true);
     }
 
-    private function nilaiCetak(?string $kode, array $item): string
+    private function bagiKolom(array $mapel): array
     {
-        if ($item['nilai_akhir'] !== null && ($kode === 'RDM_PDF_2023_VIIA' || $kode === null)) {
-            return $this->angka($item['nilai_akhir']);
+        $bagian = [];
+        $kolom = [];
+        $jumlah = 0;
+        foreach ($mapel as $kunci => $item) {
+            $lebar = max(1, count($item['kolom']));
+            if ($jumlah + $lebar > self::MAKS_KOLOM_NILAI) {
+                $bagian[] = $kolom;
+                $kolom = [];
+                $jumlah = 0;
+            }
+            $kolom[$kunci] = $item;
+            $jumlah += $lebar;
         }
-        if ($kode === 'ARD_KHS2' && $item['rata_rata_ard'] !== null) {
-            return $this->angka($item['rata_rata_ard']);
-        }
-        if ($item['nilai_pengetahuan'] === null && $item['nilai_keterampilan'] === null) {
-            return $item['nilai_akhir'] === null ? '—' : $this->angka($item['nilai_akhir']);
-        }
+        $bagian[] = $kolom;
 
-        $pengetahuan = $item['nilai_pengetahuan'] === null ? '—' : $this->angka($item['nilai_pengetahuan']);
-        $keterampilan = $item['nilai_keterampilan'] === null ? '—' : $this->angka($item['nilai_keterampilan']);
-
-        return $pengetahuan . '/' . $keterampilan;
+        return $bagian;
     }
 
     private function angka(int|float|string $nilai): string

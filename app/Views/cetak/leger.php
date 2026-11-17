@@ -8,6 +8,15 @@ $angka = static function (mixed $nilai): string {
     return str_contains($text, '.') ? str_replace('.', ',', rtrim(rtrim($text, '0'), '.')) : $text;
 };
 $judulLeger = 'LEGER KELAS' . ($jumlahBagian > 1 ? ' · Bagian ' . $bagian . ' dari ' . $jumlahBagian : '');
+$labelNilai = [];
+$jumlahKolomNilai = 0;
+foreach ($mapel as $item) {
+    $labelNilai += $item['kolom'];
+    $jumlahKolomNilai += max(1, count($item['kolom']));
+}
+$jumlahKolom = 3 + $jumlahKolomNilai + (int) $adaTotalAkhir + (int) $periodeCampuran + (int) ($mapel === []);
+$lebarNilai = (306 - 8 - 56 - 16 - ($adaTotalAkhir ? 16 : 0) - ($periodeCampuran ? 20 : 0)) / max(1, $jumlahKolomNilai);
+$tinggiKepala = $labelNilai === [] ? 1 : 2;
 ?>
 <?= $this->extend('cetak/layout_siswa') ?>
 <?= $this->section('style') ?>
@@ -17,8 +26,9 @@ $judulLeger = 'LEGER KELAS' . ($jumlahBagian > 1 ? ' · Bagian ' . $bagian . ' d
     .leger { width: 100%; font-size: 7.5pt; text-align: center; }
     .leger td, .leger th { border: .4pt solid #666; padding: 1mm .5mm; }
     .leger th { background: #eee; }
-    .leger .nama { text-align: left; width: 47mm; padding-left: 1.2mm; }
-    .leger .kelas-mapel { width: 11mm; }
+    .leger .nama { text-align: left; width: 56mm; padding-left: 1.2mm; }
+    .leger .nilai-mapel { width: <?= round($lebarNilai, 3) ?>mm; }
+    .leger .ip, .leger .total-akhir { width: 16mm; }
     .leger .status { font-size: 6.8pt; color: #444; }
     .keterangan { font-size: 7.6pt; margin: 2mm 0 3mm; }
     .ttd-leger { width: 78%; margin: 5mm auto 0; text-align: center; page-break-inside: avoid; }
@@ -44,21 +54,42 @@ $judulLeger = 'LEGER KELAS' . ($jumlahBagian > 1 ? ' · Bagian ' . $bagian . ' d
         <?php endforeach ?>
     </p>
 <?php endif ?>
-<p class="keterangan">Merdeka memakai Nilai Akhir. ARD memakai rata-rata arsip jika tersedia. Pasangan angka menunjukkan Pengetahuan/Keterampilan. Tanda — berarti nilai belum tersedia.</p>
+<p class="keterangan">
+    <?= isset($labelNilai['nilai_pengetahuan']) ? 'P = Pengetahuan, K = Keterampilan. ' : '' ?>
+    <?= isset($labelNilai['nilai_akhir']) ? 'Akhir = Nilai Akhir. ' : '' ?>
+    <?= isset($labelNilai['rata_rata_ard']) ? 'Rata ARD = rata-rata dari arsip ARD. ' : '' ?>
+    IP Semester mengikuti arsip. Tanda — berarti nilai belum tersedia.
+</p>
 <table class="leger" autosize="1">
     <thead>
         <tr>
-            <th colspan="<?= 2 + count($mapel) + count($ringkasan) + (int) ($mapel === []) ?>">
+            <th colspan="<?= $jumlahKolom ?>">
                 Rombel <?= esc($rombel) ?> · Angkatan <?= $angkatan ?> · Semester <?= $semester ?>
                 <?= $jumlahBagian > 1 ? ' · Bagian ' . $bagian . ' dari ' . $jumlahBagian : '' ?>
             </th>
         </tr>
         <tr>
-            <th style="width: 8mm">No.</th><th class="nama">Nama Siswa</th>
-            <?php foreach ($mapel as $item): ?><th class="kelas-mapel"><?= esc($item['label']) ?></th><?php endforeach ?>
-            <?php foreach ($ringkasan as $label => $field): ?><th style="width: 13mm"><?= esc($label) ?></th><?php endforeach ?>
+            <th rowspan="<?= $tinggiKepala ?>" style="width: 8mm">No.</th>
+            <th rowspan="<?= $tinggiKepala ?>" class="nama">Nama Siswa</th>
+            <?php if ($periodeCampuran): ?><th rowspan="<?= $tinggiKepala ?>" style="width: 20mm">Tahun Pelajaran</th><?php endif ?>
+            <?php foreach ($mapel as $item): ?>
+                <?php if ($item['kolom'] === []): ?>
+                    <th class="nilai-mapel" rowspan="<?= $tinggiKepala ?>"><?= esc($item['label']) ?></th>
+                <?php else: ?>
+                    <th colspan="<?= count($item['kolom']) ?>"><?= esc($item['label']) ?></th>
+                <?php endif ?>
+            <?php endforeach ?>
+            <?php if ($adaTotalAkhir): ?><th class="total-akhir" rowspan="<?= $tinggiKepala ?>">Total Nilai Akhir</th><?php endif ?>
+            <th class="ip" rowspan="<?= $tinggiKepala ?>">IP Semester</th>
             <?php if ($mapel === []): ?><th>Status Arsip</th><?php endif ?>
         </tr>
+        <?php if ($tinggiKepala === 2): ?>
+            <tr>
+                <?php foreach ($mapel as $item): ?>
+                    <?php foreach ($item['kolom'] as $label): ?><th class="nilai-mapel"><?= esc($label) ?></th><?php endforeach ?>
+                <?php endforeach ?>
+            </tr>
+        <?php endif ?>
     </thead>
     <tbody>
         <?php foreach ($anggota as $i => $siswa): ?>
@@ -67,21 +98,21 @@ $judulLeger = 'LEGER KELAS' . ($jumlahBagian > 1 ? ' · Bagian ' . $bagian . ' d
                 <td><?= $i + 1 ?></td>
                 <td class="nama">
                     <?= esc($siswa['nama']) ?>
-                    <?php if ($periodeCampuran && $siswa['tahun_pelajaran'] !== null): ?>
-                        <br><span class="status"><?= esc($siswa['tahun_pelajaran']) ?></span>
-                    <?php endif ?>
                     <?php if (! $ditemukan && $mapel !== []): ?>
                         <br><span class="status">Arsip belum ditemukan</span>
                     <?php elseif ($ditemukan && $mapel !== [] && empty($nilaiSiswa[$siswa['id']])): ?>
                         <br><span class="status">Nilai belum tersedia</span>
                     <?php endif ?>
                 </td>
+                <?php if ($periodeCampuran): ?><td><?= esc($siswa['tahun_pelajaran'] ?? '—') ?></td><?php endif ?>
                 <?php foreach ($mapel as $kunci => $item): ?>
-                    <td><?= esc($nilaiSiswa[$siswa['id']][$kunci] ?? '—') ?></td>
+                    <?php if ($item['kolom'] === []): ?><td class="nilai-mapel">—</td><?php endif ?>
+                    <?php foreach ($item['kolom'] as $field => $label): ?>
+                        <td class="nilai-mapel"><?= esc($angka($nilaiSiswa[$siswa['id']][$kunci][$field] ?? null)) ?></td>
+                    <?php endforeach ?>
                 <?php endforeach ?>
-                <?php foreach ($ringkasan as $field): ?>
-                    <td><?= esc($angka($ditemukan ? $siswa[$field] : null)) ?></td>
-                <?php endforeach ?>
+                <?php if ($adaTotalAkhir): ?><td class="total-akhir"><?= esc($angka($ditemukan ? $siswa['total_nilai_akhir'] : null)) ?></td><?php endif ?>
+                <td class="ip"><?= $ditemukan && $siswa['ip_semester'] !== null ? number_format((float) $siswa['ip_semester'], 2, ',', '') : '—' ?></td>
                 <?php if ($mapel === []): ?>
                     <td><?= $ditemukan ? 'Nilai belum tersedia' : 'Arsip belum ditemukan' ?></td>
                 <?php endif ?>

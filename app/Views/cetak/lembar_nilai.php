@@ -99,16 +99,16 @@ $angka = static function ($nilai): string {
 <table class="ttd">
     <tr>
         <td style="width: 55%"></td>
-        <td><?= esc($pengesahan['tempat']) ?><?= $pengesahan['tanggal'] === null ? '' : ', ' . esc($pengesahan['tanggal']) ?></td>
+        <td><?= esc($pengesahan['tempat_tanggal_cetak_asli'] ?? '') ?></td>
     </tr>
-    <tr><td>Kepala Madrasah,</td><td><?= esc($rapor['jabatan_cetak'] ?? 'Pembimbing Akademik') ?>,</td></tr>
+    <tr><td><?= esc($pengesahan['jabatan_kepala_cetak'] ?? '') ?></td><td><?= esc($pengesahan['jabatan_cetak'] ?? '') ?></td></tr>
     <tr>
-        <td class="ttd-nama"><?= esc($pengesahan['nama'] ?? '........................................') ?></td>
-        <td class="ttd-nama"><?= esc($rapor['nama_penandatangan'] ?? '........................................') ?></td>
+        <td class="ttd-nama"><?= esc($pengesahan['nama_kepala_madrasah'] ?? '........................................') ?></td>
+        <td class="ttd-nama"><?= esc($pengesahan['nama_penandatangan'] ?? '........................................') ?></td>
     </tr>
     <tr>
-        <td>NIP <?= esc($pengesahan['nip'] ?? '........................................') ?></td>
-        <td>NIP <?= esc($rapor['nip_penandatangan'] ?? '........................................') ?></td>
+        <td>NIP <?= esc($pengesahan['nip_kepala_madrasah'] ?? '........................................') ?></td>
+        <td>NIP <?= esc($pengesahan['nip_penandatangan'] ?? '........................................') ?></td>
     </tr>
 </table>
 <?= $this->endSection() ?>

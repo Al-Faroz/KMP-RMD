@@ -73,12 +73,12 @@
     <?php endforeach ?>
 
     <table class="ttd">
-        <tr><td style="width: 57%"></td><td><?= esc($tempatTanggal) ?></td></tr>
-        <tr><td>Orang Tua / Wali,</td><td><?= esc($rapor['jabatan_cetak'] ?? 'Wali Kelas') ?>,</td></tr>
-        <tr><td class="ttd-nama">........................................</td><td class="ttd-nama"><?= esc($rapor['nama_penandatangan'] ?? '........................................') ?></td></tr>
-        <tr><td></td><td>NIP <?= esc($rapor['nip_penandatangan'] ?? '........................................') ?></td></tr>
-        <tr><td colspan="2" class="kepala"><?= esc($pengaturan['jabatan_kepala_cetak'] ?? 'Kepala Madrasah') ?>,</td></tr>
-        <tr><td colspan="2" class="ttd-nama" style="text-align: center"><?= esc($pengaturan['nama_kepala_madrasah'] ?? '........................................') ?></td></tr>
-        <tr><td colspan="2" style="text-align: center">NIP <?= esc($pengaturan['nip_kepala_madrasah'] ?? '........................................') ?></td></tr>
+        <tr><td style="width: 57%"></td><td><?= esc($pengesahan['tempat_tanggal_cetak_asli'] ?? '') ?></td></tr>
+        <tr><td>Orang Tua / Wali,</td><td><?= esc($pengesahan['jabatan_cetak'] ?? '') ?></td></tr>
+        <tr><td class="ttd-nama">........................................</td><td class="ttd-nama"><?= esc($pengesahan['nama_penandatangan'] ?? '........................................') ?></td></tr>
+        <tr><td></td><td>NIP <?= esc($pengesahan['nip_penandatangan'] ?? '........................................') ?></td></tr>
+        <tr><td colspan="2" class="kepala"><?= esc($pengesahan['jabatan_kepala_cetak'] ?? '') ?></td></tr>
+        <tr><td colspan="2" class="ttd-nama" style="text-align: center"><?= esc($pengesahan['nama_kepala_madrasah'] ?? '........................................') ?></td></tr>
+        <tr><td colspan="2" style="text-align: center">NIP <?= esc($pengesahan['nip_kepala_madrasah'] ?? '........................................') ?></td></tr>
     </table>
 </div>

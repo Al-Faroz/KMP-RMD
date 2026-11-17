@@ -14,12 +14,14 @@
 | AB-08 | Cetak rombel memakai angkatan, semester, dan rombel pada periode pilihan. Sebelum membuat PDF, tampilkan rapor yang tersedia dan siswa pada rombel tersebut yang arsipnya belum ditemukan. PDF gabungan memuat rapor yang tersedia. |
 | AB-09 | Semua dokumen cetak memakai kertas **F4 (210 × 330 mm)**, termasuk rapor, sampul, identitas, transkrip, lembar nilai, dan leger. |
 | AB-10 | Antarmuka operator memakai **Bootstrap 5 dan Sneat Free**. Penyesuaian RMD dan tata letak dokumen cetak memakai **CSS biasa**. |
+| AB-11 | Operator masuk dengan username dan kata sandi. Setiap akun hanya memuat nama lengkap, username unik, dan hash kata sandi. Semua akun operator dapat melihat, menyunting, mengimpor, dan mencetak arsip. |
 
 ## Halaman dan alur operator
 
 | Halaman | Isi dan tindakan |
 |---|---|
-| **Data Siswa** | Halaman awal. Cari dengan nama, NIS, atau NISN. Filter berdasarkan angkatan. Buka detail siswa. |
+| **Masuk** | Masukkan username dan kata sandi operator. Setelah masuk, aplikasi membuka Data Siswa. |
+| **Data Siswa** | Halaman awal operator. Cari dengan nama, NIS, atau NISN. Filter berdasarkan angkatan. Buka detail siswa. |
 | **Detail Siswa** | Tampilkan identitas dan riwayat semester 1–6. Sediakan **Edit Identitas**, **Cetak Semua Semester**, serta **Cetak Transkrip**, **Cetak Sampul**, dan **Cetak Identitas** dalam tab baru. |
 | **Detail Semester** | Tampilkan status arsip, kelas, rombel, periode, nilai, serta Data Pendukung yang memuat pengesahan arsip. Koreksi nama, jabatan, NIP, dan tempat serta tanggal terbit hanya dilakukan melalui **Edit Rapor** saat diperlukan untuk mencocokkan data dengan dokumen asli semester itu. Sediakan **Unduh Excel**, **Impor Excel**, **Edit Rapor**, **Cetak Lembar Nilai**, dan **Cetak Rapor** sesuai data semester. |
 | **Cetak Rombel** | Pilih angkatan, semester, lalu rombel. Tampilkan daftar dan jumlah rapor tersedia serta daftar siswa yang arsipnya belum ditemukan. Buat satu PDF gabungan dari daftar yang tersedia. |

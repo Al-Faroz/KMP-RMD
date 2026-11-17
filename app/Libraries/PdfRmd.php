@@ -27,7 +27,7 @@ final class PdfRmd
             'margin_bottom' => 12,
             'tempDir' => WRITEPATH . 'cache/mpdf',
         ]);
-        $pdf->imageVars['kopKemenag'] = file_get_contents(APPPATH . 'Assets/logo-kemenag-transkrip.jpg');
+        $pdf->imageVars['kopKemenag'] = file_get_contents(ROOTPATH . 'public/assets/rmd/logo-kemenag.jpg');
         $pdf->SetTitle($judul);
         $halamanPertama = true;
         foreach ($isi as $data) {

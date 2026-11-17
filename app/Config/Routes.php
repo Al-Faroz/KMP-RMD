@@ -3,6 +3,9 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
+$routes->get('masuk', 'AkunOperator::masuk', ['as' => 'masuk']);
+$routes->post('masuk', 'AkunOperator::autentikasi', ['filter' => 'csrf']);
+$routes->post('keluar', 'AkunOperator::keluar', ['as' => 'keluar', 'filter' => 'csrf']);
 $routes->get('/', 'Siswa::index');
 $routes->get('siswa', 'Siswa::index', ['as' => 'data-siswa']);
 $routes->get('siswa/saran', 'Siswa::saran', ['as' => 'saran-siswa']);

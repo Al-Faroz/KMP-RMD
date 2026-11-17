@@ -130,20 +130,39 @@ final class CetakLeger
 
     private function bagiKolom(array $mapel): array
     {
-        $bagian = [];
-        $kolom = [];
-        $jumlah = 0;
-        foreach ($mapel as $kunci => $item) {
-            $lebar = max(1, count($item['kolom']));
-            if ($jumlah + $lebar > self::MAKS_KOLOM_NILAI) {
-                $bagian[] = $kolom;
-                $kolom = [];
-                $jumlah = 0;
-            }
-            $kolom[$kunci] = $item;
-            $jumlah += $lebar;
+        if ($mapel === []) {
+            return [[]];
         }
-        $bagian[] = $kolom;
+
+        $lebar = array_values(array_map(static fn (array $item): int => max(1, count($item['kolom'])), $mapel));
+        $jumlahMapel = count($lebar);
+        $skor = [$jumlahMapel => [0, 0]];
+        $batas = [];
+        // Minimize the number of parts first, then the sum of squared subject counts to balance their sizes.
+        for ($awal = $jumlahMapel - 1; $awal >= 0; $awal--) {
+            $jumlahKolom = 0;
+            $terbaik = [PHP_INT_MAX, PHP_INT_MAX];
+            for ($akhir = $awal; $akhir < $jumlahMapel; $akhir++) {
+                $jumlahKolom += $lebar[$akhir];
+                if ($jumlahKolom > self::MAKS_KOLOM_NILAI) {
+                    break;
+                }
+
+                $panjang = $akhir - $awal + 1;
+                [$sisaBagian, $sisaSkor] = $skor[$akhir + 1];
+                $calon = [$sisaBagian + 1, $sisaSkor + $panjang * $panjang];
+                if ($calon <= $terbaik) {
+                    $terbaik = $calon;
+                    $batas[$awal] = $akhir + 1;
+                }
+            }
+            $skor[$awal] = $terbaik;
+        }
+
+        $bagian = [];
+        for ($awal = 0; $awal < $jumlahMapel; $awal = $batas[$awal]) {
+            $bagian[] = array_slice($mapel, $awal, $batas[$awal] - $awal, true);
+        }
 
         return $bagian;
     }

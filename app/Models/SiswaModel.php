@@ -88,9 +88,24 @@ final class SiswaModel extends Model
             ->where('siswa.id', $id)->first();
     }
 
+    public static function kolomIdentitas(): array
+    {
+        return array_merge(...array_values(self::IDENTITAS));
+    }
+
+    public static function versiIdentitas(array $row): string
+    {
+        $data = [];
+        foreach (array_keys(self::kolomIdentitas()) as $kolom) {
+            $data[$kolom] = $row[$kolom] ?? null;
+        }
+
+        return hash('sha256', serialize($data));
+    }
+
     public function simpanIdentitas(string $id, array $identitas): bool
     {
-        $this->setAllowedFields(array_keys(array_merge(...array_values(self::IDENTITAS))));
+        $this->setAllowedFields(array_keys(self::kolomIdentitas()));
 
         return $this->update($id, $identitas);
     }

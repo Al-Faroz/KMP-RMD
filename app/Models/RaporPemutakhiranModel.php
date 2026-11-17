@@ -7,7 +7,6 @@ use App\Libraries\RaporFields;
 use CodeIgniter\Model;
 use DomainException;
 use RuntimeException;
-use Throwable;
 
 final class RaporPemutakhiranModel extends Model
 {
@@ -15,7 +14,7 @@ final class RaporPemutakhiranModel extends Model
 
     public function snapshot(array $siswa, int $semester): array
     {
-        $model = model(RaporSemesterModel::class);
+        $model = model(RaporSemesterModel::class, false, $this->db);
         $rapor = $model->detail((string) $siswa['id'], $semester);
         $format = $this->db->table('format_cetak')->select('id, id_sumber, nama_format')
             ->where('angkatan_id', $siswa['angkatan_id'])->orderBy('nama_format')->orderBy('id')->get()->getResultArray();
@@ -45,20 +44,9 @@ final class RaporPemutakhiranModel extends Model
         return hash('sha256', serialize($snapshot));
     }
 
-    public function simpan(array $siswa, int $semester, string $versi, array $patch): void
+    public function simpan(array $siswa, int $semester, string $versi, array $patch, int $operatorId, string $aksi): void
     {
-        $this->db->transException(true);
-        if (! $this->db->transBegin()) {
-            throw new RuntimeException('Transaksi rapor tidak dapat dimulai.');
-        }
-
-        try {
-            // Lock the parent even when the semester row does not exist yet.
-            $table = $this->db->protectIdentifiers('siswa', true);
-            $locked = $this->db->query("SELECT id FROM {$table} WHERE id = ? FOR UPDATE", [$siswa['id']]);
-            if ($locked->getNumRows() !== 1) {
-                throw new DomainException('Siswa tidak ditemukan.');
-            }
+        model(RiwayatArsipModel::class, false, $this->db)->catat((string) $siswa['id'], $semester, $operatorId, $aksi, function () use ($siswa, $semester, $versi, $patch): void {
             $snapshot = $this->snapshot($siswa, $semester);
             if (! hash_equals($this->versi($snapshot), $versi)) {
                 throw new DomainException('Rapor sudah berubah. Buka kembali halaman semester dan ulangi perubahan.');
@@ -104,14 +92,7 @@ final class RaporPemutakhiranModel extends Model
                     }
                 }
             }
-
-            if (! $this->db->transStatus() || ! $this->db->transCommit()) {
-                throw new RuntimeException('Transaksi rapor gagal disimpan.');
-            }
-        } catch (Throwable $error) {
-            $this->db->transRollback();
-            throw $error;
-        }
+        });
     }
 
     private function tulis(bool $berhasil): void

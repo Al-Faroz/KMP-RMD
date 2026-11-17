@@ -7,9 +7,12 @@ use App\Libraries\CetakRapor;
 use App\Libraries\CetakTranskrip;
 use App\Libraries\PengesahanRapor;
 use App\Models\RaporSemesterModel;
+use App\Models\RiwayatArsipModel;
 use App\Models\SiswaModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
+use DomainException;
+use RuntimeException;
 
 final class Siswa extends BaseController
 {
@@ -159,6 +162,8 @@ final class Siswa extends BaseController
     public function update(string $id): ResponseInterface
     {
         $siswa = $this->temukanSiswa($id);
+        $versi = $this->request->getPost('versi');
+        $versi = is_string($versi) ? $versi : '';
         $identitas = [];
         $rules = [];
         $errors = [];
@@ -184,14 +189,34 @@ final class Siswa extends BaseController
         $validation = service('validation')->setRules($rules);
         if (! $validation->run($identitas) || $errors !== []) {
             return $this->response->setStatusCode(422)->setBody(
-                $this->formIdentitas($siswa, $identitas, $errors + $validation->getErrors())
+                $this->formIdentitas($siswa, $identitas, $errors + $validation->getErrors(), $versi)
             );
         }
 
         $identitas = array_map(static fn (?string $value) => $value === '' ? null : $value, $identitas);
-        if (! model(SiswaModel::class)->simpanIdentitas($id, $identitas)) {
+        try {
+            model(RiwayatArsipModel::class)->catat($id, RiwayatArsipModel::IDENTITAS, (int) session()->get('operator_id'),
+                'identitas', function (array $sebelum) use ($id, $versi, $identitas): void {
+                    if (! hash_equals(SiswaModel::versiIdentitas($sebelum), $versi)) {
+                        throw new DomainException('Identitas sudah berubah. Buka ulang Edit Identitas untuk melihat data terbaru.');
+                    }
+                    $perubahan = array_filter($identitas, static fn ($nilai, $kolom): bool =>
+                        ($nilai === null ? null : (string) $nilai)
+                        !== ($sebelum[$kolom] === null ? null : (string) $sebelum[$kolom]), ARRAY_FILTER_USE_BOTH);
+                    if ($perubahan !== [] && ! model(SiswaModel::class)->simpanIdentitas($id, $perubahan)) {
+                        throw new RuntimeException('Identitas gagal disimpan.');
+                    }
+                }
+            );
+        } catch (DomainException $e) {
+            return $this->response->setStatusCode(409)->setBody(
+                $this->formIdentitas($siswa, $identitas, ['form' => $e->getMessage()], $versi)
+            );
+        } catch (RuntimeException) {
+            log_message('error', 'Gagal menyimpan identitas dan riwayat siswa {id}.', ['id' => $id]);
+
             return $this->response->setStatusCode(500)->setBody(
-                $this->formIdentitas($siswa, $identitas, ['form' => 'Identitas gagal disimpan. Silakan coba lagi.'])
+                $this->formIdentitas($siswa, $identitas, ['form' => 'Identitas gagal disimpan. Silakan coba lagi.'], $versi)
             );
         }
 
@@ -235,12 +260,13 @@ final class Siswa extends BaseController
         return $siswa;
     }
 
-    private function formIdentitas(array $siswa, array $identitas, array $errors = []): string
+    private function formIdentitas(array $siswa, array $identitas, array $errors = [], ?string $versi = null): string
     {
         return $this->halaman('siswa/edit', 'Edit Identitas', [
             'siswa' => $siswa,
             'identitas' => $identitas,
             'errors' => $errors,
+            'versi' => $versi ?? SiswaModel::versiIdentitas($siswa),
         ]);
     }
 

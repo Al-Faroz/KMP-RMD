@@ -56,6 +56,9 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 | GET | `/siswa` | Cari siswa dan filter angkatan. |
 | GET | `/siswa/{siswa}` | Buka detail dan riwayat semester. |
 | GET / POST | `/siswa/{siswa}/edit` | Buka form dan simpan identitas. |
+| GET | `/siswa/{siswa}/riwayat` | Daftar perubahan identitas. |
+| GET | `/siswa/{siswa}/semester/{semester}/riwayat` | Daftar perubahan rapor semester. |
+| GET / POST | `/siswa/{siswa}/riwayat/perubahan/{id}` | Bandingkan data dan pulihkan perubahan terbaru. |
 | GET | `/siswa/{siswa}/semester/{semester}` | Buka detail semester. |
 | GET / POST | `/siswa/{siswa}/semester/{semester}/edit` | Buka form dan simpan rapor semester. |
 | GET | `/siswa/{siswa}/semester/{semester}/excel` | Unduh Excel satu siswa dan satu semester. |
@@ -97,3 +100,11 @@ Remove-Variable kataSandiRmd
 ```
 
 Buka [RMD di XAMPP](http://localhost/kmp-rdm/), lalu masuk dengan akun tersebut. Kelola akun berikutnya dari menu **Operator**. Username harus unik. Kosongkan kata sandi saat mengedit untuk mempertahankannya. Perubahan kata sandi meminta akun terkait masuk kembali. Penghapusan akun mewajibkan konfirmasi dan mengakhiri akses akun tersebut pada permintaan berikutnya.
+
+## Riwayat perubahan dan pemulihan
+
+Jalankan migrasi `CreateRiwayatArsip`. Riwayat mulai tercatat saat operator menyimpan perubahan melalui aplikasi. Tabel `riwayat_arsip` menyimpan versi sebelum dan sesudah dalam transaksi yang sama dengan pembaruan data.
+
+- Buka **Riwayat Identitas** dari **Detail Siswa** atau **Riwayat Perubahan** dari halaman semester. Catatan menyimpan nama operator pada saat tindakan dan menampilkan waktu dalam WIB.
+- Pemulihan berlaku per identitas atau semester. Aplikasi memeriksa ulang perubahan terbaru dan kondisi data saat menerima konfirmasi. Data rapor yang dipulihkan meliputi status arsip, nilai mapel, data pendukung, dan pengesahan.
+- Sistem mencatat hasil pemulihan sebagai perubahan baru. Riwayat mencakup penyimpanan yang benar-benar mengubah data setelah fitur ini diaktifkan.

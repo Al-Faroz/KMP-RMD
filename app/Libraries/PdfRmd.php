@@ -11,6 +11,11 @@ final class PdfRmd
 
     public function buat(string $dokumen, string $judul, array $data): string
     {
+        return $this->gabungkan($dokumen, $judul, [$data]);
+    }
+
+    public function gabungkan(string $dokumen, string $judul, iterable $isi): string
+    {
         $pdf = new Mpdf([
             'mode' => 'utf-8',
             'format' => self::F4_MM,
@@ -23,7 +28,14 @@ final class PdfRmd
         ]);
         $pdf->imageVars['kopKemenag'] = file_get_contents(APPPATH . 'Assets/logo-kemenag-transkrip.jpg');
         $pdf->SetTitle($judul);
-        $pdf->WriteHTML(view('cetak/' . $dokumen, $data, ['saveData' => false]));
+        $halamanPertama = true;
+        foreach ($isi as $data) {
+            if (! $halamanPertama) {
+                $pdf->AddPage();
+            }
+            $pdf->WriteHTML(view('cetak/' . $dokumen, $data, ['saveData' => false]));
+            $halamanPertama = false;
+        }
 
         return $pdf->Output('', Destination::STRING_RETURN);
     }

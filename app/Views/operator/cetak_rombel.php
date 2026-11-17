@@ -53,9 +53,14 @@
                 <h2 id="judul-daftar-rombel" class="h5 mb-2">Rombel <?= esc($rombel) ?> · Semester <?= $semester ?></h2>
                 <p class="mb-0"><?= count($anggota) ?> siswa · <?= count($tersedia) ?> siap cetak · <?= $belum ?> arsip belum ditemukan<?= $formatBelum > 0 ? ' · ' . $formatBelum . ' format belum tersedia' : '' ?></p>
             </div>
-            <?php if ($tersedia !== []): ?>
-                <?php $query = http_build_query(compact('angkatan', 'semester', 'rombel')); ?>
-                <a href="<?= esc(url_to('pdf-rombel') . '?' . $query, 'attr') ?>" class="btn btn-primary" target="_blank" rel="noopener">Buat PDF</a>
+            <?php if ($anggota !== []): ?>
+                <div class="d-flex flex-wrap gap-2">
+                    <?php $query = http_build_query(compact('angkatan', 'semester', 'rombel')); ?>
+                    <?php if ($tersedia !== []): ?>
+                        <a href="<?= esc(url_to('pdf-rombel') . '?' . $query, 'attr') ?>" class="btn btn-primary" target="_blank" rel="noopener">Buat PDF</a>
+                    <?php endif ?>
+                    <a href="<?= esc(url_to('pdf-leger') . '?' . $query, 'attr') ?>" class="btn btn-outline-primary" target="_blank" rel="noopener">Cetak Leger</a>
+                </div>
             <?php endif ?>
         </div>
         <div class="table-responsive">

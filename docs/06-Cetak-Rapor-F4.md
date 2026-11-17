@@ -8,6 +8,12 @@ RMD membuat PDF dari data terbaru di database saat operator menjalankan tindakan
 | **Satu siswa, semua semester** | Dari Detail Siswa, **Cetak Semua Semester** membuka PDF gabungan dari rapor yang siap cetak, urut nomor semester. |
 | **Satu rombel, satu semester** | Pilih angkatan, semester, dan rombel. **Tampilkan** membuka daftar status siswa. **Buat PDF** membuka rapor siap cetak dalam satu PDF, urut nama siswa. |
 
+## Leger per rombel
+
+Pilih angkatan, semester, dan rombel pada halaman **Cetak Rombel**. Setelah daftar siswa tampil, **Cetak Leger** membuka PDF F4 lanskap (330 × 210 mm) dengan satu baris per siswa pada setiap bagian tabel dan satu kolom per mapel. Nama dan urutan siswa mengikuti daftar rombel. Arsip yang belum ditemukan tetap muncul dengan statusnya.
+
+Nilai diambil dari arsip. Kurikulum Merdeka memakai **Nilai Akhir**, ARD memakai **Rata-rata ARD** jika tersedia, dan nilai Pengetahuan serta Keterampilan yang tersimpan terpisah dicetak sebagai pasangan angka **Pengetahuan/Keterampilan**. Rombel dengan banyak mapel dibagi menjadi bagian kolom dengan pengulangan identitas siswa. Kepala tabel diulangi pada halaman lanjutan.
+
 ## Format historis
 
 Setiap rapor memilih tata letak dari kode format pada entri rapornya. Dalam satu semester, kode bisa berbeda antar siswa. Contohnya, data angkatan 2019 semester 6 memuat ARD dan RDM K13. PDF gabungan tetap mengikuti format setiap rapor dan ukuran F4.

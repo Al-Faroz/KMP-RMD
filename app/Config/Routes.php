@@ -23,3 +23,4 @@ $routes->post('siswa/(:num)/semester/(:num)/impor/pratinjau', 'Rapor::pratinjau/
 $routes->post('siswa/(:num)/semester/(:num)/impor/konfirmasi', 'Rapor::konfirmasi/$1/$2', ['as' => 'konfirmasi-rapor', 'filter' => 'csrf']);
 $routes->get('cetak-rombel', 'Operator::cetakRombel', ['as' => 'cetak-rombel']);
 $routes->get('cetak-rombel/pdf', 'Operator::pdfRombel', ['as' => 'pdf-rombel']);
+$routes->get('cetak-rombel/leger', 'Operator::pdfLeger', ['as' => 'pdf-leger']);

@@ -51,11 +51,23 @@ Satu tata letak per dokumen berlaku untuk keempat tipe rapor. Kolom Lembar Nilai
 
 ## Implementasi layout dan pemeriksaan
 
-Gunakan view cetak CI4 dengan stylesheet CSS biasa khusus dokumen. Uji dimensi fisik F4 pada keluaran PDF dan lakukan satu uji cetak dari XAMPP menggunakan kertas yang dipakai madrasah. Letakkan tiap rapor pada halaman baru dalam PDF gabungan. Cocokkan isi dan urutan PDF dengan pilihan pada layar.
+Rapor **KHS1** dan **KHS2** memakai template Word di `app/Assets/rapor/`. PHPWord mengisi arsip semester, lalu LibreOffice mengonversi DOCX ke PDF secara lokal. mPDF menggabungkan halaman dengan ukuran F4 (210 × 330 mm) dan merender rapor **RDM K13** serta **RDM Kurikulum Merdeka**. Alur ini dipakai oleh **Cetak Rapor**, **Cetak Semua Semester**, dan **Cetak Rombel**. Setiap rapor mulai di halaman baru sesuai urutan pilihan.
 
-Pada ARD KHS2 dan RDM K13, bagian Deskripsi dimulai di halaman baru. Tabel panjang mengulang kepala kolom pada halaman lanjutan. Ringkasan nilai dan rentang predikat dikelompokkan setelah tabel nilai. Data pendukung dan pengesahan ditempatkan bersama jika keduanya muat di satu halaman.
+- **KHS1** mengalirkan tabel nilai dan deskripsi pada halaman lanjutan dengan kepala kolom berulang. Data pendukung dan pengesahan mulai di halaman baru.
+- **KHS2** memulai Nilai, Deskripsi, dan Data Pendukung pada halaman baru setelah Sikap. Tabel deskripsi yang panjang dapat berlanjut dengan kepala kolom berulang. Kolom Rata-rata dan Beban × Nilai pada baris mapel memakai pembulatan tampilan arsip. Total mempertahankan desimal yang tersedia.
+- Kedua template menyediakan sedikitnya tiga baris Ekstrakurikuler dan tiga baris Prestasi. Baris memakai tinggi minimum 8 mm dan memanjang sesuai isi. Catatan Wali Kelas menyediakan minimal 22 mm dan Tanggapan Orang Tua / Wali minimal 27 mm. Pada KHS2, Ekstrakurikuler punya kolom Predikat.
+- IPK KHS1 dapat diambil dari entri Data Pendukung dengan Jenis Item `IPK`. Isi nilai tersebut dari dokumen asli. Kolom IPK kosong jika sumbernya belum tersimpan.
+- Pada RDM K13, bagian Deskripsi dimulai di halaman baru. Data pendukung dan pengesahan ditempatkan bersama jika keduanya muat di satu halaman.
 
-Semua format menyediakan sedikitnya dua baris Ekstrakurikuler dan tiga baris Prestasi. Baris dengan kolom keterangan kosong memberi ruang tulis tangan 8 mm. Jika belum terisi, Catatan Wali Kelas menyediakan ruang minimal 22 mm dan Tanggapan Orang Tua / Wali 27 mm.
+### Menyiapkan LibreOffice di XAMPP
+
+Jalankan `composer install` dari root proyek. Instal LibreOffice di komputer yang menjalankan Apache XAMPP. RMD mencari LibreOffice pada lokasi instalasi standar; untuk lokasi khusus, tambahkan setelan berikut di `.env` dengan menyesuaikan alamatnya.
+
+```dotenv
+rmd.libreOfficePath = 'C:/Program Files/LibreOffice/program/soffice.com'
+```
+
+Cetak KHS memakai fungsi PHP `proc_open` dan folder sementara di `writable/cache/`. Pada rombel atau semua semester, aplikasi mengonversi dokumen KHS dalam satu proses dan menggabungkan hasilnya sesuai urutan arsip. Uji di XAMPP dengan satu KHS1, satu KHS2, dan satu rombel. Periksa ukuran halaman, pemisah bagian, dan hasil cetak pada kertas F4 madrasah.
 
 Cetak Rapor membaca nilai, predikat, deskripsi, ringkasan, dan pengesahan yang tersimpan pada semester yang dipilih. Format memakai susunan bagian dari arsip dan penyesuaian lebar kolom serta pemisah halaman untuk F4. Kolom Rata-rata dan Beban × Nilai pada RDM K13 muncul jika nilainya tersimpan. Bagian Sikap disediakan pada format K13 dan arsip lama, dengan sel kosong jika isian tidak tersedia. Pengesahan menampilkan jabatan, nama, NIP, tempat dan tanggal terbit, serta ruang tanda tangan berdasarkan dokumen asli. Detail Semester menampilkan data itu di bagian Data Pendukung. Koreksi manual melalui Edit Rapor berlaku untuk arsip siswa dan semester tersebut pada PDF Rapor dan Lembar Nilai. Data impor saat ini belum menyimpan kode verifikasi QR dari RDM Merdeka.
 

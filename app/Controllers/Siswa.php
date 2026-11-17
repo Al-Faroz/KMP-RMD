@@ -116,9 +116,8 @@ final class Siswa extends BaseController
                 ->setBody('Format cetak rapor semester ini belum tersedia. Periksa format di Edit Rapor.');
         }
 
-        $pdf = $cetak->buat('Rapor Semester ' . $semester, [$rapor + $siswa], $model);
-
-        return $this->pdf('Rapor-' . $siswa['id'] . '-Semester-' . $semester, $pdf);
+        return $cetak->respons($this->response, "RMD-Rapor-{$siswa['id']}-Semester-{$semester}.pdf",
+            'Rapor Semester ' . $semester, [$rapor + $siswa], $model);
     }
 
     public function cetakSemuaSemester(string $id): ResponseInterface
@@ -132,7 +131,7 @@ final class Siswa extends BaseController
             throw PageNotFoundException::forPageNotFound('Belum ada rapor semester yang dapat dicetak.');
         }
 
-        return $this->pdf('Rapor-Semua-Semester-' . $siswa['id'], $cetak->buat('Rapor Semua Semester', $arsip, $model));
+        return $cetak->respons($this->response, "RMD-Rapor-Semua-Semester-{$siswa['id']}.pdf", 'Rapor Semua Semester', $arsip, $model);
     }
 
     public function semester(string $id, string $semester): string

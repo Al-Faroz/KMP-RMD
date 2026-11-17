@@ -3,33 +3,12 @@
 namespace App\Libraries;
 
 use App\Models\RaporSemesterModel;
+use CodeIgniter\HTTP\ResponseInterface;
+use Throwable;
 
 final class CetakRapor
 {
     private const FORMAT = [
-        'EXCEL_KHS1' => [
-            'judul' => 'PENCAPAIAN KOMPETENSI SISWA',
-            'nilai' => [
-                'SKS' => 'sks',
-                'Pengetahuan' => [
-                    'Nilai' => 'nilai_pengetahuan', 'SKS × N1' => 'sk_sx_n1',
-                    'Predikat' => 'predikat_pengetahuan', 'Deskripsi' => 'deskripsi_pengetahuan',
-                ],
-                'Keterampilan' => [
-                    'Nilai' => 'nilai_keterampilan', 'SKS × N2' => 'sk_sx_n2',
-                    'Predikat' => 'predikat_keterampilan', 'Deskripsi' => 'deskripsi_keterampilan',
-                ],
-            ],
-        ],
-        'ARD_KHS2' => [
-            'judul' => 'CAPAIAN HASIL BELAJAR',
-            'nilai' => [
-                'Beban / JP' => 'beban_jp',
-                'Pengetahuan' => ['Nilai' => 'nilai_pengetahuan', 'Predikat' => 'predikat_pengetahuan'],
-                'Keterampilan' => ['Nilai' => 'nilai_keterampilan', 'Predikat' => 'predikat_keterampilan'],
-                'Rata-rata' => 'rata_rata_ard', 'Beban × Nilai' => 'bebanx_n',
-            ],
-        ],
         'RDM_K13' => [
             'judul' => 'CAPAIAN HASIL BELAJAR',
             'nilai' => [
@@ -66,13 +45,32 @@ final class CetakRapor
 
     public function mendukung(?string $kode): bool
     {
-        return isset(self::FORMAT[$kode]);
+        return CetakKhsWord::mendukung($kode) || isset(self::FORMAT[$kode]);
+    }
+
+    public function respons(ResponseInterface $response, string $nama, string $judul, array $daftar, RaporSemesterModel $model): ResponseInterface
+    {
+        try {
+            $pdf = $this->buat($judul, $daftar, $model);
+        } catch (GagalCetakKhs $error) {
+            log_message('error', 'Cetak KHS gagal: {pesan}', ['pesan' => $error->getMessage()]);
+
+            return $response->setStatusCode(503)->setContentType('text/plain')
+                ->setHeader('Cache-Control', 'private, no-store')->setBody($error->getMessage());
+        }
+
+        return $response->setContentType('application/pdf')->setHeader('Cache-Control', 'private, no-store')
+            ->setHeader('Content-Disposition', 'inline; filename="' . $nama . '"')->setBody($pdf);
     }
 
     public function buat(string $judul, array $daftar, RaporSemesterModel $model): string
     {
-        $bagian = function () use ($daftar, $model): iterable {
-            $pengaturan = $rentang = [];
+        $konverter = new KonverterLibreOffice();
+        $word = new CetakKhsWord();
+        $folder = null;
+        $dokumen = $bagian = [];
+        $pengaturan = $rentang = [];
+        try {
             foreach ($daftar as $rapor) {
                 $id = (string) $rapor['id'];
                 $idPengaturan = $rapor['pengaturan_cetak_id'];
@@ -81,19 +79,40 @@ final class CetakRapor
                     $rentang[$idPengaturan] = $model->rentangPredikat($idPengaturan);
                 }
 
-                yield $this->data($rapor, $model->nilai($id), $model->dataPendukung($id),
+                $data = $this->data($rapor, $model->nilai($id), $model->dataPendukung($id),
                     $pengaturan[$idPengaturan] ?? null, $rentang[$idPengaturan] ?? []);
-            }
-        };
+                if (! CetakKhsWord::mendukung($rapor['kode_format'])) {
+                    $bagian[] = $data;
+                    continue;
+                }
 
-        return (new PdfRmd())->gabungkan('rapor', $judul, $bagian());
+                $folder ??= $konverter->folderSementara();
+                $dasar = 'rapor-' . count($dokumen);
+                try {
+                    $word->simpan($data, $folder . '/' . $dasar . '.docx');
+                } catch (Throwable $error) {
+                    throw new GagalCetakKhs('Template Word KHS gagal diisi. Periksa paket aplikasi dan data rapor.', 0, $error);
+                }
+                $dokumen[] = $dasar . '.docx';
+                $bagian[] = $folder . '/' . $dasar . '.pdf';
+            }
+            if ($folder !== null) {
+                $konverter->konversi($folder, $dokumen);
+            }
+
+            return (new PdfRmd())->gabungkan('rapor', $judul, $bagian);
+        } finally {
+            if ($folder !== null) {
+                $konverter->bersihkan($folder);
+            }
+        }
     }
 
     private function data(array $rapor, array $mapel, array $pendukung, ?array $pengaturan, array $rentang): array
     {
         $kode = $rapor['kode_format'];
-        $format = self::FORMAT[$kode];
-        $kolom = $format['nilai'];
+        $format = self::FORMAT[$kode] ?? [];
+        $kolom = $format['nilai'] ?? [];
         if ($kode === 'RDM_K13') {
             foreach (['Rata-rata', 'Beban × Nilai'] as $label) {
                 if (array_filter(array_column($mapel, $kolom[$label]), static fn ($nilai): bool => $nilai !== null) === []) {
@@ -129,7 +148,7 @@ final class CetakRapor
             'siswa' => ['nama' => $rapor['nama'], 'nis' => $rapor['nis'], 'nisn' => $rapor['nisn']],
             'rapor' => $rapor,
             'mapel' => $mapel,
-            'judul' => $format['judul'],
+            'judul' => $format['judul'] ?? '',
             'kolom' => $kolom,
             'ringkasan' => $ringkasan,
             'batas' => $batas,
@@ -138,7 +157,7 @@ final class CetakRapor
             'pengaturan' => $pengaturan,
             'pengesahan' => $pengesahan,
             'merdeka' => $kode === 'RDM_PDF_2023_VIIA',
-            'deskripsiTerpisah' => in_array($kode, ['ARD_KHS2', 'RDM_K13'], true),
+            'deskripsiTerpisah' => $kode === 'RDM_K13',
         ];
     }
 }

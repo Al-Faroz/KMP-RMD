@@ -4,6 +4,8 @@ namespace App\Libraries;
 
 use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
+use setasign\Fpdi\PdfReader\PageBoundaries;
+use Throwable;
 
 final class PdfRmd
 {
@@ -31,10 +33,23 @@ final class PdfRmd
         $pdf->SetTitle($judul);
         $halamanPertama = true;
         foreach ($isi as $data) {
-            if (! $halamanPertama) {
-                $pdf->AddPage();
+            if (is_string($data)) {
+                try {
+                    $halaman = $pdf->setSourceFile($data);
+                    for ($nomor = 1; $nomor <= $halaman; $nomor++) {
+                        $impor = $pdf->importPage($nomor, PageBoundaries::MEDIA_BOX);
+                        $pdf->AddPage();
+                        $pdf->useTemplate($impor, 0, 0, ...self::F4_MM);
+                    }
+                } catch (Throwable $error) {
+                    throw new GagalCetakKhs('PDF KHS yang dikonversi gagal dibaca.', 0, $error);
+                }
+            } else {
+                if (! $halamanPertama) {
+                    $pdf->AddPage();
+                }
+                $pdf->WriteHTML(view('cetak/' . $dokumen, $data, ['saveData' => false]));
             }
-            $pdf->WriteHTML(view('cetak/' . $dokumen, $data, ['saveData' => false]));
             $halamanPertama = false;
         }
 

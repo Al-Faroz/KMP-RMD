@@ -47,7 +47,7 @@ class Operator extends BaseController
         $namaRombel = preg_replace('/[^A-Za-z0-9_-]+/', '-', $rombel);
         $nama = "RMD-Rapor-Rombel-{$angkatan}-{$namaRombel}-Semester-{$semester}.pdf";
 
-        return $this->pdf($nama, $cetak->buat("Rapor {$rombel} Semester {$semester} Angkatan {$angkatan}", $arsip, $model));
+        return $cetak->respons($this->response, $nama, "Rapor {$rombel} Semester {$semester} Angkatan {$angkatan}", $arsip, $model);
     }
 
     public function pdfLeger(): ResponseInterface

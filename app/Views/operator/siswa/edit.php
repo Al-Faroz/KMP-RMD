@@ -12,6 +12,7 @@
 
 <form method="post" action="<?= esc(url_to('edit-siswa', $siswa['id']), 'attr') ?>">
     <?= csrf_field() ?>
+    <input type="hidden" name="versi" value="<?= esc($versi, 'attr') ?>">
     <?php foreach (SiswaModel::IDENTITAS as $judul => $fields): ?>
         <fieldset class="card card-body mb-4">
             <legend class="h5 mb-3"><?= esc($judul) ?></legend>

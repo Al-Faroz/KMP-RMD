@@ -45,6 +45,7 @@ $angka = static function ($value): string {
 </div>
 
 <div class="d-flex flex-wrap gap-2 mb-3">
+    <a href="<?= esc(url_to('riwayat-rapor', $siswa['id'], $nomorSemester), 'attr') ?>" class="btn btn-outline-secondary">Riwayat Perubahan</a>
     <a href="<?= esc(url_to('edit-rapor', $siswa['id'], $nomorSemester), 'attr') ?>" class="btn btn-primary">Edit Rapor</a>
     <a href="<?= esc(url_to('excel-rapor', $siswa['id'], $nomorSemester), 'attr') ?>" class="btn btn-outline-primary">
         <?= $status === 'Ditemukan' ? 'Unduh Excel' : 'Unduh Template Excel' ?>

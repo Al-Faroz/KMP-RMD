@@ -11,6 +11,7 @@ use CodeIgniter\Exceptions\PageNotFoundException;
 use CodeIgniter\HTTP\ResponseInterface;
 use DomainException;
 use PhpOffice\PhpSpreadsheet\Exception as SpreadsheetException;
+use RuntimeException;
 
 final class Rapor extends BaseController
 {
@@ -46,12 +47,18 @@ final class Rapor extends BaseController
 
             $hasil = (new RaporPerubahan())->siapkan($snapshot, $masukan, false);
             if ($hasil['preview'] !== []) {
-                $model->simpan($siswa, (int) $semester, $versi, $hasil['patch']);
+                $model->simpan($siswa, (int) $semester, $versi, $hasil['patch'], (int) session()->get('operator_id'), 'edit');
             }
         } catch (DomainException $error) {
             return $this->response->setStatusCode(422)->setBody(
                 $this->form($siswa, (int) $semester, $snapshot, $masukan, $error->getMessage(),
                     is_string($versi ?? null) ? $versi : '')
+            );
+        } catch (RuntimeException) {
+            log_message('error', 'Gagal menyimpan rapor dan riwayat siswa {id}, semester {semester}.', ['id' => $id, 'semester' => $semester]);
+
+            return $this->response->setStatusCode(500)->setBody(
+                $this->form($siswa, (int) $semester, $snapshot, $masukan, 'Perubahan rapor gagal disimpan. Silakan coba lagi.', $versi)
             );
         }
 
@@ -119,11 +126,15 @@ final class Rapor extends BaseController
         }
 
         try {
-            model(RaporPemutakhiranModel::class)->simpan($siswa, (int) $semester, $pending['versi'], $pending['patch']);
+            model(RaporPemutakhiranModel::class)->simpan($siswa, (int) $semester, $pending['versi'], $pending['patch'], (int) session()->get('operator_id'), 'impor');
         } catch (DomainException $error) {
             session()->removeTempdata('pratinjau_rapor');
 
             return $this->kembali($id, $semester, 'galat_rapor', $error->getMessage());
+        } catch (RuntimeException) {
+            log_message('error', 'Gagal menyimpan impor rapor dan riwayat siswa {id}, semester {semester}.', ['id' => $id, 'semester' => $semester]);
+
+            return $this->kembali($id, $semester, 'galat_rapor', 'Perubahan Excel gagal disimpan. Silakan coba lagi.');
         }
 
         session()->removeTempdata('pratinjau_rapor');

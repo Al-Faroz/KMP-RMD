@@ -17,6 +17,7 @@
         <a href="<?= esc(url_to('cetak-transkrip', $siswa['id']), 'attr') ?>" target="_blank" rel="noopener" class="btn btn-outline-primary">Cetak Transkrip</a>
         <a href="<?= esc(url_to('cetak-sampul', $siswa['id']), 'attr') ?>" target="_blank" rel="noopener" class="btn btn-outline-primary">Cetak Sampul</a>
         <a href="<?= esc(url_to('cetak-identitas', $siswa['id']), 'attr') ?>" target="_blank" rel="noopener" class="btn btn-outline-primary">Cetak Identitas</a>
+        <a href="<?= esc(url_to('riwayat-identitas', $siswa['id']), 'attr') ?>" class="btn btn-outline-secondary">Riwayat Identitas</a>
         <a href="<?= esc(url_to('edit-siswa', $siswa['id']), 'attr') ?>" class="btn btn-primary">Edit Identitas</a>
     </div>
 </div>

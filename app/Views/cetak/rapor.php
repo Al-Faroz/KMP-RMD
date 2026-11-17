@@ -147,7 +147,6 @@ $potongan = static function (?string $teks): array {
     ], ['saveData' => false]) ?>
 <?php endif ?>
 <?= view('cetak/rapor/pendukung', [
-    'pendukung' => $pendukung, 'pengaturan' => $pengaturan, 'rapor' => $rapor,
-    'tempatTanggal' => $tempatTanggal, 'tampil' => $tampil, 'potongan' => $potongan,
+    'pendukung' => $pendukung, 'pengesahan' => $pengesahan, 'tampil' => $tampil, 'potongan' => $potongan,
 ], ['saveData' => false]) ?>
 <?= $this->endSection() ?>

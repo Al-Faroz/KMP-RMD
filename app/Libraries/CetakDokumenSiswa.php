@@ -75,7 +75,7 @@ final class CetakDokumenSiswa
             'kolomPredikat' => array_intersect_key(self::KOLOM_PREDIKAT, $kolom),
             'batasNilai' => $batasNilai,
             'ringkasan' => $ringkasan,
-            'pengesahan' => $this->pengesahan($pengaturan),
+            'pengesahan' => PengesahanRapor::baca($rapor, $pengaturan),
         ]);
     }
 

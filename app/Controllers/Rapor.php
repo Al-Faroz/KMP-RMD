@@ -33,7 +33,7 @@ final class Rapor extends BaseController
             if ($this->request->getPost('form_lengkap') !== '1') {
                 throw new DomainException('Formulir tidak terkirim lengkap. Buka kembali Edit Rapor dan simpan perubahan dalam beberapa kali pengiriman.');
             }
-            foreach (RaporFields::LABELS as $bagian => $label) {
+            foreach (RaporFields::LABELS + ['pengesahan' => 'Pengesahan arsip'] as $bagian => $label) {
                 $masukan[$bagian] = $this->request->getPost($bagian) ?? [];
                 if (! is_array($masukan[$bagian])) {
                     throw new DomainException("Isian {$label} tidak valid.");

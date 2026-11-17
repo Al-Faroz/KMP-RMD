@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Libraries\PengesahanRapor;
 use App\Libraries\RaporFields;
 use CodeIgniter\Model;
 use DomainException;
@@ -31,6 +32,7 @@ final class RaporPemutakhiranModel extends Model
 
         return [
             'rapor' => $rapor,
+            'pengesahan' => PengesahanRapor::baca($rapor ?? [], $model->pengaturanCetak($rapor['pengaturan_cetak_id'] ?? null)),
             'nilai' => $rapor === null ? [] : $model->nilai((string) $rapor['id']),
             'pendukung' => $rapor === null ? [] : $model->dataPendukung((string) $rapor['id']),
             'format' => array_column($format, null, 'id_sumber'),
@@ -64,6 +66,11 @@ final class RaporPemutakhiranModel extends Model
 
             $rapor = $snapshot['rapor'] ?? [];
             $meta = $patch['rapor'];
+            if (! empty($patch['pengesahan'])) {
+                $meta['pengesahan_arsip'] = json_encode(
+                    $patch['pengesahan'] + PengesahanRapor::koreksi($rapor), JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR
+                );
+            }
             $kodeFormat = ($meta + $rapor)['kode_format'];
             unset($meta['kode_format']);
             $meta['format_cetak_id'] = $snapshot['format'][$kodeFormat]['id'];

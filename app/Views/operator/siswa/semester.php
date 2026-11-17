@@ -1,3 +1,5 @@
+<?php use App\Libraries\PengesahanRapor; ?>
+
 <?= $this->extend('layouts/operator') ?>
 
 <?= $this->section('content') ?>
@@ -128,9 +130,25 @@ $angka = static function ($value): string {
     </section>
 <?php endif ?>
 
-<?php if ($pendukung !== []): ?>
+<?php if ($rapor !== null || $pendukung !== []): ?>
     <section class="card mb-4" aria-labelledby="judul-pendukung">
-        <div class="card-body"><h2 id="judul-pendukung" class="h5 mb-0">Data Pendukung</h2></div>
+        <div class="card-body">
+            <h2 id="judul-pendukung" class="h5 mb-3">Data Pendukung</h2>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <h3 class="h6 mb-0">Pengesahan arsip</h3>
+                <a href="<?= esc(url_to('edit-rapor', $siswa['id'], $nomorSemester) . '#pengesahan-arsip', 'attr') ?>"
+                   class="btn btn-sm btn-outline-secondary">Koreksi data pengesahan</a>
+            </div>
+            <dl class="row g-3 mb-0">
+                <?php foreach (PengesahanRapor::KEPALA + PengesahanRapor::WALI as $field => [$label]): ?>
+                    <div class="col-sm-6 col-lg-4">
+                        <dt><?= esc($label) ?></dt>
+                        <dd class="mb-0 text-break"><?= esc($pengesahan[$field] ?? '—') ?></dd>
+                    </div>
+                <?php endforeach ?>
+            </dl>
+        </div>
+        <?php if ($pendukung !== []): ?>
         <div class="table-responsive">
             <table class="table mb-0">
                 <thead class="table-light">
@@ -153,6 +171,7 @@ $angka = static function ($value): string {
                 </tbody>
             </table>
         </div>
+        <?php endif ?>
     </section>
 <?php endif ?>
 

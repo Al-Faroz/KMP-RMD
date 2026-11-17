@@ -3,7 +3,6 @@
 namespace App\Libraries;
 
 use App\Models\RaporSemesterModel;
-use CodeIgniter\I18n\Time;
 
 final class CetakRapor
 {
@@ -124,15 +123,7 @@ final class CetakRapor
             $dataPendukung[mb_strtolower(trim($item['jenis_item']))][] = $item;
         }
 
-        $tempatTanggal = $pengaturan['tempat_tanggal_cetak_asli'] ?? null;
-        if ($tempatTanggal === null || $tempatTanggal === '') {
-            $tanggal = $pengaturan['tanggal_terbit'] ?? null;
-            $tempat = $pengaturan['tempat_terbit'] ?? null;
-            $tempatTanggal = implode(', ', array_filter([
-                $tempat,
-                $tanggal === null ? null : Time::parse($tanggal, 'Asia/Jakarta', 'id_ID')->toLocalizedString('d MMMM y'),
-            ]));
-        }
+        $pengesahan = PengesahanRapor::baca($rapor, $pengaturan);
 
         return [
             'siswa' => ['nama' => $rapor['nama'], 'nis' => $rapor['nis'], 'nisn' => $rapor['nisn']],
@@ -145,7 +136,7 @@ final class CetakRapor
             'pendukung' => $dataPendukung,
             'rentang' => $rentang,
             'pengaturan' => $pengaturan,
-            'tempatTanggal' => $tempatTanggal,
+            'pengesahan' => $pengesahan,
             'merdeka' => $kode === 'RDM_PDF_2023_VIIA',
             'deskripsiTerpisah' => in_array($kode, ['ARD_KHS2', 'RDM_K13'], true),
         ];

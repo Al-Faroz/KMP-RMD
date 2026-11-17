@@ -16,6 +16,10 @@ final class RaporFields
 
     public static function definitions(string $section): array
     {
+        if ($section === 'pengesahan') {
+            return PengesahanRapor::KEPALA;
+        }
+
         $fields = [];
         if ($section === 'rapor') {
             $fields = [

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Libraries\CetakDokumenSiswa;
 use App\Libraries\CetakRapor;
 use App\Libraries\CetakTranskrip;
+use App\Libraries\PengesahanRapor;
 use App\Models\RaporSemesterModel;
 use App\Models\SiswaModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -144,6 +145,7 @@ final class Siswa extends BaseController
             'rapor' => $rapor,
             'nilai' => $rapor === null ? [] : $model->nilai((string) $rapor['id']),
             'pendukung' => $rapor === null ? [] : $model->dataPendukung((string) $rapor['id']),
+            'pengesahan' => PengesahanRapor::baca($rapor ?? [], $model->pengaturanCetak($rapor['pengaturan_cetak_id'] ?? null)),
         ]);
     }
 

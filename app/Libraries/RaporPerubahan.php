@@ -8,10 +8,13 @@ final class RaporPerubahan
 {
     public function siapkan(array $snapshot, array $masukan, bool $lewatiKosong): array
     {
-        $patch = ['rapor' => [], 'nilai' => [], 'pendukung' => []];
+        $patch = ['rapor' => [], 'nilai' => [], 'pendukung' => [], 'pengesahan' => []];
         $preview = [];
         $rapor = $snapshot['rapor'] ?? [];
         $patch['rapor'] = $this->bandingkan('rapor', 'Rapor', $rapor, $masukan['rapor'] ?? [], $lewatiKosong, $preview);
+
+        $patch['pengesahan'] = $this->bandingkan('pengesahan', 'Pengesahan arsip', $snapshot['pengesahan'],
+            $masukan['pengesahan'] ?? [], $lewatiKosong, $preview);
 
         foreach (array_keys(RaporFields::TABLES) as $bagian) {
             $tersedia = array_column($snapshot[$bagian], null, 'id');

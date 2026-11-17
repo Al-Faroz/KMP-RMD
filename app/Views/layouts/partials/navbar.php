@@ -6,4 +6,11 @@
         <i class="bx bx-menu" aria-hidden="true"></i>
     </button>
     <span class="fw-semibold text-heading">Ruang Operator</span>
+    <div class="d-flex flex-wrap align-items-center gap-2 ms-auto">
+        <span class="small text-break"><?= esc(session()->get('operator_nama')) ?></span>
+        <form method="post" action="<?= esc(url_to('keluar'), 'attr') ?>">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-sm btn-outline-secondary">Keluar</button>
+        </form>
+    </div>
 </header>

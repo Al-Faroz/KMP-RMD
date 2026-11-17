@@ -1,0 +1,37 @@
+.rmd-login {
+    display: grid;
+    min-height: 100vh;
+    min-height: 100dvh;
+    place-items: center;
+    padding: 1.25rem;
+    background: #f2f6f4;
+}
+
+.rmd-login-panel {
+    width: min(100%, 25rem);
+    box-sizing: border-box;
+    padding: clamp(1.5rem, 5vw, 2.25rem);
+    background: #fff;
+    border: 1px solid #dce9e1;
+    border-radius: 1rem;
+    box-shadow: 0 1rem 3rem rgb(20 53 37 / 8%);
+}
+
+.rmd-login-brand {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1.5rem;
+    color: #24513e;
+    font-weight: 700;
+}
+
+.rmd-login-panel .btn-primary {
+    --bs-btn-bg: #176049;
+    --bs-btn-border-color: #176049;
+    --bs-btn-hover-bg: #114a38;
+    --bs-btn-hover-border-color: #114a38;
+    --bs-btn-active-bg: #114a38;
+    --bs-btn-active-border-color: #114a38;
+    --bs-btn-focus-shadow-rgb: 23, 96, 73;
+}

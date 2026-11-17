@@ -15,7 +15,7 @@ class Security extends BaseConfig
      *
      * @var string 'cookie' or 'session'
      */
-    public string $csrfProtection = 'cookie';
+    public string $csrfProtection = 'session';
 
     /**
      * --------------------------------------------------------------------------
@@ -51,7 +51,7 @@ class Security extends BaseConfig
      *
      * Cookie name for Cross Site Request Forgery protection.
      */
-    public string $cookieName = 'csrf_cookie_name';
+    public string $cookieName = 'rmd_csrf_cookie';
 
     /**
      * --------------------------------------------------------------------------

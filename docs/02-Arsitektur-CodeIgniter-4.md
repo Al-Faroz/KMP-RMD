@@ -47,6 +47,12 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 
 | Metode | Rute | Tindakan |
 |---|---|---|
+| GET / POST | `/masuk` | Buka form dan mulai sesi operator. |
+| POST | `/keluar` | Akhiri sesi operator. |
+| GET | `/operator` | Lihat daftar operator. |
+| GET / POST | `/operator/tambah` | Buka form dan buat akun operator. |
+| GET / POST | `/operator/{id}/edit` | Buka form dan simpan perubahan akun. |
+| GET / POST | `/operator/{id}/hapus` | Buka konfirmasi dan hapus akun. |
 | GET | `/siswa` | Cari siswa dan filter angkatan. |
 | GET | `/siswa/{siswa}` | Buka detail dan riwayat semester. |
 | GET / POST | `/siswa/{siswa}/edit` | Buka form dan simpan identitas. |
@@ -70,7 +76,24 @@ Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Lembar 
 
 - Validasi bahwa siswa dan semester pada rute sesuai dengan data yang dibuka. Untuk impor, cocokkan juga identitas target dan semester file dengan rute.
 - Terapkan validasi server untuk perubahan data dan CSRF untuk form yang menulis data. Preview impor memuat perubahan yang terkait dengan sesi operator dan target yang sama saat dikonfirmasi.
-- Otorisasi eksekusi di sisi server setelah kebijakan akun disetujui. Pemeriksaan berlaku juga untuk unduhan Excel dan PDF yang berisi data siswa.
+- Semua rute aplikasi selain Masuk memerlukan sesi operator. Pemeriksaan berlaku juga untuk tautan langsung ke Excel dan PDF. Form masuk, keluar, dan perubahan data menggunakan token CSRF yang tersimpan dalam sesi.
 - Pembuatan PDF membaca data terkini dan mengirim hasil ke pengguna. Database menyimpan data rapor dan konfigurasi cetak.
 
-Excel menggunakan PhpSpreadsheet. PDF dokumen siswa menggunakan mPDF dengan direktori sementara `writable/cache/mpdf`. Model akun masih perlu ditetapkan. Kriteria penerimaan setiap tahap tersedia di [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md).
+Excel menggunakan PhpSpreadsheet. PDF dokumen siswa menggunakan mPDF dengan direktori sementara `writable/cache/mpdf`. Akun operator pertama dibuat melalui perintah Spark yang membaca kata sandi dari stdin. Kriteria penerimaan setiap tahap tersedia di [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md).
+
+## Membuat akun operator di XAMPP
+
+Jalankan dari root proyek. Ganti nama dan username pada contoh. Username memakai 1–64 huruf, angka, titik, garis bawah, atau tanda hubung. Masukkan kata sandi minimal 8 karakter dengan panjang maksimal 72 byte.
+
+```powershell
+& 'E:\xampp\php\php.exe' spark migrate
+$kataSandiRmd = Read-Host 'Kata sandi operator' -AsSecureString
+& {
+    $OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+    [System.Net.NetworkCredential]::new('', $kataSandiRmd).Password |
+        & 'E:\xampp\php\php.exe' spark rmd:operator-buat 'Nama Lengkap Operator' 'operator01'
+}
+Remove-Variable kataSandiRmd
+```
+
+Buka [RMD di XAMPP](http://localhost/kmp-rdm/), lalu masuk dengan akun tersebut. Kelola akun berikutnya dari menu **Operator**. Username harus unik. Kosongkan kata sandi saat mengedit untuk mempertahankannya. Perubahan kata sandi meminta akun terkait masuk kembali. Penghapusan akun mewajibkan konfirmasi dan mengakhiri akses akun tersebut pada permintaan berikutnya.

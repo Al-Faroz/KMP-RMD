@@ -36,11 +36,14 @@ $khs1 = $khs1 ?? false;
         <?= view('cetak/rapor/ketidakhadiran', compact('pendukung', 'tampil') + ['judul' => 'D. Ketidakhadiran'], ['saveData' => false]) ?>
     <?php endif ?>
 
+    <?php $prestasi = $pendukung['prestasi'] ?? []; ?>
+    <?php // Untuk KHS1 dengan tabel pendek, pertahankan judul dan seluruh baris Prestasi pada satu halaman. ?>
+    <?php $jagaPrestasiKhs1 = $khs1 && count($prestasi) <= 3; ?>
+    <?php if ($jagaPrestasiKhs1): ?><div style="page-break-inside: avoid;"><?php endif ?>
     <h2><?= $khs ? 'E. ' : '' ?>Prestasi</h2>
-    <table class="rapor-tabel">
+    <table class="rapor-tabel"<?= $jagaPrestasiKhs1 ? ' style="page-break-inside: avoid;"' : '' ?>>
         <thead><tr><th style="width: 6%">No.</th><th style="width: 39%"><?= $khs && ! $khs1 ? 'Jenis Kegiatan' : 'Jenis Prestasi' ?></th><th><?= $khs && ! $khs1 ? 'Deskripsi' : 'Keterangan' ?></th></tr></thead>
         <tbody>
-            <?php $prestasi = $pendukung['prestasi'] ?? []; ?>
             <?php foreach ($prestasi as $i => $item): ?>
                 <?php foreach ($potongan($item['keterangan'] ?? $item['isian_tercetak_asli'] ?? null) as $bagian => $isi): ?>
                     <tr<?= trim($isi) === '' ? ' class="isian-manual"' : '' ?>>
@@ -54,6 +57,7 @@ $khs1 = $khs1 ?? false;
             <?php endfor ?>
         </tbody>
     </table>
+    <?php if ($jagaPrestasiKhs1): ?></div><?php endif ?>
 
     <?php if (! $khs1): ?>
         <?= view('cetak/rapor/ketidakhadiran', compact('pendukung', 'tampil') + ['judul' => $khs ? 'F. Ketidakhadiran' : 'Ketidakhadiran'], ['saveData' => false]) ?>

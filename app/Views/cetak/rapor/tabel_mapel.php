@@ -14,7 +14,7 @@ $khususDeskripsi = $khs && str_starts_with($daftarField[0] ?? '', 'deskripsi_');
 <table class="<?= $khususDeskripsi ? 'rapor-deskripsi' : 'rapor-tabel' ?><?= $padat ? ' rapor-khs1' : '' ?>" autosize="<?= $khs ? 1 : 1.08 ?>">
     <thead>
         <tr>
-            <th rowspan="<?= $rentangBaris ?>" style="width: <?= $lebarNo ?? 5 ?>%">No.</th>
+            <th rowspan="<?= $rentangBaris ?>"<?= $padat ? ' class="kolom-nomor"' : '' ?> style="width: <?= $lebarNo ?? 5 ?>%">No.</th>
             <th rowspan="<?= $rentangBaris ?>" style="width: <?= $lebarMapel ?>%">Mata Pelajaran</th>
             <?php foreach ($kolom as $label => $field): ?>
                 <?php if (is_array($field)): ?>

@@ -73,6 +73,22 @@ $identitas = $khs1 ? [
     .khs .rapor-tabel th.kolom-predikat { font-size: 7pt; }
     .khs .rapor-khs1 th.kolom-predikat { font-size: 6.4pt; }
     .khs .rapor-khs1 th.kolom-sks { font-size: 7pt; }
+    /* KHS1: nomor dan angka jumlah tidak boleh pecah menjadi dua baris. */
+    .khs .rapor-khs1 th.kolom-nomor {
+        font-size: 7pt;
+        white-space: nowrap;
+        padding-left: .15mm;
+        padding-right: .15mm;
+    }
+    .khs .rapor-khs1 tr.total-khs th {
+        font-size: 7.1pt;
+        white-space: nowrap;
+        padding: .35mm .15mm;
+        vertical-align: middle;
+    }
+    /* Rekap lebih padat agar dapat mengikuti Jumlah pada halaman yang sama jika muat. */
+    .khs .rekap-khs1 { font-size: 8pt; }
+    .khs .rekap-khs1 td, .khs .rekap-khs1 th { padding: .5mm .4mm; }
     .khs .rapor-deskripsi { font-size: 8.3pt; }
     .khs .rapor-deskripsi td, .khs .rapor-deskripsi th { border: .45pt solid #616161; padding: .5mm .85mm; }
     .khs .sikap-nilai td { height: 34mm; vertical-align: middle; font-size: 9.5pt; padding: 2mm; }
@@ -152,7 +168,7 @@ $identitas = $khs1 ? [
             $nilaiIpk = number_format((float) $ipk['nilai'], 2, ',', '');
         }
         ?>
-        <table class="rapor-tabel" style="margin-top: 2mm; page-break-inside: avoid">
+        <table class="rapor-tabel rekap-khs1" style="margin-top: 1.5mm; page-break-inside: avoid">
             <tr>
                 <th style="width: 18%">Peringkat</th><th style="width: 12%">IP</th><th style="width: 20%">SKS Berikutnya</th><th style="width: 12%">IPK</th>
                 <td rowspan="2" class="teks">IP = (Σ SKS × N1 + Σ SKS × N2) ÷ (2 × Σ SKS).<br>N1 = Pengetahuan. N2 = Keterampilan.</td>

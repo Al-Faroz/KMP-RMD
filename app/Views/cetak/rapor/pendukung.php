@@ -1,27 +1,44 @@
-<div class="tetap-bersama">
-    <h2>Ekstrakurikuler</h2>
+<?php
+$khs = isset($khs1);
+$khs1 = $khs1 ?? false;
+?>
+<div<?= $khs ? '' : ' class="tetap-bersama"' ?>>
+    <h2><?= $khs1 ? 'C. ' : ($khs ? 'D. ' : '') ?>Ekstrakurikuler</h2>
     <table class="rapor-tabel">
-        <thead><tr><th style="width: 6%">No.</th><th style="width: 34%">Kegiatan</th><th style="width: 17%">Nilai / Predikat</th><th>Keterangan</th></tr></thead>
+        <thead>
+            <tr>
+                <th style="width: 6%">No.</th><th style="width: 34%"><?= $khs ? 'Kegiatan Ekstrakurikuler' : 'Kegiatan' ?></th>
+                <?php if (! $khs1): ?><th style="width: 17%"><?= $khs ? 'Predikat' : 'Nilai / Predikat' ?></th><?php endif ?>
+                <th><?= $khs && ! $khs1 ? 'Deskripsi' : 'Keterangan' ?></th>
+            </tr>
+        </thead>
         <tbody>
             <?php $ekstrakurikuler = $pendukung['ekstrakurikuler'] ?? []; ?>
             <?php foreach ($ekstrakurikuler as $i => $item): ?>
                 <?php foreach ($potongan($item['keterangan'] ?? $item['isian_tercetak_asli'] ?? null) as $bagian => $isi): ?>
                     <tr<?= trim($isi) === '' ? ' class="isian-manual"' : '' ?>>
                         <td><?= $bagian > 0 ? '' : $i + 1 ?></td><td class="teks"><?= esc($item['nama_item'] ?? '') ?></td>
-                        <td><?= esc($bagian === 0 ? trim($tampil($item['nilai'] ?? null) . ' ' . ($item['predikat'] ?? '')) : '') ?></td>
+                        <?php if (! $khs1): ?>
+                            <?php $nilai = $khs ? ($item['predikat'] ?? $tampil($item['nilai'] ?? null)) : trim($tampil($item['nilai'] ?? null) . ' ' . ($item['predikat'] ?? '')); ?>
+                            <td><?= esc($bagian === 0 ? $nilai : '') ?></td>
+                        <?php endif ?>
                         <td class="teks"><?= nl2br(esc($isi), false) ?></td>
                     </tr>
                 <?php endforeach ?>
             <?php endforeach ?>
-            <?php for ($i = count($ekstrakurikuler); $i < 2; $i++): ?>
-                <tr class="isian-manual"><td><?= $i + 1 ?></td><td></td><td></td><td></td></tr>
+            <?php for ($i = count($ekstrakurikuler); $i < ($khs ? 3 : 2); $i++): ?>
+                <tr class="isian-manual"><td><?= $i + 1 ?></td><td></td><?php if (! $khs1): ?><td></td><?php endif ?><td></td></tr>
             <?php endfor ?>
         </tbody>
     </table>
 
-    <h2>Prestasi</h2>
+    <?php if ($khs1): ?>
+        <?= view('cetak/rapor/ketidakhadiran', compact('pendukung', 'tampil') + ['judul' => 'D. Ketidakhadiran'], ['saveData' => false]) ?>
+    <?php endif ?>
+
+    <h2><?= $khs ? 'E. ' : '' ?>Prestasi</h2>
     <table class="rapor-tabel">
-        <thead><tr><th style="width: 6%">No.</th><th style="width: 39%">Jenis Prestasi</th><th>Keterangan</th></tr></thead>
+        <thead><tr><th style="width: 6%">No.</th><th style="width: 39%"><?= $khs && ! $khs1 ? 'Jenis Kegiatan' : 'Jenis Prestasi' ?></th><th><?= $khs && ! $khs1 ? 'Deskripsi' : 'Keterangan' ?></th></tr></thead>
         <tbody>
             <?php $prestasi = $pendukung['prestasi'] ?? []; ?>
             <?php foreach ($prestasi as $i => $item): ?>
@@ -38,22 +55,9 @@
         </tbody>
     </table>
 
-    <h2>Ketidakhadiran</h2>
-    <table class="rapor-tabel" style="width: 55%">
-        <tbody>
-            <?php foreach ($pendukung['ketidakhadiran'] ?? array_map(static fn ($nama) => ['nama_item' => $nama], ['Sakit', 'Izin', 'Tanpa Keterangan']) as $item): ?>
-                <?php
-                $arsip = trim($item['isian_tercetak_asli'] ?? '');
-                $jumlah = $item['jumlah'] ?? null;
-                $isi = $arsip !== '' ? $arsip : trim($tampil($jumlah) . ' ' . ($item['satuan'] ?? ''));
-                ?>
-                <tr<?= $arsip === '' && $jumlah === null ? ' class="isian-manual"' : '' ?>>
-                    <td class="teks" style="width: 63%"><?= esc($item['nama_item'] ?? '') ?></td>
-                    <td><?= esc($isi) ?></td>
-                </tr>
-            <?php endforeach ?>
-        </tbody>
-    </table>
+    <?php if (! $khs1): ?>
+        <?= view('cetak/rapor/ketidakhadiran', compact('pendukung', 'tampil') + ['judul' => $khs ? 'F. Ketidakhadiran' : 'Ketidakhadiran'], ['saveData' => false]) ?>
+    <?php endif ?>
 
     <?php foreach (['Catatan Wali Kelas', 'Tanggapan Orang Tua / Wali'] as $judulCatatan): ?>
         <?php
@@ -61,12 +65,13 @@
         $kunciCatatan = $tanggapan ? 'tanggapan orang tua/wali' : 'catatan wali kelas';
         $catatan = array_filter(array_map(
             static fn (array $item): string => trim($item['keterangan'] ?? $item['isian_tercetak_asli'] ?? ''),
-            $pendukung[$kunciCatatan] ?? []
+            $pendukung[$kunciCatatan] ?? ($tanggapan ? ($pendukung['tanggapan orang tua'] ?? []) : [])
         ), static fn (string $isi): bool => $isi !== '');
         ?>
-        <h2><?= esc($judulCatatan) ?></h2>
-        <?php if ($catatan === []): ?>
-            <table class="kotak-isian"><tr><td<?= $tanggapan ? ' class="tanggapan"' : '' ?>>&nbsp;</td></tr></table>
+        <?php $huruf = $khs1 ? ($tanggapan ? 'G. ' : 'F. ') : ($khs ? ($tanggapan ? 'H. ' : 'G. ') : ''); ?>
+        <h2><?= esc($huruf . $judulCatatan) ?></h2>
+        <?php if ($khs || $catatan === []): ?>
+            <table class="kotak-isian"><tr><td<?= $tanggapan ? ' class="tanggapan"' : '' ?>><?= $catatan === [] ? '&nbsp;' : nl2br(esc(implode("\n", $catatan)), false) ?></td></tr></table>
         <?php else: ?>
             <div class="bingkai"><?= nl2br(esc(implode("\n", $catatan)), false) ?></div>
         <?php endif ?>

@@ -51,23 +51,14 @@ Satu tata letak per dokumen berlaku untuk keempat tipe rapor. Kolom Lembar Nilai
 
 ## Implementasi layout dan pemeriksaan
 
-Rapor **KHS1** dan **KHS2** memakai template Word di `app/Assets/rapor/`. PHPWord mengisi arsip semester, lalu LibreOffice mengonversi DOCX ke PDF secara lokal. mPDF menggabungkan halaman dengan ukuran F4 (210 × 330 mm) dan merender rapor **RDM K13** serta **RDM Kurikulum Merdeka**. Alur ini dipakai oleh **Cetak Rapor**, **Cetak Semua Semester**, dan **Cetak Rombel**. Setiap rapor mulai di halaman baru sesuai urutan pilihan.
+RMD menghasilkan PDF F4 (210 × 330 mm) langsung dengan mPDF melalui view cetak CI4. PDF dan Word contoh dipakai sebagai acuan untuk susunan halaman, lebar kolom, serta ruang isian. Cetak Rapor, Cetak Semua Semester, dan Cetak Rombel memakai jalur cetak yang sama. Setiap rapor mulai pada halaman baru dalam hasil gabungan.
 
-- **KHS1** mengalirkan tabel nilai dan deskripsi pada halaman lanjutan dengan kepala kolom berulang. Data pendukung dan pengesahan mulai di halaman baru.
-- **KHS2** memulai Nilai, Deskripsi, dan Data Pendukung pada halaman baru setelah Sikap. Tabel deskripsi yang panjang dapat berlanjut dengan kepala kolom berulang. Kolom Rata-rata dan Beban × Nilai pada baris mapel memakai pembulatan tampilan arsip. Total mempertahankan desimal yang tersedia.
-- Kedua template menyediakan sedikitnya tiga baris Ekstrakurikuler dan tiga baris Prestasi. Baris memakai tinggi minimum 8 mm dan memanjang sesuai isi. Catatan Wali Kelas menyediakan minimal 22 mm dan Tanggapan Orang Tua / Wali minimal 27 mm. Pada KHS2, Ekstrakurikuler punya kolom Predikat.
-- IPK KHS1 dapat diambil dari entri Data Pendukung dengan Jenis Item `IPK`. Isi nilai tersebut dari dokumen asli. Kolom IPK kosong jika sumbernya belum tersimpan.
+- **KHS1** mengalirkan tabel nilai dan deskripsi dengan kepala kolom berulang. Data pendukung serta pengesahan dimulai pada halaman baru. IPK bersumber dari entri Data Pendukung berjenis `IPK` jika arsip menyimpannya.
+- **KHS2** memulai Sikap, Nilai, Deskripsi, dan Data Pendukung pada halaman masing-masing. Deskripsi yang panjang dapat berlanjut ke halaman berikutnya dengan kepala tabel berulang. Rata-rata dan Beban × Nilai di baris mapel mengikuti pembulatan tampilan arsip. Total Beban × Nilai menampilkan desimal yang tersimpan.
+- KHS1 dan KHS2 menyediakan paling sedikit tiga baris Ekstrakurikuler dan tiga baris Prestasi. Baris kosong diberi tinggi 8 mm. Kotak Catatan Wali Kelas dan Tanggapan Orang Tua / Wali memakai tinggi minimum 22 mm dan 27 mm.
 - Pada RDM K13, bagian Deskripsi dimulai di halaman baru. Data pendukung dan pengesahan ditempatkan bersama jika keduanya muat di satu halaman.
 
-### Menyiapkan LibreOffice di XAMPP
-
-Jalankan `composer install` dari root proyek. Instal LibreOffice di komputer yang menjalankan Apache XAMPP. RMD mencari LibreOffice pada lokasi instalasi standar; untuk lokasi khusus, tambahkan setelan berikut di `.env` dengan menyesuaikan alamatnya.
-
-```dotenv
-rmd.libreOfficePath = 'C:/Program Files/LibreOffice/program/soffice.com'
-```
-
-Cetak KHS memakai fungsi PHP `proc_open` dan folder sementara di `writable/cache/`. Pada rombel atau semua semester, aplikasi mengonversi dokumen KHS dalam satu proses dan menggabungkan hasilnya sesuai urutan arsip. Uji di XAMPP dengan satu KHS1, satu KHS2, dan satu rombel. Periksa ukuran halaman, pemisah bagian, dan hasil cetak pada kertas F4 madrasah.
+Untuk paket hosting, jalankan `composer install --no-dev` di PC. Unggah aplikasi beserta folder `vendor/`. Jalur cetak memakai PHP dan dependensi yang ada di folder tersebut.
 
 Cetak Rapor membaca nilai, predikat, deskripsi, ringkasan, dan pengesahan yang tersimpan pada semester yang dipilih. Format memakai susunan bagian dari arsip dan penyesuaian lebar kolom serta pemisah halaman untuk F4. Kolom Rata-rata dan Beban × Nilai pada RDM K13 muncul jika nilainya tersimpan. Bagian Sikap disediakan pada format K13 dan arsip lama, dengan sel kosong jika isian tidak tersedia. Pengesahan menampilkan jabatan, nama, NIP, tempat dan tanggal terbit, serta ruang tanda tangan berdasarkan dokumen asli. Detail Semester menampilkan data itu di bagian Data Pendukung. Koreksi manual melalui Edit Rapor berlaku untuk arsip siswa dan semester tersebut pada PDF Rapor dan Lembar Nilai. Data impor saat ini belum menyimpan kode verifikasi QR dari RDM Merdeka.
 

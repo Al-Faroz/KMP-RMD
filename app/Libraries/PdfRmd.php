@@ -4,8 +4,6 @@ namespace App\Libraries;
 
 use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
-use setasign\Fpdi\PdfReader\PageBoundaries;
-use Throwable;
 
 final class PdfRmd
 {
@@ -16,7 +14,7 @@ final class PdfRmd
         return $this->gabungkan($dokumen, $judul, [$data], $lanskap);
     }
 
-    public function gabungkan(string $dokumen, string $judul, iterable $isi, bool $lanskap = false): string
+    public function gabungkan(string|callable $dokumen, string $judul, iterable $isi, bool $lanskap = false): string
     {
         $pdf = new Mpdf([
             'mode' => 'utf-8',
@@ -33,23 +31,11 @@ final class PdfRmd
         $pdf->SetTitle($judul);
         $halamanPertama = true;
         foreach ($isi as $data) {
-            if (is_string($data)) {
-                try {
-                    $halaman = $pdf->setSourceFile($data);
-                    for ($nomor = 1; $nomor <= $halaman; $nomor++) {
-                        $impor = $pdf->importPage($nomor, PageBoundaries::MEDIA_BOX);
-                        $pdf->AddPage();
-                        $pdf->useTemplate($impor, 0, 0, ...self::F4_MM);
-                    }
-                } catch (Throwable $error) {
-                    throw new GagalCetakKhs('PDF KHS yang dikonversi gagal dibaca.', 0, $error);
-                }
-            } else {
-                if (! $halamanPertama) {
-                    $pdf->AddPage();
-                }
-                $pdf->WriteHTML(view('cetak/' . $dokumen, $data, ['saveData' => false]));
+            if (! $halamanPertama) {
+                $pdf->AddPage();
             }
+            $template = is_string($dokumen) ? $dokumen : $dokumen($data);
+            $pdf->WriteHTML(view('cetak/' . $template, $data, ['saveData' => false]));
             $halamanPertama = false;
         }
 

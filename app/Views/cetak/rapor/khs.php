@@ -63,6 +63,16 @@ $identitas = $khs1 ? [
     .khs .rapor-khs1 { font-size: 8pt; }
     .khs .rapor-khs1 td, .khs .rapor-khs1 th { padding: .8mm .65mm; }
     .khs .rapor-khs1 .kolom-sempit { font-size: 7pt; }
+    /* Label pada kolom angka KHS harus utuh pada cetakan dan header berulang. */
+    .khs .rapor-tabel th.kolom-predikat,
+    .khs .rapor-tabel th.kolom-sks {
+        white-space: nowrap;
+        padding-left: .2mm;
+        padding-right: .2mm;
+    }
+    .khs .rapor-tabel th.kolom-predikat { font-size: 7pt; }
+    .khs .rapor-khs1 th.kolom-predikat { font-size: 6.4pt; }
+    .khs .rapor-khs1 th.kolom-sks { font-size: 7pt; }
     .khs .rapor-deskripsi { font-size: 8.3pt; }
     .khs .rapor-deskripsi td, .khs .rapor-deskripsi th { border: .45pt solid #616161; padding: .5mm .85mm; }
     .khs .sikap-nilai td { height: 34mm; vertical-align: middle; font-size: 9.5pt; padding: 2mm; }
@@ -80,11 +90,12 @@ $identitas = $khs1 ? [
 <?= $this->section('isi') ?>
 <div class="khs">
     <?php if ($khs1): ?><h1><?= esc($judul) ?></h1><?php endif ?>
+    <?php $lebarIdentitas = $khs1 ? [19, 45, 18, 18] : [16, 40, 24, 20]; ?>
     <table class="isian<?= $khs1 ? '' : ' identitas-khs2' ?>">
         <?php foreach ($identitas as [$kiri, $nilaiKiri, $kanan, $nilaiKanan]): ?>
             <tr>
-                <td style="width: 19%"><?= esc($kiri) ?></td><td style="width: 45%"><?= esc($nilaiKiri) ?></td>
-                <td style="width: 18%"><?= esc($kanan) ?></td><td style="width: 18%"><?= esc($nilaiKanan) ?></td>
+                <td style="width: <?= $lebarIdentitas[0] ?>%"><?= esc($kiri) ?></td><td style="width: <?= $lebarIdentitas[1] ?>%"><?= esc($nilaiKiri) ?></td>
+                <td style="width: <?= $lebarIdentitas[2] ?>%"><?= esc($kanan) ?></td><td style="width: <?= $lebarIdentitas[3] ?>%"><?= esc($nilaiKanan) ?></td>
             </tr>
         <?php endforeach ?>
     </table>
@@ -115,11 +126,11 @@ $identitas = $khs1 ? [
     <p><?= $khs1 ? 'Ketuntasan Belajar Minimal' : 'Kriteria Ketuntasan Minimal' ?>&nbsp; <?= esc($tampil($batas[$khs1 ? 'KBM' : 'KKM'] ?? null)) ?></p>
     <?= view('cetak/rapor/tabel_mapel', compact('mapel', 'kolom', 'tampil', 'potongan', 'khs') + [
         'lebarNo' => $khs1 ? 3.5 : 4,
-        'lebarMapel' => $khs1 ? 15 : 30,
+        'lebarMapel' => $khs1 ? 14 : 30,
         'lebarField' => $khs1 ? [
-            'sks' => 3.5,
-            'nilai_pengetahuan' => 4.5, 'sk_sx_n1' => 5.5, 'predikat_pengetahuan' => 4.5, 'deskripsi_pengetahuan' => 24.5,
-            'nilai_keterampilan' => 4.5, 'sk_sx_n2' => 5.5, 'predikat_keterampilan' => 4.5, 'deskripsi_keterampilan' => 24.5,
+            'sks' => 4.5,
+            'nilai_pengetahuan' => 4.5, 'sk_sx_n1' => 5.5, 'predikat_pengetahuan' => 6, 'deskripsi_pengetahuan' => 23,
+            'nilai_keterampilan' => 4.5, 'sk_sx_n2' => 5.5, 'predikat_keterampilan' => 6, 'deskripsi_keterampilan' => 23,
         ] : [
             'beban_jp' => 7, 'nilai_pengetahuan' => 7, 'predikat_pengetahuan' => 8,
             'nilai_keterampilan' => 7, 'predikat_keterampilan' => 8, 'rata_rata_ard' => 14, 'bebanx_n' => 15,
@@ -173,7 +184,8 @@ $identitas = $khs1 ? [
         ], ['saveData' => false]) ?>
     <?php endif ?>
 
-    <pagebreak />
+    <?php // KHS1: data pendukung mengalir setelah rekap jika masih ada ruang; KHS2 tetap di halaman tersendiri. ?>
+    <?php if (! $khs1): ?><pagebreak /><?php endif ?>
     <?= view('cetak/rapor/pendukung', compact('pendukung', 'pengesahan', 'tampil', 'potongan', 'khs1'), ['saveData' => false]) ?>
 </div>
 <?= $this->endSection() ?>

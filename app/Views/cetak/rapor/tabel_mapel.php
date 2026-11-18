@@ -20,7 +20,7 @@ $khususDeskripsi = $khs && str_starts_with($daftarField[0] ?? '', 'deskripsi_');
                 <?php if (is_array($field)): ?>
                     <th colspan="<?= count($field) ?>"><?= esc($label) ?></th>
                 <?php else: ?>
-                    <th rowspan="<?= $rentangBaris ?>"<?= isset($lebarField[$field]) ? ' style="width: ' . $lebarField[$field] . '%"' : '' ?>><?= esc($label) ?></th>
+                    <th rowspan="<?= $rentangBaris ?>"<?= $khs && $field === 'sks' ? ' class="kolom-sks"' : '' ?><?= isset($lebarField[$field]) ? ' style="width: ' . $lebarField[$field] . '%"' : '' ?>><?= esc($label) ?></th>
                 <?php endif ?>
             <?php endforeach ?>
         </tr>
@@ -29,7 +29,7 @@ $khususDeskripsi = $khs && str_starts_with($daftarField[0] ?? '', 'deskripsi_');
                 <?php foreach ($kolom as $field): ?>
                     <?php if (is_array($field)): ?>
                         <?php foreach ($field as $label => $nama): ?>
-                            <th class="kolom-sempit"<?= isset($lebarField[$nama]) ? ' style="width: ' . $lebarField[$nama] . '%"' : '' ?>><?= esc($label) ?></th>
+                            <th class="kolom-sempit<?= $khs && $label === 'Predikat' ? ' kolom-predikat' : '' ?>"<?= isset($lebarField[$nama]) ? ' style="width: ' . $lebarField[$nama] . '%"' : '' ?>><?= esc($label) ?></th>
                         <?php endforeach ?>
                     <?php endif ?>
                 <?php endforeach ?>

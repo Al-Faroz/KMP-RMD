@@ -76,7 +76,9 @@ $khususDeskripsi = $khs && str_starts_with($daftarField[0] ?? '', 'deskripsi_');
                     <td><?= $bagian === 0 ? $noMapel : '' ?></td>
                     <td class="teks"><?= esc($item['nama_mapel_asli']) ?></td>
                     <?php foreach ($baris as $field => $bagianIsi): ?>
-                        <td<?= str_starts_with($field, 'deskripsi_') || $field === 'capaian_kompetensi' ? ' class="teks"' : '' ?>
+                        <td<?= str_starts_with($field, 'deskripsi_') || $field === 'capaian_kompetensi'
+                            ? ' class="teks' . ($khs && $padat && str_starts_with($field, 'deskripsi_') ? ' deskripsi-khs1' : '') . '"'
+                            : '' ?>
                             <?= isset($lebarField[$field]) ? 'style="width: ' . $lebarField[$field] . '%"' : '' ?>>
                             <?= nl2br(esc($bagianIsi[$bagian] ?? ''), false) ?>
                         </td>

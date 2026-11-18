@@ -61,6 +61,8 @@ $identitas = $khs1 ? [
     .khs .kelompok { background: #f0f0f0; }
     .khs .judul-kelompok { page-break-after: avoid; }
     .khs .rapor-khs1 { font-size: 8pt; }
+    /* Hanya isi sel Deskripsi KHS1: 8pt -> 7.5pt. Header, angka, KHS2 tidak berubah. */
+    .khs .rapor-khs1 td.deskripsi-khs1 { font-size: 7.5pt; }
     .khs .rapor-khs1 td, .khs .rapor-khs1 th { padding: .8mm .65mm; }
     .khs .rapor-khs1 .kolom-sempit { font-size: 7pt; }
     /* Label pada kolom angka KHS harus utuh pada cetakan dan header berulang. */

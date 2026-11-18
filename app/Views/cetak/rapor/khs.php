@@ -202,8 +202,8 @@ $identitas = $khs1 ? [
         ], ['saveData' => false]) ?>
     <?php endif ?>
 
-    <?php // KHS1: data pendukung mengalir setelah rekap jika masih ada ruang; KHS2 tetap di halaman tersendiri. ?>
-    <?php if (! $khs1): ?><pagebreak /><?php endif ?>
+    <?php // Setelah rekap KHS1 (atau deskripsi KHS2), Data Pendukung harus mulai pada halaman baru. ?>
+    <pagebreak />
     <?= view('cetak/rapor/pendukung', compact('pendukung', 'pengesahan', 'tampil', 'potongan', 'khs1'), ['saveData' => false]) ?>
 </div>
 <?= $this->endSection() ?>

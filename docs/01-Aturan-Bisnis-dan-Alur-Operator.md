@@ -24,7 +24,7 @@
 |---|---|
 | **Masuk** | Masukkan username dan kata sandi operator. Setelah masuk, aplikasi membuka Data Siswa. |
 | **Operator** | Lihat daftar, tambah, edit, atau hapus akun operator. Biarkan kata sandi kosong saat edit untuk mempertahankan kata sandi saat ini. |
-| **Kode Akses Cetak** | Buat dan salin kode universal. Kode disimpan dalam bentuk hash dan tampil saat dibuat. Atur nomor operator untuk tombol **Pesan WhatsApp** dalam modal cetak publik. |
+| **Kode Akses Cetak** | Buat, lihat, dan salin kode universal aktif setelah masuk. Hash dipakai untuk verifikasi cetak, dan salinan terenkripsi dipakai untuk menampilkan kode kepada operator. Atur nomor operator untuk tombol **Pesan WhatsApp** dalam modal cetak publik. |
 | **Data Siswa** | Halaman awal operator. Cari dengan nama, NIS, atau NISN. Filter berdasarkan angkatan. Buka detail siswa. |
 | **Detail Siswa** | Tampilkan identitas dan riwayat semester 1–6. Sediakan **Edit Identitas**, **Cetak Semua Semester**, serta **Cetak Transkrip**, **Cetak Sampul**, dan **Cetak Identitas** dalam tab baru. |
 | **Detail Semester** | Tampilkan status arsip, kelas, rombel, periode, nilai, serta Data Pendukung yang memuat pengesahan arsip. Koreksi nama, jabatan, NIP, dan tempat serta tanggal terbit hanya dilakukan melalui **Edit Rapor** saat diperlukan untuk mencocokkan data dengan dokumen asli semester itu. Sediakan **Unduh Excel**, **Impor Excel**, **Edit Rapor**, **Cetak Lembar Nilai**, dan **Cetak Rapor** sesuai data semester. |

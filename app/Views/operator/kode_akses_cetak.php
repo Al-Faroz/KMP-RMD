@@ -10,16 +10,20 @@
             <div class="alert alert-danger" role="alert"><?= esc($pesan) ?></div>
         <?php endif ?>
         <div class="card card-body mb-3">
-            <?php if ($kodeBaru !== null): ?>
+            <?php if ($kode !== null): ?>
                 <div class="mb-4">
                     <label for="kode-cetak-baru" class="form-label">Kode Cetak Aktif</label>
                     <div class="input-group">
                         <input id="kode-cetak-baru" type="text" class="form-control font-monospace"
-                               value="<?= esc($kodeBaru, 'attr') ?>" readonly>
+                               value="<?= esc($kode, 'attr') ?>" readonly>
                         <button id="salin-kode-cetak" class="btn btn-outline-primary" type="button">Salin Kode</button>
                     </div>
-                    <div id="status-salin-kode" class="form-text" role="status">Salin kode sebelum meninggalkan halaman.</div>
+                    <div id="status-salin-kode" class="form-text" role="status"></div>
                 </div>
+            <?php elseif ($galatDekripsi): ?>
+                <p class="text-danger">Kode cetak gagal ditampilkan. Periksa kunci enkripsi server.</p>
+            <?php elseif ($kodeAktif): ?>
+                <p>Kode dari versi lama masih berlaku. Klik <strong>Buat Kode Baru</strong> sekali agar kode aktif bisa ditampilkan dan disalin lagi.</p>
             <?php endif ?>
             <form method="post" action="<?= esc(url_to('kode-akses-cetak'), 'attr') ?>">
                 <?= csrf_field() ?>

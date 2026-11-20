@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Libraries\EnkripsiKodeCetak;
 use CodeIgniter\Model;
 use DomainException;
 use RuntimeException;
@@ -17,19 +18,23 @@ final class AksesCetakModel extends Model
         return $this->select('kode_hash, whatsapp_operator')->find(self::SETTING_ID);
     }
 
-    public function buatKode(): string
+    public function pengaturanOperator(): ?array
+    {
+        return $this->find(self::SETTING_ID);
+    }
+
+    public function buatKode(): void
     {
         $kode = strtoupper(bin2hex(random_bytes(8)));
         $tersimpan = $this->builder()->upsert([
             'id' => self::SETTING_ID,
             'kode_hash' => password_hash($kode, PASSWORD_DEFAULT),
+            'kode_terenkripsi' => (new EnkripsiKodeCetak())->enkripsi($kode),
         ]);
 
         if (! $tersimpan) {
             throw new RuntimeException('Pengaturan akses cetak gagal disimpan.');
         }
-
-        return $kode;
     }
 
     public function simpanWhatsApp(string $nomor): void

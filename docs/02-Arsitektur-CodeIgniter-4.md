@@ -49,9 +49,10 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 |---|---|---|
 | GET | `/` | Tampilkan statistik dan pencarian siswa. |
 | GET | `/arsip-cetak/saran` | Beri saran nama dan angkatan siswa. |
-| GET | `/arsip-cetak/siswa/{siswa}` | Buka pilihan dokumen cetak. Rute di bawahnya menyediakan PDF per siswa. |
+| GET | `/arsip-cetak/siswa/{siswa}` | Buka pilihan dokumen cetak. Permintaan POST untuk PDF per siswa memvalidasi kode cetak yang dikirim dalam formulir. |
 | GET / POST | `/login` | Buka form dan mulai sesi operator. |
 | POST | `/keluar` | Akhiri sesi operator. |
+| GET / POST | `/operator/kode-akses-cetak` | Atur kode universal dan nomor WhatsApp operator. |
 | GET | `/operator` | Lihat daftar operator. |
 | GET / POST | `/operator/tambah` | Buka form dan buat akun operator. |
 | GET / POST | `/operator/{id}/edit` | Buka form dan simpan perubahan akun. |
@@ -82,7 +83,7 @@ Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Lembar 
 
 - Validasi bahwa siswa dan semester pada rute sesuai dengan data yang dibuka. Untuk impor, cocokkan juga identitas target dan semester file dengan rute.
 - Terapkan validasi server untuk perubahan data dan CSRF untuk form yang menulis data. Preview impor memuat perubahan yang terkait dengan sesi operator dan target yang sama saat dikonfirmasi.
-- Beranda, pencarian publik, halaman Masuk, dan PDF per siswa pada `/arsip-cetak/` dapat dibuka tanpa sesi operator. Rute operator memerlukan sesi, termasuk rute PDF dan Excel pada area tersebut. Form masuk, keluar, dan perubahan data menggunakan token CSRF yang tersimpan dalam sesi.
+- Beranda, pencarian publik, dan halaman Masuk dapat dibuka tanpa sesi operator. Setiap permintaan PDF pada `/arsip-cetak/` memakai kode cetak dan dibatasi jika percobaan gagal berulang. Rute operator memerlukan sesi, termasuk rute PDF dan Excel pada area tersebut. Form masuk, keluar, dan perubahan data menggunakan token CSRF yang tersimpan dalam sesi.
 - Pembuatan PDF membaca data terkini dan mengirim hasil ke pengguna. Database menyimpan data rapor dan konfigurasi cetak.
 
 Excel menggunakan PhpSpreadsheet. PDF dokumen siswa menggunakan mPDF dengan direktori sementara `writable/cache/mpdf`. Akun operator pertama dibuat melalui perintah Spark yang membaca kata sandi dari stdin. Kriteria penerimaan setiap tahap tersedia di [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md).

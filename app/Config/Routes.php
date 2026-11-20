@@ -7,12 +7,14 @@ $routes->get('/', 'Siswa::berandaPublik', ['as' => 'beranda-publik']);
 $routes->group('arsip-cetak', static function (RouteCollection $routes): void {
     $routes->get('saran', 'Siswa::saran/dokumen-publik', ['as' => 'saran-publik']);
     $routes->get('siswa/(:num)', 'Siswa::dokumenPublik/$1', ['as' => 'dokumen-publik']);
-    $routes->get('siswa/(:num)/transkrip', 'Siswa::transkrip/$1', ['as' => 'transkrip-publik']);
-    $routes->get('siswa/(:num)/semua-semester', 'Siswa::cetakSemuaSemester/$1', ['as' => 'semua-semester-publik']);
-    $routes->get('siswa/(:num)/sampul', 'Siswa::sampul/$1', ['as' => 'sampul-publik']);
-    $routes->get('siswa/(:num)/identitas', 'Siswa::cetakIdentitas/$1', ['as' => 'identitas-publik']);
-    $routes->get('siswa/(:num)/semester/(:num)/nilai', 'Siswa::lembarNilai/$1/$2', ['as' => 'nilai-publik']);
-    $routes->get('siswa/(:num)/semester/(:num)/rapor', 'Siswa::cetakRapor/$1/$2', ['as' => 'rapor-publik']);
+    $routes->group('siswa/(:num)', ['filter' => 'kode-cetak'], static function (RouteCollection $routes): void {
+        $routes->post('transkrip', 'Siswa::transkrip/$1', ['as' => 'transkrip-publik']);
+        $routes->post('semua-semester', 'Siswa::cetakSemuaSemester/$1', ['as' => 'semua-semester-publik']);
+        $routes->post('sampul', 'Siswa::sampul/$1', ['as' => 'sampul-publik']);
+        $routes->post('identitas', 'Siswa::cetakIdentitas/$1', ['as' => 'identitas-publik']);
+        $routes->post('semester/(:num)/nilai', 'Siswa::lembarNilai/$1/$2', ['as' => 'nilai-publik']);
+        $routes->post('semester/(:num)/rapor', 'Siswa::cetakRapor/$1/$2', ['as' => 'rapor-publik']);
+    });
 });
 
 $routes->get('login', 'AkunOperator::masuk', ['as' => 'masuk']);
@@ -20,6 +22,8 @@ $routes->post('login', 'AkunOperator::autentikasi', ['filter' => 'csrf']);
 $routes->get('masuk', 'AkunOperator::masuk', ['as' => 'masuk-lama']);
 $routes->post('masuk', 'AkunOperator::autentikasi', ['filter' => 'csrf']);
 $routes->post('keluar', 'AkunOperator::keluar', ['as' => 'keluar', 'filter' => 'csrf']);
+$routes->get('operator/kode-akses-cetak', 'PengaturanCetakPublik::index', ['as' => 'kode-akses-cetak']);
+$routes->post('operator/kode-akses-cetak', 'PengaturanCetakPublik::simpan', ['filter' => 'csrf']);
 $routes->get('operator', 'KelolaOperator::index', ['as' => 'daftar-operator']);
 $routes->get('operator/tambah', 'KelolaOperator::tambah', ['as' => 'tambah-operator']);
 $routes->post('operator/tambah', 'KelolaOperator::simpan', ['filter' => 'csrf']);

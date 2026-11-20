@@ -12,9 +12,9 @@ $assetPath = realpath(FCPATH) === realpath(ROOTPATH) ? 'public/assets/' : 'asset
     <link rel="stylesheet" href="<?= esc(base_url($assetPath . 'sneat/core.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(base_url($assetPath . 'rmd/app.css'), 'attr') ?>">
     <link rel="stylesheet" href="<?= esc(base_url($assetPath . 'rmd/publik.css'), 'attr') ?>">
-    <?php if (isset($pageScript)): ?>
-        <script defer src="<?= esc(base_url($assetPath . $pageScript), 'attr') ?>"></script>
-    <?php endif ?>
+    <?php foreach ($pageScripts as $script): ?>
+        <script defer src="<?= esc(base_url($assetPath . $script), 'attr') ?>"></script>
+    <?php endforeach ?>
 </head>
 <body class="rmd-public">
     <a class="visually-hidden-focusable rmd-skip-link" href="#konten-utama">Lewati ke konten utama</a>

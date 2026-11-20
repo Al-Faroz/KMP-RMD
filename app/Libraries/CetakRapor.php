@@ -86,7 +86,12 @@ final class CetakRapor
             }
         };
 
-        return (new PdfRmd())->gabungkan('rapor', $judul, $bagian());
+        $template = static fn (array $data): string => match ($data['rapor']['kode_format']) {
+            'EXCEL_KHS1', 'ARD_KHS2' => 'rapor/khs',
+            default => 'rapor',
+        };
+
+        return (new PdfRmd())->gabungkan($template, $judul, $bagian());
     }
 
     private function data(array $rapor, array $mapel, array $pendukung, ?array $pengaturan, array $rentang): array
@@ -138,7 +143,7 @@ final class CetakRapor
             'pengaturan' => $pengaturan,
             'pengesahan' => $pengesahan,
             'merdeka' => $kode === 'RDM_PDF_2023_VIIA',
-            'deskripsiTerpisah' => in_array($kode, ['ARD_KHS2', 'RDM_K13'], true),
+            'deskripsiTerpisah' => $kode === 'RDM_K13',
         ];
     }
 }

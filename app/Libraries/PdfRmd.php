@@ -14,7 +14,7 @@ final class PdfRmd
         return $this->gabungkan($dokumen, $judul, [$data], $lanskap);
     }
 
-    public function gabungkan(string $dokumen, string $judul, iterable $isi, bool $lanskap = false): string
+    public function gabungkan(string|callable $dokumen, string $judul, iterable $isi, bool $lanskap = false): string
     {
         $pdf = new Mpdf([
             'mode' => 'utf-8',
@@ -34,7 +34,8 @@ final class PdfRmd
             if (! $halamanPertama) {
                 $pdf->AddPage();
             }
-            $pdf->WriteHTML(view('cetak/' . $dokumen, $data, ['saveData' => false]));
+            $template = is_string($dokumen) ? $dokumen : $dokumen($data);
+            $pdf->WriteHTML(view('cetak/' . $template, $data, ['saveData' => false]));
             $halamanPertama = false;
         }
 

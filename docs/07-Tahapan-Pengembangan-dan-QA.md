@@ -1,10 +1,10 @@
 # Tahapan Pengembangan dan QA
 
-## Baseline lokal
+## Lingkungan lokal
 
-CI4 sudah terpasang di `E:\xampp\htdocs\kmp-rdm`. Pengguna sudah menguji URL lokal dan melihat halaman **Welcome CodeIgniter**. Lanjutkan Tahap 1 dari checkout ini. Konfigurasi database lokal `dt_rdm` disimpan di `.env`. Uji koneksi dari CI4 dilakukan pada Tahap 2.
+KMP-RMD berjalan di XAMPP dari `E:\xampp\htdocs\kmp-rdm` dengan database `dt_rdm`. Panduan pemasangan dan penggunaan awal tersedia di [README KMP-RMD](../README.md).
 
-## Usulan tahapan pengembangan
+## Tahapan pengembangan dan kriteria uji
 
 | Tahap | Ruang lingkup | Kriteria uji di XAMPP |
 |---|---|---|
@@ -27,3 +27,10 @@ CI4 sudah terpasang di `E:\xampp\htdocs\kmp-rdm`. Pengguna sudah menguji URL lok
 ## Serah terima setiap tahap
 
 Catat ruang lingkup PR, instruksi uji, hasil pemeriksaan, dan temuan yang masih terbuka. Acuan fondasi ada di [02 · Arsitektur CodeIgniter 4](02-Arsitektur-CodeIgniter-4.md), [03 · Standar Bootstrap 5](03-Standar-Bootstrap-5.md), dan [04 · Integrasi Sneat Free](04-Integrasi-Sneat-Free.md).
+
+## Serah terima lokal pasca-Patch V2
+
+- [PR #12](https://github.com/Al-Faroz/KMP-RMD/pull/12) sudah masuk ke `main` pada commit `f9e97cb` setelah uji cetak XAMPP. Perubahan mencakup pembuatan PDF dengan mPDF untuk KHS1 dan KHS2 serta perapian tata letak.
+- Audit pada salinan database mencatat **22.103 rapor Ditemukan** dan **4.849 posisi semester Belum Ditemukan**. Pada 11 rapor KHS1 angkatan 2017, 31 isian nilai masih kosong atau bernilai nol pada salinan arsip yang cocok.
+- Pemeriksaan pada salinan database meluluskan **19 PDF F4**, termasuk keempat format rapor, cetak rombel, leger, dan transkrip. Paket internal `RMD_QA_PASCA_V2.zip` memuat hasil uji, kueri audit baca-saja, dan rujukan sumber per isian.
+- Backup SQL lokal pasca-Patch V2 dibuat pada 20 November 2026 di `%USERPROFILE%\Backup-RMD`. Pembuatan file dan checksum SHA-256 telah dikonfirmasi. Dump dan arsip audit disimpan sebagai dokumen internal karena memuat data siswa.

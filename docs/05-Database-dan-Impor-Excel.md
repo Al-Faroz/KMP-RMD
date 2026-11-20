@@ -16,7 +16,7 @@ CI4 mengambil konfigurasi database default dari `.env` di `E:\xampp\htdocs\kmp-r
 | `database.default.charset` | `utf8mb4` |
 | `database.default.DBCollat` | `utf8mb4_general_ci` |
 
-Nilai `database.default.username` dan `database.default.password` tetap diatur di `.env` lokal. Sebelum migrasi atau impor awal, cek bahwa koneksi dari CI4 berhasil dan `SELECT DATABASE()` mengembalikan `dt_rdm`. Uji halaman Welcome hanya memeriksa bahwa aplikasi dapat dijalankan.
+Nilai `database.default.username` dan `database.default.password` tetap diatur di `.env` lokal. Sebelum migrasi atau impor awal, cek bahwa koneksi dari CI4 berhasil dan `SELECT DATABASE()` mengembalikan `dt_rdm`. Untuk database lokal pasca-Patch V2, lihat [hasil audit dan backup](07-Tahapan-Pengembangan-dan-QA.md#serah-terima-lokal-pasca-patch-v2).
 
 ## Rancangan data dan pengisian awal
 

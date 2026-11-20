@@ -22,13 +22,13 @@
 
 | Halaman | Isi dan tindakan |
 |---|---|
-| **Masuk** | Masukkan username dan kata sandi operator. Setelah masuk, aplikasi membuka Data Siswa. |
+| **Masuk** | Masukkan username dan kata sandi operator untuk membuka Data Siswa. Tombol **Kembali ke Beranda** membuka beranda publik. |
 | **Operator** | Lihat daftar, tambah, edit, atau hapus akun operator. Biarkan kata sandi kosong saat edit untuk mempertahankan kata sandi saat ini. |
-| **Kode Akses Cetak** | Lihat dan salin kode universal operator. Buat dan salin kode sementara untuk pengguna serta lihat batas waktunya. Atur nomor operator untuk tombol **Pesan WhatsApp** dalam modal cetak publik. |
+| **Kode Akses Cetak** | Lihat dan salin kode universal operator. Buat dan salin kode sementara untuk pengguna serta lihat batas waktunya. Atur nomor operator untuk mengaktifkan tombol **Pesan WhatsApp** dalam modal cetak publik. Tombol membuka draf permintaan kode sementara. |
 | **Data Siswa** | Halaman awal operator. Cari dengan nama, NIS, atau NISN. Filter berdasarkan angkatan. Buka detail siswa. |
 | **Detail Siswa** | Tampilkan identitas dan riwayat semester 1–6. Sediakan **Edit Identitas**, **Cetak Semua Semester**, serta **Cetak Transkrip**, **Cetak Sampul**, dan **Cetak Identitas** dalam tab baru. |
 | **Detail Semester** | Tampilkan status arsip, kelas, rombel, periode, nilai, serta Data Pendukung yang memuat pengesahan arsip. Koreksi nama, jabatan, NIP, dan tempat serta tanggal terbit hanya dilakukan melalui **Edit Rapor** saat diperlukan untuk mencocokkan data dengan dokumen asli semester itu. Sediakan **Unduh Excel**, **Impor Excel**, **Edit Rapor**, **Cetak Lembar Nilai**, dan **Cetak Rapor** sesuai data semester. |
-| **Cetak Rombel** | Pilih angkatan, semester, lalu rombel. Tampilkan daftar dan jumlah rapor tersedia serta daftar siswa yang arsipnya belum ditemukan. Buat satu PDF gabungan dari daftar yang tersedia. |
+| **Cetak Rombel** | Pilih angkatan, semester, lalu rombel. Tampilkan daftar dan jumlah rapor tersedia serta daftar siswa yang arsipnya belum ditemukan. Buat satu PDF gabungan dari daftar yang tersedia atau cetak leger F4 untuk rombel. |
 
 Pada riwayat siswa, semester yang berstatus **Belum ditemukan** tetap tampil dan bisa dibuka untuk melengkapi arsip. Daftar rombel hanya bisa menampilkan siswa yang keanggotaannya diketahui untuk semester itu.
 

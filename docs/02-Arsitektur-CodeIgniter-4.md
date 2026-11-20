@@ -50,9 +50,10 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 | GET | `/` | Tampilkan statistik dan pencarian siswa. |
 | GET | `/arsip-cetak/saran` | Beri saran nama dan angkatan siswa. |
 | GET | `/arsip-cetak/siswa/{siswa}` | Buka pilihan dokumen cetak. Permintaan POST untuk PDF per siswa memvalidasi kode cetak yang dikirim dalam formulir. |
-| GET / POST | `/login` | Buka form dan mulai sesi operator. |
+| GET / POST | `/login` | Buka form dengan tombol **Kembali ke Beranda** atau mulai sesi operator. Alias `/masuk` tetap tersedia. |
 | POST | `/keluar` | Akhiri sesi operator. |
-| GET / POST | `/operator/kode-akses-cetak` | Buat dan salin kode akses cetak universal. |
+| GET | `/operator/kode-akses-cetak` | Tampilkan kode universal dari konfigurasi dan kode sementara aktif untuk disalin. |
+| POST | `/operator/kode-akses-cetak` | Buat kode sementara baru dengan masa berlaku 24 jam. |
 | POST | `/operator/kode-akses-cetak/whatsapp` | Simpan nomor operator untuk modal cetak publik. |
 | GET | `/operator` | Lihat daftar operator. |
 | GET / POST | `/operator/tambah` | Buka form dan buat akun operator. |
@@ -77,6 +78,7 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 | GET | `/siswa/{siswa}/cetak-semua-semester` | Buat PDF gabungan rapor yang tersedia. |
 | GET | `/cetak-rombel` | Pilih angkatan, semester, dan rombel, lalu tinjau daftar rapor. |
 | GET | `/cetak-rombel/pdf` | Buat PDF gabungan dari pilihan rombel. |
+| GET | `/cetak-rombel/leger` | Buat PDF leger F4 lanskap dari pilihan rombel. |
 
 Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Lembar Nilai dibuka dari Detail Semester. Dokumen PDF tersebut dibuka di tab baru.
 

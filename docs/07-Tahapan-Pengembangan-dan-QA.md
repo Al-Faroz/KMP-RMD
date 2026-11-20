@@ -17,6 +17,7 @@ KMP-RMD berjalan di XAMPP dari `E:\xampp\htdocs\kmp-rdm` dengan database `dt_rdm
 | **7. Cetak dokumen terpisah dan regresi** | Tindakan cetak sampul, halaman identitas, dan dokumen pendukung yang telah dipetakan. Uji ulang alur pencarian, edit, impor, dan cetak. | Setiap keluaran mencetak dokumen yang dipilih pada kertas F4 (210 × 330 mm). |
 | **8. Akses operator** | Login, logout, dan pengelolaan akun operator. | Halaman operator memerlukan login. Uji penambahan akun dan pencabutan akses setelah akun dihapus. |
 | **9. Riwayat dan pemulihan arsip** | Catat edit identitas, edit rapor, impor Excel, dan pemulihan. | Cocokkan nilai sebelum dan sesudah beserta nama operator. Pulihkan perubahan terbaru pada satu semester. Pastikan perubahan lain tetap tersimpan. |
+| **10. Area publik dan cetak dengan kode** | Beranda dan pencarian siswa, cetak dokumen per siswa dengan kode, permintaan kode sementara lewat WhatsApp, dan navigasi login operator. | Uji pencarian dengan filter angkatan, cetak tanpa login dengan kedua kode, penolakan kode yang salah atau kedaluwarsa, tautan WhatsApp, serta tombol **Kembali ke Beranda** di desktop dan ponsel. |
 
 ### Cara kerja per tahap
 
@@ -34,3 +35,10 @@ Catat ruang lingkup PR, instruksi uji, hasil pemeriksaan, dan temuan yang masih 
 - Audit pada salinan database mencatat **22.103 rapor Ditemukan** dan **4.849 posisi semester Belum Ditemukan**. Pada 11 rapor KHS1 angkatan 2017, 31 isian nilai masih kosong atau bernilai nol pada salinan arsip yang cocok.
 - Pemeriksaan pada salinan database meluluskan **19 PDF F4**, termasuk keempat format rapor, cetak rombel, leger, dan transkrip. Paket internal `RMD_QA_PASCA_V2.zip` memuat hasil uji, kueri audit baca-saja, dan rujukan sumber per isian.
 - Backup SQL lokal pasca-Patch V2 dibuat pada 20 November 2026 di `%USERPROFILE%\Backup-RMD`. Pembuatan file dan checksum SHA-256 telah dikonfirmasi. Dump dan arsip audit disimpan sebagai dokumen internal karena memuat data siswa.
+
+## Serah terima area publik
+
+- Uji XAMPP oleh pengguna mengonfirmasi kedua kode akses dan tombol **Kembali ke Beranda** pada halaman login. [PR #14](https://github.com/Al-Faroz/KMP-RMD/pull/14)
+- Uji browser di Apache dan MariaDB mencakup pencarian siswa, pembuatan dan rotasi kode sementara, penolakan kode kedaluwarsa, akses cetak dengan kode universal tanpa login, salin kedua kode, pembatasan percobaan, dan draf WhatsApp. Navigasi login dan beranda diuji pada lebar layar 1.366 px dan 360 px.
+- Teks dan hasil render PDF publik cocok dengan keluaran operator pada empat format rapor dan lima keluaran lain, yaitu gabungan semua semester, transkrip, sampul, identitas, dan lembar nilai.
+- Untuk memasang tahap ini pada XAMPP, jalankan migrasi dan isi konfigurasi kode universal pada `.env` lokal. Simpan nomor WhatsApp operator melalui menu **Kode Akses Cetak** agar tombol permintaan kode bisa digunakan. [Panduan pemasangan](../README.md#mengaktifkan-cetak-publik)

@@ -36,7 +36,9 @@
             <div class="mb-3">
                 <label for="whatsapp-operator" class="form-label">Nomor WhatsApp Operator</label>
                 <input id="whatsapp-operator" name="whatsapp_operator" type="tel" class="form-control"
-                       autocomplete="tel" value="<?= esc($whatsappOperator, 'attr') ?>" maxlength="32" required>
+                       autocomplete="tel" value="<?= esc($whatsappOperator, 'attr') ?>" maxlength="32"
+                       aria-describedby="petunjuk-whatsapp-operator" required>
+                <div id="petunjuk-whatsapp-operator" class="form-text">Isi nomor aktif (08… atau +62…) untuk mengaktifkan tombol Pesan WhatsApp di modal cetak publik.</div>
             </div>
             <div>
                 <button class="btn btn-primary" type="submit">Simpan Nomor</button>

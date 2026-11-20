@@ -4,7 +4,7 @@ CI4 menangani permintaan halaman, validasi input, transaksi data, serta pembuata
 
 ## Lingkungan CI4 di XAMPP
 
-- Proyek lokal berada di `E:\xampp\htdocs\kmp-rdm`. Buka [KMP-RMD di XAMPP](http://localhost/kmp-rdm/) untuk masuk sebagai operator.
+- Proyek lokal berada di `E:\xampp\htdocs\kmp-rdm`. Buka [KMP-RMD di XAMPP](http://localhost/kmp-rdm/) untuk mencari siswa dan mencetak dokumen. Gunakan **Masuk Operator** untuk mengelola data.
 - File publik awal telah disalin ke root proyek. Di branch `main`, `index.php` berada sejajar dengan `app/` dan memuat `app/Config/Paths.php` dari root. Apache memakai entry point ini untuk URL lokal yang sudah berjalan. [index.php](https://github.com/Al-Faroz/KMP-RMD/blob/main/index.php)
 - Repository menetapkan PHP `^8.2` dan CI4 `^4.7` di `composer.json`. Versi CI4 yang terkunci adalah `4.7.6`. [composer.json](https://github.com/Al-Faroz/KMP-RMD/blob/main/composer.json) · [composer.lock](https://github.com/Al-Faroz/KMP-RMD/blob/main/composer.lock)
 - Jalankan pengembangan dari checkout tersebut. Untuk instalasi dependensi pada checkout baru, gunakan `composer install` agar versinya mengikuti `composer.lock`. [Instalasi Composer](https://codeigniter.com/user_guide/installation/installing_composer.html)
@@ -47,8 +47,14 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 
 | Metode | Rute | Tindakan |
 |---|---|---|
-| GET / POST | `/masuk` | Buka form dan mulai sesi operator. |
+| GET | `/` | Tampilkan statistik dan pencarian siswa. |
+| GET | `/arsip-cetak/saran` | Beri saran nama dan angkatan siswa. |
+| GET | `/arsip-cetak/siswa/{siswa}` | Buka pilihan dokumen cetak. Permintaan POST untuk PDF per siswa memvalidasi kode cetak yang dikirim dalam formulir. |
+| GET / POST | `/login` | Buka form dengan tombol **Kembali ke Beranda** atau mulai sesi operator. Alias `/masuk` tetap tersedia. |
 | POST | `/keluar` | Akhiri sesi operator. |
+| GET | `/operator/kode-akses-cetak` | Tampilkan kode universal dari konfigurasi dan kode sementara aktif untuk disalin. |
+| POST | `/operator/kode-akses-cetak` | Buat kode sementara baru dengan masa berlaku 24 jam. |
+| POST | `/operator/kode-akses-cetak/whatsapp` | Simpan nomor operator untuk modal cetak publik. |
 | GET | `/operator` | Lihat daftar operator. |
 | GET / POST | `/operator/tambah` | Buka form dan buat akun operator. |
 | GET / POST | `/operator/{id}/edit` | Buka form dan simpan perubahan akun. |
@@ -72,6 +78,7 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 | GET | `/siswa/{siswa}/cetak-semua-semester` | Buat PDF gabungan rapor yang tersedia. |
 | GET | `/cetak-rombel` | Pilih angkatan, semester, dan rombel, lalu tinjau daftar rapor. |
 | GET | `/cetak-rombel/pdf` | Buat PDF gabungan dari pilihan rombel. |
+| GET | `/cetak-rombel/leger` | Buat PDF leger F4 lanskap dari pilihan rombel. |
 
 Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Lembar Nilai dibuka dari Detail Semester. Dokumen PDF tersebut dibuka di tab baru.
 
@@ -79,7 +86,9 @@ Sampul dan halaman identitas memiliki aksi tersendiri dari Detail Siswa. Lembar 
 
 - Validasi bahwa siswa dan semester pada rute sesuai dengan data yang dibuka. Untuk impor, cocokkan juga identitas target dan semester file dengan rute.
 - Terapkan validasi server untuk perubahan data dan CSRF untuk form yang menulis data. Preview impor memuat perubahan yang terkait dengan sesi operator dan target yang sama saat dikonfirmasi.
-- Semua rute aplikasi selain Masuk memerlukan sesi operator. Pemeriksaan berlaku juga untuk tautan langsung ke Excel dan PDF. Form masuk, keluar, dan perubahan data menggunakan token CSRF yang tersimpan dalam sesi.
+- Beranda, pencarian publik, dan halaman Masuk dapat dibuka tanpa sesi operator. Setiap permintaan PDF pada `/arsip-cetak/` memakai kode cetak dan dibatasi jika percobaan gagal berulang. Rute operator memerlukan sesi, termasuk rute PDF dan Excel pada area tersebut. Form masuk, keluar, dan perubahan data menggunakan token CSRF yang tersimpan dalam sesi.
+- Kode Universal Operator dibaca dari `cetakpublik.kodeUniversal` di `.env`. Kode ini tidak berubah saat operator membuat kode sementara.
+- Kode sementara disimpan sebagai hash untuk verifikasi PDF dan sebagai salinan terenkripsi untuk ditampilkan kembali hanya kepada operator. Waktu kedaluwarsa disimpan sebagai timestamp Unix dan ditampilkan dalam WIB. Saat memindahkan instalasi, simpan kunci yang dipakai, yaitu `encryption.key` jika dikonfigurasi atau berkas lokal `writable/kode-cetak.key` yang dibuat saat operator membuat kode. Simpan kunci secara terpisah dari cadangan database.
 - Pembuatan PDF membaca data terkini dan mengirim hasil ke pengguna. Database menyimpan data rapor dan konfigurasi cetak.
 
 Excel menggunakan PhpSpreadsheet. PDF dokumen siswa menggunakan mPDF dengan direktori sementara `writable/cache/mpdf`. Akun operator pertama dibuat melalui perintah Spark yang membaca kata sandi dari stdin. Kriteria penerimaan setiap tahap tersedia di [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md).

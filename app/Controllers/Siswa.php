@@ -6,6 +6,7 @@ use App\Libraries\CetakDokumenSiswa;
 use App\Libraries\CetakRapor;
 use App\Libraries\CetakTranskrip;
 use App\Libraries\PengesahanRapor;
+use App\Models\AksesCetakModel;
 use App\Models\RaporSemesterModel;
 use App\Models\RiwayatArsipModel;
 use App\Models\SiswaModel;
@@ -17,6 +18,47 @@ use RuntimeException;
 final class Siswa extends BaseController
 {
     protected $helpers = ['url', 'form'];
+
+    public function berandaPublik(): string
+    {
+        [$kata, $angkatan] = $this->filterPencarian();
+        $model = model(SiswaModel::class);
+        $daftarAngkatan = $model->daftarAngkatan();
+
+        return view('publik/beranda', [
+            'pageTitle' => 'Arsip Rapor Siswa',
+            'pageScripts' => ['rmd/siswa-search.js'],
+            'kata' => $kata,
+            'angkatan' => $angkatan,
+            'daftarAngkatan' => $daftarAngkatan,
+            'jumlahSiswa' => $model->countAllResults(),
+            'jumlahRapor' => model(RaporSemesterModel::class)->where('status_arsip', 'Ditemukan')->countAllResults(),
+            'hasil' => mb_strlen($kata) < 2 ? [] : $model->saran($kata, $angkatan),
+        ]);
+    }
+
+    public function dokumenPublik(string $id): string
+    {
+        $siswa = model(SiswaModel::class)->ringkasanCetak($id);
+        if ($siswa === null) {
+            throw PageNotFoundException::forPageNotFound('Siswa tidak ditemukan.');
+        }
+
+        $arsip = array_intersect_key(model(RaporSemesterModel::class)->riwayat($id), array_flip(range(1, 6)));
+        $arsip = array_filter($arsip, static fn (array $rapor): bool => $rapor['status_arsip'] === 'Ditemukan');
+        ksort($arsip);
+        $cetak = new CetakRapor();
+        $raporTersedia = array_filter($arsip, static fn (array $rapor): bool => $cetak->mendukung($rapor['kode_format']));
+
+        return view('publik/dokumen', [
+            'pageTitle' => 'Dokumen Cetak',
+            'pageScripts' => ['sneat/bootstrap.bundle.min.js', 'rmd/cetak-publik.js'],
+            'whatsappOperator' => model(AksesCetakModel::class)->pengaturan()['whatsapp_operator'] ?? '',
+            'siswa' => $siswa,
+            'semesterTersedia' => array_keys($arsip),
+            'semesterDenganRapor' => array_keys($raporTersedia),
+        ]);
+    }
 
     public function index(): string
     {
@@ -34,14 +76,14 @@ final class Siswa extends BaseController
         ]);
     }
 
-    public function saran(): ResponseInterface
+    public function saran(string $tujuan = 'detail-siswa'): ResponseInterface
     {
         [$kata, $angkatan] = $this->filterPencarian();
         $hasil = mb_strlen($kata) < 2 ? [] : model(SiswaModel::class)->saran($kata, $angkatan);
         $saran = array_map(static fn (array $siswa): array => [
             'nama' => $siswa['nama'],
             'angkatan' => $siswa['tahun_masuk'],
-            'url' => url_to('detail-siswa', $siswa['id']),
+            'url' => url_to($tujuan, $siswa['id']),
         ], $hasil);
 
         return $this->response->setHeader('Cache-Control', 'no-store')->setJSON($saran);

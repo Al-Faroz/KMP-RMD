@@ -3,6 +3,7 @@
 namespace Config;
 
 use App\Filters\AksesOperator;
+use App\Filters\KodeCetak;
 use CodeIgniter\Config\Filters as BaseFilters;
 use CodeIgniter\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
@@ -25,6 +26,7 @@ class Filters extends BaseFilters
      */
     public array $aliases = [
         'operator'      => AksesOperator::class,
+        'kode-cetak'    => KodeCetak::class,
         'csrf'          => CSRF::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
@@ -67,7 +69,7 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            'operator' => ['except' => ['masuk']],
+            'operator' => ['except' => ['/', 'login', 'masuk', 'arsip-cetak/*']],
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',

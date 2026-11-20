@@ -1,6 +1,6 @@
 # KMP-RMD — Raport Digital Madrasah
 
-KMP-RMD membantu operator mencari, memperbarui, dan mencetak ulang rapor historis angkatan 2016–2023.
+KMP-RMD mengelola arsip rapor historis angkatan 2016–2023. Pengunjung internal dapat mencari siswa dan mencetak PDF dengan kode cetak tanpa akun. Pengelolaan data memerlukan akun operator.
 
 - Cari siswa berdasarkan nama, NIS, atau NISN, lalu buka arsip per semester.
 - Koreksi identitas dan rapor melalui formulir atau impor Excel dengan pratinjau. Perubahan tercatat dalam riwayat dan dapat dipulihkan melalui aplikasi.
@@ -22,7 +22,14 @@ Gunakan PHP yang memenuhi `composer.lock`, Composer, serta Apache dan MySQL dari
    ```
 
 3. Sambungkan database `dt_rdm` yang berisi arsip terkini. Untuk mengisi database baru dari workbook, ikuti petunjuk migrasi dan simulasi impor. [Database dan Impor Excel](docs/05-Database-dan-Impor-Excel.md)
-4. Buka [KMP-RMD di XAMPP](http://localhost/kmp-rdm/) dan masuk sebagai operator. [Cara membuat akun operator pertama](docs/02-Arsitektur-CodeIgniter-4.md#membuat-akun-operator-di-xampp)
+4. Buka [KMP-RMD di XAMPP](http://localhost/kmp-rdm/) untuk mencari dan mencetak PDF. Gunakan [Masuk Operator](http://localhost/kmp-rdm/login) untuk mengelola arsip. [Cara membuat akun operator pertama](docs/02-Arsitektur-CodeIgniter-4.md#membuat-akun-operator-di-xampp)
+
+## Mengaktifkan cetak publik
+
+1. Jalankan migrasi dengan `& 'E:\xampp\php\php.exe' spark migrate` dari folder proyek.
+2. Atur `cetakpublik.kodeUniversal` di `.env` dengan kode tetap milik operator. Kode ini berlaku tanpa batas waktu untuk mencetak lewat modal publik.
+3. Masuk sebagai operator dan buka **Kode Akses Cetak** untuk melihat dan menyalin kode universal, membuat kode sementara pengguna, serta menyimpan nomor WhatsApp. Kode sementara berlaku 24 jam dan bisa diganti sebelum kedaluwarsa. Kode aktif dari versi sebelumnya berlaku 24 jam sejak migrasi.
+4. Dari beranda, pilih siswa dan tekan tombol cetak. Masukkan salah satu kode yang berlaku untuk membuka PDF. Tombol **Pesan WhatsApp** membuka draf permintaan kode sementara.
 
 ## Dokumentasi
 

@@ -1,8 +1,8 @@
 # Master Dokumen RMD
 
-**Raport Digital Madrasah · Baseline lokal pasca-Patch V2 · 20 November 2026**
+**Raport Digital Madrasah · Area publik dan cetak dengan kode · 20 November 2026**
 
-RMD digunakan untuk mencari, memperbarui, dan mencetak ulang rapor historis. Delapan workbook final angkatan 2016–2023 menjadi sumber pengisian awal database. Aplikasi mencakup akses operator, pemutakhiran arsip, riwayat perubahan, dan pencetakan PDF F4.
+RMD digunakan untuk mencari, memperbarui, dan mencetak ulang rapor historis. Delapan workbook final angkatan 2016–2023 menjadi sumber pengisian awal database. Aplikasi mencakup akses operator, pemutakhiran arsip, riwayat perubahan, dan pencetakan PDF F4. Beranda publik menyediakan pencarian siswa dan cetak dokumen per siswa dengan kode akses.
 
 ## Lingkungan pengembangan
 
@@ -12,7 +12,7 @@ RMD digunakan untuk mencari, memperbarui, dan mencetak ulang rapor historis. Del
 | URL clone | `https://github.com/Al-Faroz/KMP-RMD.git` |
 | Folder lokal | `E:\xampp\htdocs\kmp-rdm` |
 | URL aplikasi | [http://localhost/kmp-rdm/](http://localhost/kmp-rdm/) |
-| Status lokal | Uji cetak KHS1 dan KHS2 disetujui. Perubahan mPDF masuk ke `main` melalui PR #12. |
+| Status lokal | Uji cetak KHS1 dan KHS2 serta uji area publik dan navigasi login telah disetujui. |
 | Database lokal | `dt_rdm`, host `localhost`, port `3306`, driver `MySQLi` |
 
 Detail penempatan entry point dan konfigurasi lokal ada di [02 · Arsitektur CodeIgniter 4](02-Arsitektur-CodeIgniter-4.md). Pemeriksaan koneksi database ada di [05 · Database dan Impor Excel](05-Database-dan-Impor-Excel.md).
@@ -27,7 +27,7 @@ Detail penempatan entry point dan konfigurasi lokal ada di [02 · Arsitektur Cod
 | [04 · Integrasi Sneat Free](04-Integrasi-Sneat-Free.md) | Shell operator, integrasi view CI4, aset lokal, dan atribusi template. |
 | [05 · Database dan Impor Excel](05-Database-dan-Impor-Excel.md) | Entitas dan relasi, pemetaan workbook, pengisian awal, serta impor koreksi. |
 | [06 · Cetak Rapor F4](06-Cetak-Rapor-F4.md) | Jenis keluaran, pemilihan format historis, dan kriteria pemeriksaan PDF. |
-| [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md) | Sembilan tahap, kriteria uji XAMPP, dan hasil QA pasca-Patch V2. |
+| [07 · Tahapan Pengembangan dan QA](07-Tahapan-Pengembangan-dan-QA.md) | Sepuluh tahap, kriteria uji XAMPP, dan hasil QA pasca-Patch V2 serta area publik. |
 
 ## Stack aplikasi
 
@@ -41,4 +41,5 @@ Detail penempatan entry point dan konfigurasi lokal ada di [02 · Arsitektur Cod
 
 ## Serah terima lokal
 
-[Hasil uji, temuan arsip, dan backup pasca-Patch V2](07-Tahapan-Pengembangan-dan-QA.md#serah-terima-lokal-pasca-patch-v2).
+- [Hasil uji, temuan arsip, dan backup pasca-Patch V2](07-Tahapan-Pengembangan-dan-QA.md#serah-terima-lokal-pasca-patch-v2)
+- [Hasil uji area publik dan cetak dengan kode](07-Tahapan-Pengembangan-dan-QA.md#serah-terima-area-publik)

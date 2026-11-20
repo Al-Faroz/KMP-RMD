@@ -3,6 +3,7 @@ $menuItems = [
     'data-siswa' => ['label' => 'Data Siswa', 'icon' => 'bx-group'],
     'cetak-rombel' => ['label' => 'Cetak Rombel', 'icon' => 'bx-printer'],
     'daftar-operator' => ['label' => 'Operator', 'icon' => 'bx-group'],
+    'kode-akses-cetak' => ['label' => 'Kode Akses Cetak', 'icon' => 'bx-lock-alt'],
 ];
 ?>
 <aside id="menu-operator" class="offcanvas-xl offcanvas-start rmd-sidebar" tabindex="-1" aria-labelledby="judul-menu-operator">

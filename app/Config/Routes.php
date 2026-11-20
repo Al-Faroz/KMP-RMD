@@ -3,7 +3,21 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
-$routes->get('masuk', 'AkunOperator::masuk', ['as' => 'masuk']);
+$routes->get('/', 'Siswa::berandaPublik', ['as' => 'beranda-publik']);
+$routes->group('arsip-cetak', static function (RouteCollection $routes): void {
+    $routes->get('saran', 'Siswa::saran/dokumen-publik', ['as' => 'saran-publik']);
+    $routes->get('siswa/(:num)', 'Siswa::dokumenPublik/$1', ['as' => 'dokumen-publik']);
+    $routes->get('siswa/(:num)/transkrip', 'Siswa::transkrip/$1', ['as' => 'transkrip-publik']);
+    $routes->get('siswa/(:num)/semua-semester', 'Siswa::cetakSemuaSemester/$1', ['as' => 'semua-semester-publik']);
+    $routes->get('siswa/(:num)/sampul', 'Siswa::sampul/$1', ['as' => 'sampul-publik']);
+    $routes->get('siswa/(:num)/identitas', 'Siswa::cetakIdentitas/$1', ['as' => 'identitas-publik']);
+    $routes->get('siswa/(:num)/semester/(:num)/nilai', 'Siswa::lembarNilai/$1/$2', ['as' => 'nilai-publik']);
+    $routes->get('siswa/(:num)/semester/(:num)/rapor', 'Siswa::cetakRapor/$1/$2', ['as' => 'rapor-publik']);
+});
+
+$routes->get('login', 'AkunOperator::masuk', ['as' => 'masuk']);
+$routes->post('login', 'AkunOperator::autentikasi', ['filter' => 'csrf']);
+$routes->get('masuk', 'AkunOperator::masuk', ['as' => 'masuk-lama']);
 $routes->post('masuk', 'AkunOperator::autentikasi', ['filter' => 'csrf']);
 $routes->post('keluar', 'AkunOperator::keluar', ['as' => 'keluar', 'filter' => 'csrf']);
 $routes->get('operator', 'KelolaOperator::index', ['as' => 'daftar-operator']);
@@ -13,7 +27,6 @@ $routes->get('operator/(:num)/edit', 'KelolaOperator::edit/$1', ['as' => 'edit-o
 $routes->post('operator/(:num)/edit', 'KelolaOperator::simpan/$1', ['filter' => 'csrf']);
 $routes->get('operator/(:num)/hapus', 'KelolaOperator::konfirmasiHapus/$1', ['as' => 'hapus-operator']);
 $routes->post('operator/(:num)/hapus', 'KelolaOperator::hapus/$1', ['filter' => 'csrf']);
-$routes->get('/', 'Siswa::index');
 $routes->get('siswa', 'Siswa::index', ['as' => 'data-siswa']);
 $routes->get('siswa/saran', 'Siswa::saran', ['as' => 'saran-siswa']);
 $routes->get('siswa/(:num)', 'Siswa::show/$1', ['as' => 'detail-siswa']);

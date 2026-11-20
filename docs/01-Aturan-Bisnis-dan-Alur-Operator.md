@@ -16,6 +16,7 @@
 | AB-10 | Antarmuka operator memakai **Bootstrap 5 dan Sneat Free**. Penyesuaian RMD dan tata letak dokumen cetak memakai **CSS biasa**. |
 | AB-11 | Operator masuk dengan username dan kata sandi. Setiap akun hanya memuat nama lengkap, username unik, dan hash kata sandi. Semua akun operator dapat mengelola arsip dan akun operator. Operator dapat mengedit akunnya sendiri. Penghapusan akun dilakukan dari akun operator lain dan memutus akses akun yang dihapus. |
 | AB-12 | Simpan riwayat perubahan identitas siswa dan rapor semester, termasuk impor Excel dan pemulihan. Tampilkan operator, waktu, serta nilai sebelum dan sesudah. Operator dapat memulihkan versi sebelum perubahan terbaru untuk identitas atau semester yang dibuka. |
+| AB-13 | Beranda menampilkan statistik arsip serta pencarian nama, NIS, atau NISN dengan filter angkatan. Pengunjung internal dapat memilih siswa dan mencetak rapor yang tersedia serta dokumen cetak per siswa tanpa login. PDF memakai proses cetak yang sama dengan area operator. Pengelolaan arsip melalui halaman Masuk Operator. |
 
 ## Halaman dan alur operator
 

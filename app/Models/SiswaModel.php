@@ -88,6 +88,13 @@ final class SiswaModel extends Model
             ->where('siswa.id', $id)->first();
     }
 
+    public function ringkasanCetak(string $id): ?array
+    {
+        return $this->select('siswa.id, siswa.nama, angkatan.tahun_masuk')
+            ->join('angkatan', 'angkatan.id = siswa.angkatan_id')
+            ->where('siswa.id', $id)->first();
+    }
+
     public static function kolomIdentitas(): array
     {
         return array_merge(...array_values(self::IDENTITAS));

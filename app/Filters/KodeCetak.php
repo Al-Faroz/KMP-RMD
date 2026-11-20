@@ -19,13 +19,13 @@ final class KodeCetak implements FilterInterface
                 ->setHeader('Retry-After', (string) $throttler->getTokenTime());
         }
 
-        $pengaturan = model(AksesCetakModel::class)->pengaturan();
-        if ($pengaturan === null) {
+        $hash = model(AksesCetakModel::class)->pengaturan()['kode_hash'] ?? '';
+        if ($hash === '') {
             return $this->galat(503, 'Akses cetak belum diatur. Hubungi operator madrasah.');
         }
 
         $kode = $request->getPost('kode_cetak');
-        if (! is_string($kode) || strlen($kode) > 72 || ! password_verify($kode, $pengaturan['kode_hash'])) {
+        if (! is_string($kode) || strlen($kode) > 72 || ! password_verify($kode, $hash)) {
             return $this->galat(403, 'Kode akses cetak salah. Periksa kode dan coba lagi.');
         }
 

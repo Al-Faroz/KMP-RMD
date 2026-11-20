@@ -24,6 +24,7 @@ $routes->post('masuk', 'AkunOperator::autentikasi', ['filter' => 'csrf']);
 $routes->post('keluar', 'AkunOperator::keluar', ['as' => 'keluar', 'filter' => 'csrf']);
 $routes->get('operator/kode-akses-cetak', 'PengaturanCetakPublik::index', ['as' => 'kode-akses-cetak']);
 $routes->post('operator/kode-akses-cetak', 'PengaturanCetakPublik::buat', ['filter' => 'csrf']);
+$routes->post('operator/kode-akses-cetak/whatsapp', 'PengaturanCetakPublik::simpanWhatsApp', ['as' => 'simpan-whatsapp-cetak', 'filter' => 'csrf']);
 $routes->get('operator', 'KelolaOperator::index', ['as' => 'daftar-operator']);
 $routes->get('operator/tambah', 'KelolaOperator::tambah', ['as' => 'tambah-operator']);
 $routes->post('operator/tambah', 'KelolaOperator::simpan', ['filter' => 'csrf']);

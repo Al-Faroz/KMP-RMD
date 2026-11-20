@@ -3,10 +3,13 @@
 <?= $this->section('content') ?>
 <div class="row">
     <div class="col-md-8 col-xl-6">
+        <?php if ($pesan = session()->getFlashdata('sukses')): ?>
+            <div class="alert alert-success" role="status"><?= esc($pesan) ?></div>
+        <?php endif ?>
         <?php if ($pesan = session()->getFlashdata('galat')): ?>
             <div class="alert alert-danger" role="alert"><?= esc($pesan) ?></div>
         <?php endif ?>
-        <div class="card card-body">
+        <div class="card card-body mb-3">
             <?php if ($kodeBaru !== null): ?>
                 <div class="mb-4">
                     <label for="kode-cetak-baru" class="form-label">Kode Cetak Aktif</label>
@@ -28,6 +31,17 @@
                 <button class="btn btn-primary" type="submit"><?= $kodeAktif ? 'Buat Kode Baru' : 'Buat Kode' ?></button>
             </form>
         </div>
+        <form class="card card-body" method="post" action="<?= esc(url_to('simpan-whatsapp-cetak'), 'attr') ?>">
+            <?= csrf_field() ?>
+            <div class="mb-3">
+                <label for="whatsapp-operator" class="form-label">Nomor WhatsApp Operator</label>
+                <input id="whatsapp-operator" name="whatsapp_operator" type="tel" class="form-control"
+                       autocomplete="tel" value="<?= esc($whatsappOperator, 'attr') ?>" maxlength="32" required>
+            </div>
+            <div>
+                <button class="btn btn-primary" type="submit">Simpan Nomor</button>
+            </div>
+        </form>
     </div>
 </div>
 <?= $this->endSection() ?>

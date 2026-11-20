@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use DomainException;
 use RuntimeException;
 
 final class AksesCetakModel extends Model
@@ -13,7 +14,7 @@ final class AksesCetakModel extends Model
 
     public function pengaturan(): ?array
     {
-        return $this->select('kode_hash')->find(self::SETTING_ID);
+        return $this->select('kode_hash, whatsapp_operator')->find(self::SETTING_ID);
     }
 
     public function buatKode(): string
@@ -29,5 +30,29 @@ final class AksesCetakModel extends Model
         }
 
         return $kode;
+    }
+
+    public function simpanWhatsApp(string $nomor): void
+    {
+        $nomor = preg_replace('/[\s().-]+/', '', trim($nomor));
+        if (str_starts_with($nomor, '+')) {
+            $nomor = substr($nomor, 1);
+        } elseif (str_starts_with($nomor, '0')) {
+            $nomor = '62' . substr($nomor, 1);
+        }
+
+        if (! preg_match('/^[1-9][0-9]{7,14}$/D', $nomor)) {
+            throw new DomainException('Masukkan nomor WhatsApp yang valid, misalnya 08… atau +62….');
+        }
+
+        $tersimpan = $this->builder()->updateFields(['whatsapp_operator'])->upsert([
+            'id' => self::SETTING_ID,
+            'kode_hash' => '',
+            'whatsapp_operator' => $nomor,
+        ]);
+
+        if ($tersimpan === false) {
+            throw new RuntimeException('Nomor WhatsApp gagal disimpan.');
+        }
     }
 }

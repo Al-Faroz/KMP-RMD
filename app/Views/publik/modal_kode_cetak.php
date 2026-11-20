@@ -1,6 +1,6 @@
 <?php
 $pesanWhatsApp = <<<'PESAN'
-Halo, Operator Madrasah. Saya ingin meminta kode akses untuk mencetak rapor atau dokumen siswa.
+Halo, Operator Madrasah. Saya ingin meminta kode akses sementara untuk mencetak rapor atau dokumen siswa.
 
 Nama pemohon: [isi nama Anda]
 Nama siswa: [isi nama siswa]

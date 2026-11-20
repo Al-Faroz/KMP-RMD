@@ -1,19 +1,20 @@
-const tombolSalinKode = document.getElementById('salin-kode-cetak');
-const kodeBaru = document.getElementById('kode-cetak-baru');
-const statusSalinKode = document.getElementById('status-salin-kode');
+for (const tombol of document.querySelectorAll('[data-salin-kode]')) {
+  const kode = document.getElementById(tombol.dataset.salinKode);
+  const status = document.getElementById(tombol.getAttribute('aria-describedby'));
 
-tombolSalinKode?.addEventListener('click', async () => {
-  try {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(kodeBaru.value);
-    } else {
-      kodeBaru.select();
-      if (!document.execCommand('copy')) throw new Error();
+  tombol.addEventListener('click', async () => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(kode.value);
+      } else {
+        kode.select();
+        if (!document.execCommand('copy')) throw new Error();
+      }
+
+      status.textContent = 'Kode disalin.';
+    } catch {
+      kode.select();
+      status.textContent = 'Kode sudah dipilih. Salin dengan Ctrl+C atau menu perangkat.';
     }
-
-    statusSalinKode.textContent = 'Kode disalin.';
-  } catch {
-    kodeBaru.select();
-    statusSalinKode.textContent = 'Kode sudah dipilih. Salin dengan Ctrl+C atau menu perangkat.';
-  }
-});
+  });
+}

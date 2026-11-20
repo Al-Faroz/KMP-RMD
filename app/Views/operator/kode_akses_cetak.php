@@ -10,29 +10,45 @@
             <div class="alert alert-danger" role="alert"><?= esc($pesan) ?></div>
         <?php endif ?>
         <div class="card card-body mb-3">
-            <?php if ($kode !== null): ?>
-                <div class="mb-4">
-                    <label for="kode-cetak-baru" class="form-label">Kode Cetak Aktif</label>
+            <?php if ($kodeUniversal !== ''): ?>
+                <label for="kode-cetak-universal" class="form-label">Kode Universal Operator</label>
+                <div class="input-group">
+                    <input id="kode-cetak-universal" type="text" class="form-control font-monospace"
+                           value="<?= esc($kodeUniversal, 'attr') ?>" readonly>
+                    <button class="btn btn-outline-primary" type="button" data-salin-kode="kode-cetak-universal"
+                            aria-describedby="status-salin-universal">Salin Kode Universal</button>
+                </div>
+                <div id="status-salin-universal" class="form-text" role="status"></div>
+                <p class="form-text mb-0">Selalu aktif untuk cetak oleh operator.</p>
+            <?php else: ?>
+                <p class="mb-0">Kode Universal Operator belum dikonfigurasi di server.</p>
+            <?php endif ?>
+        </div>
+        <div class="card card-body mb-3">
+            <h2 class="h6 mb-3">Kode Sementara Pengguna</h2>
+            <?php if ($kodeSementara !== null): ?>
+                <div class="mb-3">
+                    <label for="kode-cetak-sementara" class="form-label">Kode Sementara Aktif</label>
                     <div class="input-group">
-                        <input id="kode-cetak-baru" type="text" class="form-control font-monospace"
-                               value="<?= esc($kode, 'attr') ?>" readonly>
-                        <button id="salin-kode-cetak" class="btn btn-outline-primary" type="button">Salin Kode</button>
+                        <input id="kode-cetak-sementara" type="text" class="form-control font-monospace"
+                               value="<?= esc($kodeSementara, 'attr') ?>" readonly>
+                        <button class="btn btn-outline-primary" type="button" data-salin-kode="kode-cetak-sementara"
+                                aria-describedby="status-salin-sementara">Salin Kode Sementara</button>
                     </div>
-                    <div id="status-salin-kode" class="form-text" role="status"></div>
+                    <div id="status-salin-sementara" class="form-text" role="status"></div>
                 </div>
             <?php elseif ($galatDekripsi): ?>
-                <p class="text-danger">Kode cetak gagal ditampilkan. Periksa kunci enkripsi server.</p>
-            <?php elseif ($kodeAktif): ?>
-                <p>Kode dari versi lama masih berlaku. Klik <strong>Buat Kode Baru</strong> sekali agar kode aktif bisa ditampilkan dan disalin lagi.</p>
+                <p class="text-danger">Kode sementara gagal ditampilkan. Periksa kunci enkripsi server.</p>
+            <?php elseif ($kodeSementaraAktif): ?>
+                <p>Kode dari versi lama masih berlaku. Buat kode sementara baru agar bisa langsung disalin di sini.</p>
+            <?php endif ?>
+            <?php if ($akhirBerlaku !== null): ?>
+                <p class="form-text mb-2"><?= $kodeSementaraAktif ? 'Berlaku sampai' : 'Kedaluwarsa pada' ?> <?= esc($akhirBerlaku) ?>.</p>
             <?php endif ?>
             <form method="post" action="<?= esc(url_to('kode-akses-cetak'), 'attr') ?>">
                 <?= csrf_field() ?>
-                <?php if ($kodeAktif): ?>
-                    <p>Kode yang aktif akan langsung diganti saat kode baru dibuat.</p>
-                <?php else: ?>
-                    <p>Buat kode untuk mengaktifkan cetak publik.</p>
-                <?php endif ?>
-                <button class="btn btn-primary" type="submit"><?= $kodeAktif ? 'Buat Kode Baru' : 'Buat Kode' ?></button>
+                <p><?= $kodeSementaraAktif ? 'Membuat kode baru langsung mengganti kode sementara yang aktif.' : 'Kode baru berlaku 24 jam dan dapat dibagikan kepada pengguna.' ?></p>
+                <button class="btn btn-primary" type="submit"><?= $kodeSementaraAktif ? 'Buat Kode Sementara Baru' : 'Buat Kode Sementara' ?></button>
             </form>
         </div>
         <form class="card card-body" method="post" action="<?= esc(url_to('simpan-whatsapp-cetak'), 'attr') ?>">

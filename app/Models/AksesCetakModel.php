@@ -10,12 +10,13 @@ use RuntimeException;
 final class AksesCetakModel extends Model
 {
     private const SETTING_ID = 1;
+    private const MASA_BERLAKU_DETIK = 86400;
 
     protected $table = 'akses_cetak';
 
     public function pengaturan(): ?array
     {
-        return $this->select('kode_hash, whatsapp_operator')->find(self::SETTING_ID);
+        return $this->select('kode_hash, kode_berlaku_hingga, whatsapp_operator')->find(self::SETTING_ID);
     }
 
     public function pengaturanOperator(): ?array
@@ -30,6 +31,7 @@ final class AksesCetakModel extends Model
             'id' => self::SETTING_ID,
             'kode_hash' => password_hash($kode, PASSWORD_DEFAULT),
             'kode_terenkripsi' => (new EnkripsiKodeCetak())->enkripsi($kode),
+            'kode_berlaku_hingga' => time() + self::MASA_BERLAKU_DETIK,
         ]);
 
         if (! $tersimpan) {

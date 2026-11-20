@@ -6,6 +6,7 @@ use App\Models\AksesCetakModel;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use Config\CetakPublik;
 
 final class KodeCetak implements FilterInterface
 {
@@ -19,14 +20,28 @@ final class KodeCetak implements FilterInterface
                 ->setHeader('Retry-After', (string) $throttler->getTokenTime());
         }
 
-        $hash = model(AksesCetakModel::class)->pengaturan()['kode_hash'] ?? '';
-        if ($hash === '') {
-            return $this->galat(503, 'Akses cetak belum diatur. Hubungi operator madrasah.');
+        $kode = $request->getPost('kode_cetak');
+        if (! is_string($kode) || $kode === '' || strlen($kode) > 72) {
+            return $this->galat(403, 'Kode akses cetak salah. Periksa kode dan coba lagi.');
         }
 
-        $kode = $request->getPost('kode_cetak');
-        if (! is_string($kode) || strlen($kode) > 72 || ! password_verify($kode, $hash)) {
+        $kodeUniversal = config(CetakPublik::class)->kodeUniversal;
+        if ($kodeUniversal !== '' && hash_equals($kodeUniversal, $kode)) {
+            $throttler->remove($batas);
+
+            return null;
+        }
+
+        $pengaturan = model(AksesCetakModel::class)->pengaturan();
+        $hash = $pengaturan['kode_hash'] ?? '';
+        if ($hash === '' && $kodeUniversal === '') {
+            return $this->galat(503, 'Akses cetak belum diatur. Hubungi operator madrasah.');
+        }
+        if ($hash === '' || ! password_verify($kode, $hash)) {
             return $this->galat(403, 'Kode akses cetak salah. Periksa kode dan coba lagi.');
+        }
+        if ((int) ($pengaturan['kode_berlaku_hingga'] ?? 0) <= time()) {
+            return $this->galat(403, 'Kode cetak sudah kedaluwarsa. Minta kode baru ke operator madrasah.');
         }
 
         $throttler->remove($batas);

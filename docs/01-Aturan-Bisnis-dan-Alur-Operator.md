@@ -16,7 +16,7 @@
 | AB-10 | Antarmuka operator memakai **Bootstrap 5 dan Sneat Free**. Penyesuaian RMD dan tata letak dokumen cetak memakai **CSS biasa**. |
 | AB-11 | Operator masuk dengan username dan kata sandi. Setiap akun hanya memuat nama lengkap, username unik, dan hash kata sandi. Semua akun operator dapat mengelola arsip dan akun operator. Operator dapat mengedit akunnya sendiri. Penghapusan akun dilakukan dari akun operator lain dan memutus akses akun yang dihapus. |
 | AB-12 | Simpan riwayat perubahan identitas siswa dan rapor semester, termasuk impor Excel dan pemulihan. Tampilkan operator, waktu, serta nilai sebelum dan sesudah. Operator dapat memulihkan versi sebelum perubahan terbaru untuk identitas atau semester yang dibuka. |
-| AB-13 | Beranda menampilkan statistik arsip serta pencarian nama, NIS, atau NISN dengan filter angkatan. Pengunjung internal dapat memilih siswa dan mencetak rapor yang tersedia serta dokumen cetak per siswa tanpa login. Setiap tombol cetak publik meminta kode universal yang dibuat oleh operator. Kode berlaku sampai diganti. PDF memakai proses cetak yang sama dengan area operator. |
+| AB-13 | Beranda menampilkan statistik arsip serta pencarian nama, NIS, atau NISN dengan filter angkatan. Pengunjung internal dapat memilih siswa dan mencetak rapor yang tersedia serta dokumen cetak per siswa tanpa login. Modal cetak menerima kode sementara pengguna selama 24 jam atau kode universal operator yang selalu aktif. PDF memakai proses cetak yang sama dengan area operator. |
 
 ## Halaman dan alur operator
 
@@ -24,7 +24,7 @@
 |---|---|
 | **Masuk** | Masukkan username dan kata sandi operator. Setelah masuk, aplikasi membuka Data Siswa. |
 | **Operator** | Lihat daftar, tambah, edit, atau hapus akun operator. Biarkan kata sandi kosong saat edit untuk mempertahankan kata sandi saat ini. |
-| **Kode Akses Cetak** | Buat, lihat, dan salin kode universal aktif setelah masuk. Hash dipakai untuk verifikasi cetak, dan salinan terenkripsi dipakai untuk menampilkan kode kepada operator. Atur nomor operator untuk tombol **Pesan WhatsApp** dalam modal cetak publik. |
+| **Kode Akses Cetak** | Lihat dan salin kode universal operator. Buat dan salin kode sementara untuk pengguna serta lihat batas waktunya. Atur nomor operator untuk tombol **Pesan WhatsApp** dalam modal cetak publik. |
 | **Data Siswa** | Halaman awal operator. Cari dengan nama, NIS, atau NISN. Filter berdasarkan angkatan. Buka detail siswa. |
 | **Detail Siswa** | Tampilkan identitas dan riwayat semester 1–6. Sediakan **Edit Identitas**, **Cetak Semua Semester**, serta **Cetak Transkrip**, **Cetak Sampul**, dan **Cetak Identitas** dalam tab baru. |
 | **Detail Semester** | Tampilkan status arsip, kelas, rombel, periode, nilai, serta Data Pendukung yang memuat pengesahan arsip. Koreksi nama, jabatan, NIP, dan tempat serta tanggal terbit hanya dilakukan melalui **Edit Rapor** saat diperlukan untuk mencocokkan data dengan dokumen asli semester itu. Sediakan **Unduh Excel**, **Impor Excel**, **Edit Rapor**, **Cetak Lembar Nilai**, dan **Cetak Rapor** sesuai data semester. |

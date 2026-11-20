@@ -67,3 +67,6 @@
 #--------------------------------------------------------------------
 
 # logger.threshold = 4
+
+# Kode cetak tetap untuk operator. Isi di .env lokal, bukan di repositori.
+# cetakpublik.kodeUniversal = ''

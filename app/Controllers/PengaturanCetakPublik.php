@@ -5,6 +5,9 @@ namespace App\Controllers;
 use App\Libraries\EnkripsiKodeCetak;
 use App\Models\AksesCetakModel;
 use CodeIgniter\HTTP\ResponseInterface;
+use Config\CetakPublik;
+use DateTimeImmutable;
+use DateTimeZone;
 use DomainException;
 use RuntimeException;
 
@@ -15,9 +18,11 @@ final class PengaturanCetakPublik extends BaseController
     public function index(): ResponseInterface
     {
         $pengaturan = model(AksesCetakModel::class)->pengaturanOperator();
+        $berlakuHingga = (int) ($pengaturan['kode_berlaku_hingga'] ?? 0);
+        $kodeAktif = $berlakuHingga > time() && ($pengaturan['kode_hash'] ?? '') !== '';
         $kode = null;
         $galatDekripsi = false;
-        if (($pengaturan['kode_terenkripsi'] ?? '') !== '') {
+        if ($kodeAktif && ($pengaturan['kode_terenkripsi'] ?? '') !== '') {
             try {
                 $kode = (new EnkripsiKodeCetak())->dekripsi($pengaturan['kode_terenkripsi']);
             } catch (RuntimeException $e) {
@@ -26,13 +31,19 @@ final class PengaturanCetakPublik extends BaseController
             }
         }
 
+        $akhirBerlaku = $berlakuHingga > 0
+            ? (new DateTimeImmutable('@' . $berlakuHingga))->setTimezone(new DateTimeZone('Asia/Jakarta'))->format('d/m/Y H:i') . ' WIB'
+            : null;
+
         return $this->response->setHeader('Cache-Control', 'private, no-store')
             ->setBody(view('operator/kode_akses_cetak', [
                 'pageTitle' => 'Kode Akses Cetak',
                 'activeMenu' => 'kode-akses-cetak',
                 'pageScript' => 'rmd/salin-kode-cetak.js',
-                'kodeAktif' => ($pengaturan['kode_hash'] ?? '') !== '',
-                'kode' => $kode,
+                'kodeUniversal' => config(CetakPublik::class)->kodeUniversal,
+                'kodeSementaraAktif' => $kodeAktif,
+                'kodeSementara' => $kode,
+                'akhirBerlaku' => $akhirBerlaku,
                 'galatDekripsi' => $galatDekripsi,
                 'whatsappOperator' => $pengaturan['whatsapp_operator'] ?? '',
             ]));
@@ -48,7 +59,7 @@ final class PengaturanCetakPublik extends BaseController
                 ->with('galat', 'Kode cetak gagal dibuat. Coba lagi.');
         }
 
-        return redirect()->route('kode-akses-cetak', [], 303)->with('sukses', 'Kode cetak disimpan.');
+        return redirect()->route('kode-akses-cetak', [], 303)->with('sukses', 'Kode sementara dibuat dan berlaku 24 jam.');
     }
 
     public function simpanWhatsApp(): ResponseInterface

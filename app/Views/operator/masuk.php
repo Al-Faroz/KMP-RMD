@@ -40,6 +40,8 @@ $assetPath = realpath(FCPATH) === realpath(ROOTPATH) ? 'public/assets/' : 'asset
             </div>
             <button class="btn btn-primary w-100" type="submit">Masuk</button>
         </form>
+        <a class="btn btn-outline-secondary w-100 mt-3"
+           href="<?= esc(url_to('beranda-publik'), 'attr') ?>">Kembali ke Beranda</a>
     </main>
 </body>
 </html>

@@ -5,6 +5,9 @@
             <?php
             $arsip = trim($item['isian_tercetak_asli'] ?? '');
             $jumlah = $item['jumlah'] ?? null;
+            if (in_array(strtolower($arsip), ['[null', 'null', 'null]'], true)) {
+                $arsip = $jumlah === null ? '—' : '';
+            }
             $isi = $arsip !== '' ? $arsip : trim($tampil($jumlah) . ' ' . ($item['satuan'] ?? ''));
             ?>
             <tr<?= $arsip === '' && $jumlah === null ? ' class="isian-manual"' : '' ?>>

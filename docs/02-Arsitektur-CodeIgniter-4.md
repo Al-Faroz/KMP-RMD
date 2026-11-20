@@ -2,9 +2,9 @@
 
 CI4 menangani permintaan halaman, validasi input, transaksi data, serta pembuatan keluaran Excel dan PDF. Aturan fungsional mengacu pada [01 · Aturan Bisnis dan Alur Operator](01-Aturan-Bisnis-dan-Alur-Operator.md).
 
-## Baseline CI4 di XAMPP
+## Lingkungan CI4 di XAMPP
 
-- Proyek lokal berada di `E:\xampp\htdocs\kmp-rdm`. Pengguna sudah membuka [http://localhost/kmp-rdm/](http://localhost/kmp-rdm/) dan melihat halaman **Welcome CodeIgniter**.
+- Proyek lokal berada di `E:\xampp\htdocs\kmp-rdm`. Buka [KMP-RMD di XAMPP](http://localhost/kmp-rdm/) untuk masuk sebagai operator.
 - File publik awal telah disalin ke root proyek. Di branch `main`, `index.php` berada sejajar dengan `app/` dan memuat `app/Config/Paths.php` dari root. Apache memakai entry point ini untuk URL lokal yang sudah berjalan. [index.php](https://github.com/Al-Faroz/KMP-RMD/blob/main/index.php)
 - Repository menetapkan PHP `^8.2` dan CI4 `^4.7` di `composer.json`. Versi CI4 yang terkunci adalah `4.7.6`. [composer.json](https://github.com/Al-Faroz/KMP-RMD/blob/main/composer.json) · [composer.lock](https://github.com/Al-Faroz/KMP-RMD/blob/main/composer.lock)
 - Jalankan pengembangan dari checkout tersebut. Untuk instalasi dependensi pada checkout baru, gunakan `composer install` agar versinya mengikuti `composer.lock`. [Instalasi Composer](https://codeigniter.com/user_guide/installation/installing_composer.html)

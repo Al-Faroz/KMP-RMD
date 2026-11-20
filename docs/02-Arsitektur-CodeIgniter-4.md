@@ -52,7 +52,7 @@ Parameter `{siswa}` merujuk ke ID internal dan `{semester}` ke nomor 1–6. Satu
 | GET | `/arsip-cetak/siswa/{siswa}` | Buka pilihan dokumen cetak. Permintaan POST untuk PDF per siswa memvalidasi kode cetak yang dikirim dalam formulir. |
 | GET / POST | `/login` | Buka form dan mulai sesi operator. |
 | POST | `/keluar` | Akhiri sesi operator. |
-| GET / POST | `/operator/kode-akses-cetak` | Atur kode universal dan nomor WhatsApp operator. |
+| GET / POST | `/operator/kode-akses-cetak` | Buat dan salin kode akses cetak universal. |
 | GET | `/operator` | Lihat daftar operator. |
 | GET / POST | `/operator/tambah` | Buka form dan buat akun operator. |
 | GET / POST | `/operator/{id}/edit` | Buka form dan simpan perubahan akun. |

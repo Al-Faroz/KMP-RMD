@@ -27,8 +27,8 @@ Gunakan PHP yang memenuhi `composer.lock`, Composer, serta Apache dan MySQL dari
 ## Mengaktifkan cetak publik
 
 1. Jalankan migrasi dengan `& 'E:\xampp\php\php.exe' spark migrate` dari folder proyek.
-2. Masuk sebagai operator, buka **Kode Akses Cetak**, lalu simpan kode yang dipilih dan nomor WhatsApp operator.
-3. Dari beranda, pilih siswa dan tekan tombol cetak. Masukkan kode pada modal untuk membuka PDF. Tombol **Pesan WhatsApp** membuka draf permintaan yang dapat dilengkapi sebelum dikirim.
+2. Masuk sebagai operator, buka **Kode Akses Cetak**, klik **Buat Kode**, lalu salin kode untuk dibagikan kepada pengguna. Kode baru langsung berlaku.
+3. Dari beranda, pilih siswa dan tekan tombol cetak. Masukkan kode pada modal untuk membuka PDF.
 
 ## Dokumentasi
 

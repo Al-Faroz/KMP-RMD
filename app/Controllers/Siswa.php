@@ -6,7 +6,6 @@ use App\Libraries\CetakDokumenSiswa;
 use App\Libraries\CetakRapor;
 use App\Libraries\CetakTranskrip;
 use App\Libraries\PengesahanRapor;
-use App\Models\AksesCetakModel;
 use App\Models\RaporSemesterModel;
 use App\Models\RiwayatArsipModel;
 use App\Models\SiswaModel;
@@ -53,7 +52,6 @@ final class Siswa extends BaseController
         return view('publik/dokumen', [
             'pageTitle' => 'Dokumen Cetak',
             'pageScripts' => ['sneat/bootstrap.bundle.min.js', 'rmd/cetak-publik.js'],
-            'whatsappOperator' => model(AksesCetakModel::class)->pengaturan()['whatsapp_operator'] ?? null,
             'siswa' => $siswa,
             'semesterTersedia' => array_keys($arsip),
             'semesterDenganRapor' => array_keys($raporTersedia),

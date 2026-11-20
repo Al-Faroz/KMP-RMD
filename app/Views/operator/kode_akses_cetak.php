@@ -3,32 +3,31 @@
 <?= $this->section('content') ?>
 <div class="row">
     <div class="col-md-8 col-xl-6">
-        <?php if ($pesan = session()->getFlashdata('sukses')): ?>
-            <div class="alert alert-success" role="status"><?= esc($pesan) ?></div>
-        <?php endif ?>
         <?php if ($pesan = session()->getFlashdata('galat')): ?>
             <div class="alert alert-danger" role="alert"><?= esc($pesan) ?></div>
         <?php endif ?>
-        <form class="card card-body" method="post" action="<?= esc(url_to('kode-akses-cetak'), 'attr') ?>">
-            <?= csrf_field() ?>
-            <div class="mb-3">
-                <label for="kode-cetak-operator" class="form-label"><?= $kodeAktif ? 'Kode Cetak Baru' : 'Kode Cetak' ?></label>
-                <input id="kode-cetak-operator" name="kode_cetak" type="password" class="form-control"
-                       autocomplete="new-password" minlength="8" maxlength="72" aria-describedby="petunjuk-kode-cetak"
-                       <?= $kodeAktif ? '' : 'required' ?>>
-                <div id="petunjuk-kode-cetak" class="form-text">
-                    <?= $kodeAktif ? 'Kosongkan untuk mempertahankan kode yang aktif.' : 'Minimal 8 karakter. Kode berlaku sampai diganti.' ?>
+        <div class="card card-body">
+            <?php if ($kodeBaru !== null): ?>
+                <div class="mb-4">
+                    <label for="kode-cetak-baru" class="form-label">Kode Cetak Aktif</label>
+                    <div class="input-group">
+                        <input id="kode-cetak-baru" type="text" class="form-control font-monospace"
+                               value="<?= esc($kodeBaru, 'attr') ?>" readonly>
+                        <button id="salin-kode-cetak" class="btn btn-outline-primary" type="button">Salin Kode</button>
+                    </div>
+                    <div id="status-salin-kode" class="form-text" role="status">Salin kode sebelum meninggalkan halaman.</div>
                 </div>
-            </div>
-            <div class="mb-4">
-                <label for="whatsapp-operator" class="form-label">Nomor WhatsApp Operator</label>
-                <input id="whatsapp-operator" name="whatsapp_operator" type="tel" class="form-control"
-                       autocomplete="tel" value="<?= esc($whatsappOperator, 'attr') ?>" maxlength="32" required>
-            </div>
-            <div>
-                <button class="btn btn-primary" type="submit">Simpan</button>
-            </div>
-        </form>
+            <?php endif ?>
+            <form method="post" action="<?= esc(url_to('kode-akses-cetak'), 'attr') ?>">
+                <?= csrf_field() ?>
+                <?php if ($kodeAktif): ?>
+                    <p>Kode yang aktif akan langsung diganti saat kode baru dibuat.</p>
+                <?php else: ?>
+                    <p>Buat kode untuk mengaktifkan cetak publik.</p>
+                <?php endif ?>
+                <button class="btn btn-primary" type="submit"><?= $kodeAktif ? 'Buat Kode Baru' : 'Buat Kode' ?></button>
+            </form>
+        </div>
     </div>
 </div>
 <?= $this->endSection() ?>
